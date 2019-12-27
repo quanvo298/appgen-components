@@ -1,0 +1,12 @@
+{
+  "theme" : {
+    "default": [{"name":"default","importPath": "./ThemeDefault/index.js"}] 
+  },
+  "component" : {
+    "default": [
+      { "name": "UIForm", "importPath": "./UIForm/index.js" },
+      { "name": "UIFormPage", "importPath": "./UIFormPage/index.js" },
+      { "name": "UIContentList", "importPath": "./UIContentList/index.js" }
+    ]
+  } 
+}

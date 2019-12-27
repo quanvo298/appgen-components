@@ -1,0 +1,136 @@
+{
+  "app" : {"title": "AppGen Framework"},
+  "message" : {
+    "confirm": {
+      "delete": "Are you sure to delete this item ?"
+    },
+    "error" : {
+      "existed": "%{label} existed",
+      "invalid": "%{label} is invalid"
+    }
+  },
+  "btn" : {
+    "new": "New",
+    "delete": "delete", 
+    "agree":"Agree", 
+    "disagree":"Disagree", 
+    "save" : "Save", 
+    "reset":"Reset",
+    "addFormPage": "Add FP",
+    "addForm": "Add Form",
+    "addGrid": "Add Grid",
+    "addPage": "Add Page",
+    "login":"Login",
+    "register": "Register"
+  },
+  "nav" : {
+    "title" : "Project Overview",
+    "project": "Project",
+    "entities" : "Entities",
+    "formPage": "Form Page",
+    "form": "Form",
+    "grid": "Grid",
+    "add" : "Add",
+    "page": "Page",
+    "deploy" : "Deploy",
+    "addEntity": "Add Entity",
+    "choiceList" : "ChoiceList"
+  },
+  "projects": {
+    "generic":"Generic",
+    "restApi":"Rest Api",
+    "deployment": "Deployment",
+    "builder":"Layout Builder"
+  },
+  "entity":{
+    "name": "Name",
+    "properties": {
+      "label": "Properties",
+      "column" :{
+        "label": "Label",
+        "name": "Name",
+        "dataType": "Data Type",
+        "relationship":"Relationship",
+        "entity":"Entity",
+        "length":"Length",
+        "defaultValue": "DefaultValue",
+        "description": "Description"
+      }
+    }
+  },
+  "restapi":{
+    "serviceName": "Service Name",
+    "restApiUrl": "RestApi URL",
+    "source": "Source",
+    "methodType": "Method Type",
+    "entity": "Entity",
+    "description": "Description"
+  },
+  "choicelist":{
+    "name": "Name",
+    "itemcode": "Item Code",
+    "groupitem": "Group Item Code",
+    "parent": "Parent",
+    "description": "Description"
+  },
+  "uibasiclayout":{
+    "properties":"Properties",
+    "formBuilder":"Form Builder",
+    "formPageBuilder":"FormPage Builder",
+    "gridBuilder":"ContentList Builder",
+    "pageBuilder":"Page Builder",
+    "grid": "Grid",
+    "ta": "Ta",
+    "tr": "Tr",
+    "ele":"Ele",
+    "component": "Comp",
+    "addRow": "Add Row",
+    "deleteRow": "Delete Row",
+    "dragEmpty":"Drag over here",
+    "title":"Title",
+    "symbolicName":"Symbolic Name",
+    "rows":"Rows",
+    "position": "Position",
+    "width": "Width"
+  },
+  "uicontentlist":{
+    "name":"Name",
+    "label":"Label",
+    "serviceName":"Service Name",
+    "restApi": "Rest API",
+    "columns": "Columns",
+    "visible": "Visible",
+    "width": "Width"
+  },
+  "uielementform":{
+    "label":"Label",
+    "defaultValue":"Default Value",
+    "required":"Required",
+    "readonly":"Readonly"
+  },
+  "uielementcomponent":{
+    "title":"Title"
+  },
+  "uipage":{
+    "theme": "Theme",
+    "router": "Link"
+  },
+  "login":{
+    "username":"Username",
+    "password":"Password"
+  },
+  "deployment":{
+    "mode":"Mode",
+    "folderPath":"Folder Path",
+    "finalStatus":"Status",
+    "beStatus":"BackEnd Status",
+    "feStatus":"FrontEnd Status",
+    "options":"Options",
+    "deployedDate":"Deployed Date",
+    "status" : {
+      "-1": "Fail",
+      "0": "",
+      "1": "Successful"
+    }
+  }
+}
