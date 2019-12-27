@@ -2,6 +2,7 @@
   "name": "appgen-components",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/index.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "1.2.12",
     "@fortawesome/free-brands-svg-icons": "5.6.3",
@@ -20,7 +21,6 @@
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-redux": "7.1.0",
-    "react-scripts": "^3.3.0",
     "react-select": "3.0.4",
     "rebass": "3.1.1",
     "redux-logger": "3.0.6",
@@ -29,10 +29,8 @@
     "styled-system": "5.0.12"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "unittest": "CI=true NODE_PATH=./src react-scripts test --env=jsdom --coverage --updateSnapshot",
+    "build": "rm -rf dist && babel src -d dist --copy-files",
+    "prepare": "npm run build",
     "lint": "eslint ."
   },
   "eslintConfig": {
@@ -50,6 +48,17 @@
     }
   },
   "devDependencies": {
+    "@babel/cli": "7.6.0",
+    "@babel/core": "7.6.0",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/plugin-transform-runtime": "7.6.0",
+    "@babel/preset-env": "7.6.0",
+    "@babel/preset-react": "7.0.0",
+    "@babel/runtime": "7.6.0",
+    "babel-eslint": "10.0.3",
+    "babel-loader": "8.0.6",
+    "babel-plugin-inline-react-svg": "1.1.0",
+    "babel-plugin-styled-components": "1.10.6",
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",
     "enzyme-to-json": "3.3.5",
