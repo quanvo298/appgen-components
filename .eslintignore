@@ -10,4 +10,4 @@ storybook-static/*
 .scannerwork/*
 .next/*
 serviceWorker.js
-.dist/*
+dist

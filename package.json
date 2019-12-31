@@ -44,7 +44,7 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "yarn unittest && yarn lint"
+      "pre-commit": "yarn lint"
     }
   },
   "devDependencies": {
