@@ -2,7 +2,7 @@ import React from 'react';
 import Row from 'components/Container/Row';
 import Wrapper from 'components/Container/Wrapper';
 import BasicForm from '../BasicForm/BasicFormWidget';
-import ContentList from '../ContentList';
+import ContentList from '../ContentList/ContentList';
 
 const BasicFormPageLayout = ({ formConfig, contentListConfig }) => (
   <Wrapper>
