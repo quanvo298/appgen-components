@@ -36,7 +36,7 @@ import Validator from 'helper/Validator';
 import en from 'locales/en';
 import BasicTheme from 'theme/BasicTheme/BasicTheme';
 import NavBar from 'theme/BasicTheme/NavBar';
-import navigation_config from 'theme/BasicTheme/navigation.config';
+import navigationconfig from 'theme/BasicTheme/navigation.config';
 import CollectionUtils from 'utils/CollectionUtils';
 import DateUtils from 'utils/DateUtils';
 import LocalProvider from 'utils/LocalProvider';
@@ -46,4 +46,52 @@ import constant from 'utils/constant';
 import withPolyglot from 'utils/withPolyglot';
 import withSubscription from 'utils/withSubscription';
 
-export { AppBar,Header,AutoSelect,BasicBoxWidget,BasicElementForm,BasicFormLayout,BasicFormProperties,BasicFormWidget,withBasicForm,BasicFormPageLayout,BasicButton,Column,Container,DragItem,DragableContainer,Row,Wrapper,ContentList,ConfirmDialog,DeleteConfirmDialog,BasicEditor,ElementFormEditor,Heading,ListItemWidget,Head,TableEditable,TableRow,TableView,Text,ToolbarButton,BasicFormHelper,ModelComponentHelper,ModelHelper,TableEditorHelper,Validator,en,BasicTheme,NavBar,navigation_config,CollectionUtils,DateUtils,LocalProvider,PubSub,StringUtils,constant,withPolyglot,withSubscription, }
+export {
+  AppBar,
+  Header,
+  AutoSelect,
+  BasicBoxWidget,
+  BasicElementForm,
+  BasicFormLayout,
+  BasicFormProperties,
+  BasicFormWidget,
+  withBasicForm,
+  BasicFormPageLayout,
+  BasicButton,
+  Column,
+  Container,
+  DragItem,
+  DragableContainer,
+  Row,
+  Wrapper,
+  ContentList,
+  ConfirmDialog,
+  DeleteConfirmDialog,
+  BasicEditor,
+  ElementFormEditor,
+  Heading,
+  ListItemWidget,
+  Head,
+  TableEditable,
+  TableRow,
+  TableView,
+  Text,
+  ToolbarButton,
+  BasicFormHelper,
+  ModelComponentHelper,
+  ModelHelper,
+  TableEditorHelper,
+  Validator,
+  en,
+  BasicTheme,
+  NavBar,
+  navigationconfig,
+  CollectionUtils,
+  DateUtils,
+  LocalProvider,
+  PubSub,
+  StringUtils,
+  constant,
+  withPolyglot,
+  withSubscription,
+};
