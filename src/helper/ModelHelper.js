@@ -1,4 +1,4 @@
-import { SearchOperation } from 'utils/constant';
+import { SearchOperation } from '../utils/constant';
 
 export const ENTITY_PROPERTIES_SYSTEM = {
   ID: 'id',

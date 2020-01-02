@@ -1,17 +1,17 @@
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { usePolyglot } from 'utils/LocalProvider';
 import AppBar from './AppBar';
+import withPolyglot from '../../utils/withPolyglot';
 
-const Header = () => (
+const Header = ({polyglot}) => (
   <AppBar>
     <Toolbar>
       <Typography variant="h6" color="inherit">
-        {usePolyglot().t('app.title')}
+        {polyglot.t('app.title')}
       </Typography>
     </Toolbar>
   </AppBar>
 );
 
-export default Header;
+export default withPolyglot(Header);

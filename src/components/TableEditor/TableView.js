@@ -3,9 +3,9 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import { withTableStyles } from 'utils/withBasicStyles';
-import Wrapper from 'components/Container/Wrapper';
-import { displayCellValue } from 'helper/TableEditorHelper';
+import { withTableStyles } from '../../utils/withBasicStyles';
+import Wrapper from '../Container/Wrapper';
+import { displayCellValue } from '../../helper/TableEditorHelper';
 import Head from './Head';
 
 const TableView = ({ columns, gridData, classes }) => (

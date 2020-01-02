@@ -1,6 +1,6 @@
 import React from 'react';
-import { usePolyglot } from 'utils/LocalProvider';
-import ToolbarButton from 'components/Toolbar/ToolbarButton';
+import { usePolyglot } from '../../utils/LocalProvider';
+import ToolbarButton from '../Toolbar/ToolbarButton';
 import ElementForm from './BasicElementForm';
 import Wrapper from '../Container/Wrapper';
 

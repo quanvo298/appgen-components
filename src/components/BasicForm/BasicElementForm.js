@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import FormLabel from '@material-ui/core/InputLabel';
-import Row from 'components/Container/Row';
-import Wrapper from 'components/Container/Wrapper';
-import ElementFormEditor from 'components/ElementFormEditor';
-import { BaiscFormPropertyComponentType } from 'utils/constant';
-import { FUNCTION_VALIDATE } from 'helper/BasicFormHelper';
+import Row from '../Container/Row';
+import Wrapper from '../Container/Wrapper';
+import ElementFormEditor from '../ElementFormEditor/ElementFormEditor';
+import { BaiscFormPropertyComponentType } from '../../utils/constant';
+import { FUNCTION_VALIDATE } from '../../helper/BasicFormHelper';
 
 const LABEL_WIDTH = 200;
 

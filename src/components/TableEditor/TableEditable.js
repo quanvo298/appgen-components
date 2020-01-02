@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { withTableStyles } from 'utils/withBasicStyles';
-import { usePolyglot } from 'utils/LocalProvider';
-import { validate, processErrors } from 'helper/TableEditorHelper';
+import { withTableStyles } from '../../utils/withBasicStyles';
+import { usePolyglot } from '../../utils/LocalProvider';
+import { validate, processErrors } from '../../helper/TableEditorHelper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import Wrapper from 'components/Container/Wrapper';
-import BasicButton from 'components/Button/BasicButton';
-import { isNotEmpty } from 'utils/CollectionUtils';
-import { processInitialValues } from 'helper/BasicFormHelper';
+import Wrapper from '../Container/Wrapper';
+import BasicButton from '../Button/BasicButton';
+import { isNotEmpty } from '../../utils/CollectionUtils';
+import { processInitialValues } from '../../helper/BasicFormHelper';
 import Head from './Head';
 import TableRow from './TableRow';
 

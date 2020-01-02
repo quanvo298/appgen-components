@@ -1,7 +1,7 @@
 import React from 'react';
-import TableEditable from 'components/TableEditor/TableEditable';
-import BasicEditor from 'components/ElementFormEditor/BasicEditor';
-import { TABLE_MODE } from 'utils/constant';
+import TableEditable from '../TableEditor/TableEditable';
+import BasicEditor from '../ElementFormEditor/BasicEditor';
+import { TABLE_MODE } from '../../utils/constant';
 
 const GridComponent = ({ component, name, value, onInputChange, forwardRef, ...restProps }) => (
   <TableEditable

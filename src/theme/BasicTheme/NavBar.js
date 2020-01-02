@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { withNavigatorStyles } from 'utils/withBasicStyles';
+import { withNavigatorStyles } from '../../utils/withBasicStyles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -8,10 +8,10 @@ import {
   ListItemCategory,
   ListItemCategoryHeader,
   ListItemWidget,
-} from 'components/ListItemWidget';
+} from '../../components/ListItemWidget/ListItemWidget';
 import { navigate } from '@reach/router';
 import { Divider } from '@material-ui/core';
-import { isNotEmpty } from 'utils/CollectionUtils';
+import { isNotEmpty } from '../../utils/CollectionUtils';
 
 const ListItemCategoryWrapper = ({ title, icon, href }) => {
   const hanldeClick = event => {

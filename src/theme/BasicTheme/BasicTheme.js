@@ -1,7 +1,7 @@
 import React from 'react';
-import { withLayoutStyles } from 'utils/withBasicStyles';
-import Wrapper from 'components/Container/Wrapper';
-import Header from 'components/AppBar/Header';
+import { withLayoutStyles } from '../../utils/withBasicStyles';
+import Wrapper from '../../components/Container/Wrapper';
+import Header from '../../components/AppBar/Header';
 import NavBar from './NavBar';
 
 const BasicThemeWidget = ({ classes, navigation, children }) => (

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { displayCellValue } from 'helper/TableEditorHelper';
+import { displayCellValue } from '../../helper/TableEditorHelper';
 import TableCell from '@material-ui/core/TableCell';
 import TableRowMaterial from '@material-ui/core/TableRow';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BasicElementForm from 'components/BasicForm/BasicElementForm';
-import { TABLE_MODE } from 'utils/constant';
+import BasicElementForm from '../BasicForm/BasicElementForm';
+import { TABLE_MODE } from '../../utils/constant';
 
 const CellValue = ({
   row,

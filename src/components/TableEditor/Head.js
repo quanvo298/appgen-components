@@ -2,7 +2,7 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { isNotEmpty } from 'utils/CollectionUtils';
+import { isNotEmpty } from '../../utils/CollectionUtils';
 
 const MIN_WIDTH = 100;
 const ICON_WIDTH = 16;

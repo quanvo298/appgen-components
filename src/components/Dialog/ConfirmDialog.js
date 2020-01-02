@@ -4,8 +4,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Slide from '@material-ui/core/Slide';
-import BasicButton from 'components/Button/BasicButton';
-import { usePolyglot } from 'utils/LocalProvider';
+import BasicButton from '../Button/BasicButton';
+import { usePolyglot } from '../../utils/LocalProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

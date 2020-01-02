@@ -7,8 +7,8 @@ import {
   handleValidatePropertyBeforeSaved,
   handleValidateUpdatedItemBeforeSaved,
   handleAfterSaved,
-} from 'helper/BasicFormHelper';
-import withPolyglot from 'utils/withPolyglot';
+} from '../../helper/BasicFormHelper';
+import withPolyglot from '../../utils/withPolyglot';
 
 const withBasicForm = formConfig => ComposedComponent => {
   class BasicFormComponent extends Component {

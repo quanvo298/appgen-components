@@ -7,12 +7,12 @@ import {
   validateUpdatedItemBeforeSaved,
   checkElementByRegExp,
   processInitialValues,
-} from 'helper/BasicFormHelper';
-import withPolyglot from 'utils/withPolyglot';
-import { withBasicFormStyles } from 'utils/withBasicStyles';
-import { createValidatorStrategy } from 'helper/Validator';
-import PubSub, { SUBSCRIPTION } from 'utils/PubSub';
-import { NotificationKind } from 'utils/constant';
+} from '../../helper/BasicFormHelper';
+import withPolyglot from '../../utils/withPolyglot';
+import { withBasicFormStyles } from '../../utils/withBasicStyles';
+import { createValidatorStrategy } from '../../helper/Validator';
+import PubSub, { SUBSCRIPTION } from '../../utils/PubSub';
+import { NotificationKind } from '../../utils/constant';
 import BasicFormLayout from './BasicFormLayout';
 
 class BasicFormProperties extends Component {

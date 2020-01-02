@@ -1,5 +1,5 @@
 import React from 'react';
-import BasicButton from 'components/Button/BasicButton';
+import BasicButton from '../Button/BasicButton';
 
 const ToolbarButton = ({ toolbarButtons }) =>
   toolbarButtons &&

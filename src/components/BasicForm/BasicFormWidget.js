@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { withBasicFormStyles } from 'utils/withBasicStyles';
-import { ModeFormType } from 'utils/constant';
-import { usePolyglot } from 'utils/LocalProvider';
-import DeleteConfirmDialog from 'components/Dialog/DeleteConfirmDialog';
-import BasicBoxWidget from 'components/BasicBoxWidget';
-import { getEntityId } from 'helper/ModelHelper';
-import ToolbarButton from 'components/Toolbar/ToolbarButton';
+import { withBasicFormStyles } from '../../utils/withBasicStyles';
+import { ModeFormType } from '../../utils/constant';
+import { usePolyglot } from '../../utils/LocalProvider';
+import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
+import BasicBoxWidget from '../BasicBoxWidget/BasicBoxWidget';
+import { getEntityId } from '../../helper/ModelHelper';
+import ToolbarButton from '../Toolbar/ToolbarButton';
 import BaseFormProperties from './BasicFormProperties';
 
 const ButtonsBox = ({ supportNew, supportDelete, handleAdd, handleDelete, toolbarButtons }) => {

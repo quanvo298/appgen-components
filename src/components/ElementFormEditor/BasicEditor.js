@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import AutoSelect from '../AutoSelect/AutoSelect';
-import { TrueOrFalseOptions } from '../../config';
+import { TrueOrFalseOptions } from '../config';
 
 const processSelectComponent = props => {
   if (props.type === 'boolean') {

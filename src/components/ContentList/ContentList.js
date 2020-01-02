@@ -1,6 +1,6 @@
 import React from 'react';
-import TableEditable from 'components/TableEditor/TableEditable';
-import BasicBoxWidget from 'components/BasicBoxWidget';
+import TableEditable from '../TableEditor/TableEditable';
+import BasicBoxWidget from '../BasicBoxWidget/BasicBoxWidget';
 
 const ContentList = ({ title, init, gridData }) => (
   <BasicBoxWidget title={title}>

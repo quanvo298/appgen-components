@@ -1,5 +1,5 @@
 import React from 'react';
-import Wrapper from 'components/Container/Wrapper';
+import Wrapper from '../Container/Wrapper';
 
 const DragItem = ({ item, itemType, onDragStart, onDragEnd, ...restProps }) => {
   const handleDragStart = event => {

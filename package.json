@@ -2,7 +2,7 @@
   "name": "appgen-components",
   "version": "0.1.0",
   "private": true,
-  "main": "dist/index.js",
+  "main": "wqappgen/index.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "1.2.12",
     "@fortawesome/free-brands-svg-icons": "5.6.3",
@@ -29,7 +29,7 @@
     "styled-system": "5.0.12"
   },
   "scripts": {
-    "build": "rm -rf dist && babel src -d dist --copy-files",
+    "build": "rm -rf wqappgen && babel src -d wqappgen --copy-files",
     "prepare": "npm run build",
     "lint": "eslint ."
   },

@@ -1,0 +1,26 @@
+{
+  "app" : {"title": "AppGen Framework"},
+  "message" : {
+    "confirm": {
+      "delete": "Are you sure to delete this item ?"
+    },
+    "error" : {
+      "existed": "%{label} existed",
+      "invalid": "%{label} is invalid"
+    }
+  },
+  "btn" : {
+    "new": "New",
+    "delete": "delete", 
+    "agree":"Agree", 
+    "disagree":"Disagree", 
+    "save" : "Save", 
+    "reset":"Reset",
+    "addFormPage": "Add FP",
+    "addForm": "Add Form",
+    "addGrid": "Add Grid",
+    "addPage": "Add Page",
+    "login":"Login",
+    "register": "Register"
+  }
+}

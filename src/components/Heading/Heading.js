@@ -1,5 +1,5 @@
 import React from 'react';
-import Text from 'components/Text';
+import Text from '../Text/Text';
 
 const TextForHeading = (name, headingProps, defaultProps) => {
   function HeadingText(props) {

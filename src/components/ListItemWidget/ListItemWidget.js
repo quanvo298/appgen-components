@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Wrapper from 'components/Container/Wrapper';
-import BasicButton from 'components/Button/BasicButton';
-import { makeListItemStyles } from 'utils/withBasicStyles';
-import { usePolyglot } from 'utils/LocalProvider';
+import Wrapper from '../Container/Wrapper';
+import BasicButton from '../Button/BasicButton';
+import { makeListItemStyles } from '../../utils/withBasicStyles';
+import { usePolyglot } from '../../utils/LocalProvider';
 
 const ListItemComponent = ({
   iconComponent,

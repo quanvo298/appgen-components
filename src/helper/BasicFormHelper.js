@@ -1,6 +1,6 @@
-import { ModeFormType } from 'utils/constant';
-import { getItemByName } from 'utils/CollectionUtils';
-import { containString } from 'utils/StringUtils';
+import { ModeFormType } from '../utils/constant';
+import { getItemByName } from '../utils/CollectionUtils';
+import { containString } from '../utils/StringUtils';
 import { validateElement } from './Validator';
 import { getEntityId } from './ModelHelper';
 
