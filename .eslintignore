@@ -11,3 +11,4 @@ storybook-static/*
 .next/*
 serviceWorker.js
 wqappgen
+babel.config.js
