@@ -1,5 +1,5 @@
 import React from 'react';
-import Wrapper from '../Container/Wrapper';
+import Wrapper from './Wrapper';
 import { withDragableStyles } from '../../utils/withBasicStyles';
 
 const DragableContainer = ({ classes, onDrop, supportDrop, children, notPadding }) => {

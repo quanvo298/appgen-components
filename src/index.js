@@ -20,7 +20,7 @@ import ConfirmDialog from './components/Dialog/ConfirmDialog';
 import DeleteConfirmDialog from './components/Dialog/DeleteConfirmDialog';
 import BasicEditor from './components/ElementFormEditor/BasicEditor';
 import ElementFormEditor from './components/ElementFormEditor/ElementFormEditor';
-import {H1,H2,H3,H4,H5,H6,H7} from './components/Heading/Heading';
+import { H1, H2, H3, H4, H5, H6, H7 } from './components/Heading/Heading';
 import ListItemWidget from './components/ListItemWidget/ListItemWidget';
 import Head from './components/TableEditor/Head';
 import TableEditable from './components/TableEditor/TableEditable';
@@ -29,4 +29,41 @@ import TableView from './components/TableEditor/TableView';
 import Text from './components/Text/Text';
 import ToolbarButton from './components/Toolbar/ToolbarButton';
 
-export { AppBar,Header,AutoSelect,BasicBoxWidget,BasicElementForm,BasicFormLayout,BasicFormProperties,BasicFormWidget,withBasicForm,BasicFormPageLayout,BasicButton,Column,Container,DragItem,DragableContainer,Row,Wrapper,ContentList,ConfirmDialog,DeleteConfirmDialog,BasicEditor,ElementFormEditor,H1,H2,H3,H4,H5,H6,H7,ListItemWidget,Head,TableEditable,TableRow,TableView,Text,ToolbarButton, }
+export {
+  AppBar,
+  Header,
+  AutoSelect,
+  BasicBoxWidget,
+  BasicElementForm,
+  BasicFormLayout,
+  BasicFormProperties,
+  BasicFormWidget,
+  withBasicForm,
+  BasicFormPageLayout,
+  BasicButton,
+  Column,
+  Container,
+  DragItem,
+  DragableContainer,
+  Row,
+  Wrapper,
+  ContentList,
+  ConfirmDialog,
+  DeleteConfirmDialog,
+  BasicEditor,
+  ElementFormEditor,
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+  H7,
+  ListItemWidget,
+  Head,
+  TableEditable,
+  TableRow,
+  TableView,
+  Text,
+  ToolbarButton,
+};

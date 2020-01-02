@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { withNavigatorStyles } from '../../utils/withBasicStyles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ExpandLess from '@material-ui/icons/ExpandLess';
+import { navigate } from '@reach/router';
+import { Divider } from '@material-ui/core';
 import {
   ListItemCategory,
   ListItemCategoryHeader,
   ListItemWidget,
 } from '../../components/ListItemWidget/ListItemWidget';
-import { navigate } from '@reach/router';
-import { Divider } from '@material-ui/core';
+import { withNavigatorStyles } from '../../utils/withBasicStyles';
 import { isNotEmpty } from '../../utils/CollectionUtils';
 
 const ListItemCategoryWrapper = ({ title, icon, href }) => {

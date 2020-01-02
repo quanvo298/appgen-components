@@ -19,7 +19,7 @@ const LocalProvider = ({ children, locale, phrases }) => {
 export default LocalProvider;
 
 LocalProvider.defaultProperties = {
-  phrases: defaultPhares
-}
+  phrases: defaultPhares,
+};
 
 export const usePolyglot = () => useContext(LocalProviderCtx);

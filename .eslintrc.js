@@ -45,6 +45,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'guard-for-in':'off',
     'no-continue': 'off',
-    'react/no-danger': 'off'
+    'react/no-danger': 'off',
+    "import/no-cycle": 'off'
   },
 };

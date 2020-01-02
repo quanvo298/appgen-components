@@ -29,8 +29,9 @@
     "styled-system": "5.0.12"
   },
   "scripts": {
+    "buildDev": "rm -rf ../externalLib/appgen-components/core && babel src -d ../externalLib/appgen-components/core --copy-files",
     "build": "rm -rf core && babel src -d core --copy-files",
-    "prepare": "npm run build",
+    "prepare": "npm run buildDev",
     "lint": "eslint ."
   },
   "eslintConfig": {
@@ -44,7 +45,7 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build"
+      "pre-commit": "npm run lint"
     }
   },
   "devDependencies": {
