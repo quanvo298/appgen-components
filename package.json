@@ -31,7 +31,7 @@
   "scripts": {
     "buildDev": "rm -rf ../externalLib/appgen-components/core && babel src -d ../externalLib/appgen-components/core --copy-files",
     "build": "rm -rf core && babel src -d core --copy-files",
-    "prepare": "npm run buildDev",
+    "prepare": "npm run build",
     "lint": "eslint ."
   },
   "eslintConfig": {
