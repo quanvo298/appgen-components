@@ -247,13 +247,14 @@ class BasicFormProperties extends Component {
   }
 
   render() {
-    const { elements, classes, onCellChange } = this.props;
+    const { elements, classes, onCellChange, FormComponentLayout } = this.props;
     const { values } = this.state;
     const supportSave = this.doSave();
     const supportReset = this.doReset();
     return (
       <BasicFormLayout
         classes={classes}
+        FormComponentLayout={FormComponentLayout}
         formToolbarButton={this.proceedToolbarButton()}
         elements={elements}
         elementsValue={values}

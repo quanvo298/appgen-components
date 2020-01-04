@@ -27,6 +27,7 @@ const ButtonsBox = ({ supportSave, supportReset, onSave, onReset, toolbarButtons
 };
 
 const BasicFormLayout = ({
+  FormComponentLayout,
   elements,
   elementsValue,
   classes,
@@ -40,7 +41,15 @@ const BasicFormLayout = ({
 }) => (
   <Wrapper>
     <Wrapper>
-      {elements &&
+      {FormComponentLayout ? (
+        <FormComponentLayout
+          elements={elements}
+          elementsValue={elementsValue}
+          forwardRef={forwardRef}
+          {...restProps}
+        />
+      ) : (
+        elements &&
         elements.map((element, index) => (
           <ElementForm
             ref={forwardRef}
@@ -49,7 +58,8 @@ const BasicFormLayout = ({
             {...restProps}
             value={elementsValue[element.name]}
           />
-        ))}
+        ))
+      )}
     </Wrapper>
     <Wrapper className={classes.menuWrapper}>
       <ButtonsBox
