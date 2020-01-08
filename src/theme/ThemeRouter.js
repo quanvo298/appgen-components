@@ -1,5 +1,5 @@
 import React from 'react';
-import withPolyglot from 'utils/withPolyglot';
+import withPolyglot from '../utils/withPolyglot';
 
 const ThemeRouter = ({ page, theme, themeProps, polyglot, ...restProps }) => {
   const PageWrapper = page;

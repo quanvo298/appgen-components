@@ -67,8 +67,9 @@ class BasicFormWidget extends Component {
   };
 
   doDelete = () => {
-    const { disableDelete, onDelete, selectedItem } = this.props;
-    return disableDelete ? false : onDelete && selectedItem;
+    const { disableDelete, onDelete } = this.props;
+    const { modeForm } = this.state;
+    return disableDelete ? false : onDelete && modeForm === ModeFormType.UPDATE;
   };
 
   doAdd = () => {
