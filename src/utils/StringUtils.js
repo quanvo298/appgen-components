@@ -2,6 +2,12 @@ export const isBlank = str => !(str && str.trim && str.trim().length > 0);
 
 export const isNotBlank = str => !isBlank(str);
 
+export const isNumber = str => typeof str === 'number';
+
+export const isString = str => typeof str === 'string';
+
+export const isObject = str => typeof str === 'object';
+
 export const removeAllWhiteSpace = str => str.replace(/\s/g, '');
 
 export const containString = (stringValue, regExp) => {

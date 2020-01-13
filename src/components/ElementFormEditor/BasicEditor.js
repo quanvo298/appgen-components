@@ -4,36 +4,30 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import AutoSelect from '../AutoSelect/AutoSelect';
 import { TrueOrFalseOptions } from '../config';
+import { isDatePropertyType } from '../../utils/FormatUtils';
+import { formatToNativeDateFormComponent } from '../../utils/DateUtils';
+import NumberField from '../NumberField/NumberField';
+import { isObject } from '../../utils/StringUtils';
 
 const processSelectComponent = props => {
-  if (props.type === 'boolean') {
-    return (
-      <Select
-        native
-        fullWidth
-        error={props.error}
-        value={props.value}
-        onChange={props.onInputChange && props.onInputChange(props.name)}
-      >
-        <option value="" />
-        {TrueOrFalseOptions.map((option, index) => (
-          <option value={option.value} key={index}>
-            {option.label}
-          </option>
-        ))}
-      </Select>
-    );
+  const { type, component } = props;
+  const componentData = type === 'boolean' ? TrueOrFalseOptions : component.data;
+  const optionEmpty = type === 'boolean' ? true : component.optionEmpty;
+  const propsValueAtt = component.valueAtt || 'value';
+  let propsValue = props.value || '';
+  if (isObject(propsValue)) {
+    propsValue = propsValue[propsValueAtt] || '';
   }
   return (
     <Select
       native
       fullWidth
       error={props.error}
-      value={props.value}
+      value={propsValue}
       onChange={props.onInputChange && props.onInputChange(props.name)}
     >
-      {props.component.optionEmpty && <option value="" />}
-      {props.component.data.map((option, index) => (
+      {optionEmpty && <option value="" />}
+      {componentData.map((option, index) => (
         <option value={option.value} key={index}>
           {option.label}
         </option>
@@ -51,6 +45,8 @@ const processAutoSelectComponent = props => (
   />
 );
 
+const processNumberComponent = props => <NumberField {...props} />;
+
 const processBooleanType = props => (
   <Checkbox
     checked={props.value}
@@ -58,6 +54,13 @@ const processBooleanType = props => (
     value="true"
   />
 );
+
+const getValueBaseonType = (cellValue, type) => {
+  if (cellValue && isDatePropertyType(type)) {
+    return formatToNativeDateFormComponent(new Date(cellValue));
+  }
+  return cellValue || '';
+};
 
 const processOtherType = ({
   name,
@@ -79,7 +82,7 @@ const processOtherType = ({
     }}
     onChange={onInputChange && onInputChange(name)}
     onKeyPress={onKeyPress && onKeyPress(name)}
-    value={value || ''}
+    value={getValueBaseonType(value, type)}
     type={type}
     disabled={disabled}
     InputProps={{ ...inputProps }}
@@ -90,6 +93,8 @@ const ElementTagBaseOnType = props => {
   switch (props.type) {
     case 'boolean':
       return processBooleanType(props);
+    case 'number':
+      return processNumberComponent(props);
     default:
       return processOtherType(props);
   }

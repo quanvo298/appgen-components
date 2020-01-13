@@ -25,6 +25,8 @@ export const PropertyDataType = {
   Boolean: 'boolean',
   Number: 'number',
   ArrayObject: 'arrayObject',
+  Date: 'date',
+  Object: 'object',
 };
 
 export const SearchOperation = {

@@ -5,6 +5,8 @@ import Wrapper from '../Container/Wrapper';
 import ElementFormEditor from '../ElementFormEditor/ElementFormEditor';
 import { BaiscFormPropertyComponentType } from '../../utils/constant';
 import { FUNCTION_VALIDATE } from '../../helper/BasicFormHelper';
+import { isObject } from '../../utils/StringUtils';
+import { isObjectPropertyType } from '../../utils/FormatUtils';
 
 const LABEL_WIDTH = 200;
 
@@ -87,12 +89,31 @@ class BasicElementForm extends Component {
     this.setState({ value, fromSetState: true });
   };
 
+  doSupportObjectValue = elementValue => {
+    const { type, component } = this.props;
+    return (
+      elementValue &&
+      !isObject(elementValue) &&
+      isObjectPropertyType(type) &&
+      component &&
+      component.data
+    );
+  };
+
+  processElementValue = elementValue => {
+    if (this.doSupportObjectValue(elementValue)) {
+      const { component } = this.props;
+      return component.data.find(comp => comp.value === elementValue);
+    }
+    return elementValue;
+  };
+
   hanldeInputChange = (name, valueKey) => event => {
     const { onInputChange } = this.props;
     const { target } = event;
     const elementValue = valueKey ? target[valueKey] : target.value;
     if (onInputChange) {
-      onInputChange(name, elementValue)(event);
+      onInputChange(name, this.processElementValue(elementValue))(event);
     }
     if (this.doRender()) {
       this.setState({ value: elementValue, fromSetState: true });

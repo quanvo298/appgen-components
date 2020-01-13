@@ -4,7 +4,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { isNotEmpty } from '../../utils/CollectionUtils';
 
-const MIN_WIDTH = 100;
+const MIN_WIDTH = 120;
 const ICON_WIDTH = 16;
 
 const Head = ({ columns, classes, mode }) => (

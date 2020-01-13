@@ -1,4 +1,5 @@
 import { PROPERTIES_SYSTEM, validateElements } from './BasicFormHelper';
+import { formatValueBaseOnType } from '../utils/FormatUtils';
 
 export const displayCellValue = (row, column, onFormatCellValue) => {
   const { name: columnName } = column;
@@ -14,7 +15,7 @@ export const displayCellValue = (row, column, onFormatCellValue) => {
       : cellValue[PROPERTIES_SYSTEM.Label];
   }
 
-  return cellValue;
+  return formatValueBaseOnType({ cellName: columnName, cellValue, row, column, type: column.type });
 };
 
 export const validate = (gridData, elements) => {

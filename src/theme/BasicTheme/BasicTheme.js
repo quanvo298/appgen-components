@@ -20,7 +20,7 @@ const BasicThemeWidget = ({ classes, navigation, children }) => (
     </nav>
     <Wrapper className={classes.appContent}>
       <Header />
-      <Wrapper className={classes.appPageContent}>{children}</Wrapper>
+      <main className={classes.mainContent}>{children}</main>
     </Wrapper>
   </Wrapper>
 );

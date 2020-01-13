@@ -4,6 +4,14 @@ import defaultPhares from '../locales';
 
 export const LocalProviderCtx = createContext();
 
+let currentLocale = 'en';
+
+const setCurrentLocale = (locale = 'en') => {
+  currentLocale = locale;
+};
+
+export const getCurrentLocale = () => currentLocale;
+
 const LocalProvider = ({ children, locale, phrases }) => {
   const correctPhrases = phrases || defaultPhares;
   let mergeredPhrases = correctPhrases[locale];
@@ -15,6 +23,9 @@ const LocalProvider = ({ children, locale, phrases }) => {
     locale,
     phrases: mergeredPhrases,
   });
+
+  setCurrentLocale(locale);
+
   return (
     <LocalProviderCtx.Provider value={polyglot}>
       {React.Children.only(children)}
