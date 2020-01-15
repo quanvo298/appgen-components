@@ -169,7 +169,7 @@ const TableEditorStyles = () => ({
 const AutoSuggestStyles = theme => ({
   input: {
     display: 'flex',
-    padding: 0,
+    padding: '6px 0px',
   },
   valueContainer: {
     display: 'flex',

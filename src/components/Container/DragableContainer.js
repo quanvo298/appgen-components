@@ -2,7 +2,14 @@ import React from 'react';
 import Wrapper from './Wrapper';
 import { withDragableStyles } from '../../utils/withBasicStyles';
 
-const DragableContainer = ({ classes, onDrop, supportDrop, children, notPadding }) => {
+const DragableContainer = ({
+  classes,
+  onDrop,
+  supportDrop,
+  children,
+  notPadding,
+  ...restProps
+}) => {
   const onDragLeave = event => {
     event.target.style.border = 'none';
     event.target.style.background = 'none';
@@ -31,6 +38,7 @@ const DragableContainer = ({ classes, onDrop, supportDrop, children, notPadding 
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
       onDrop={onDrop && handleDrop}
+      {...restProps}
     >
       {children}
     </Wrapper>

@@ -72,10 +72,10 @@ export function updateItemFromList(item, idValue, list, idProp) {
 }
 
 export function deleteItemFromList(idValue, list, idProp) {
-  const idPropName = idProp || ENTITY_PROPERTIES_SYSTEM.ID;
   for (let index = 0; index < list.length; index++) {
     const itemFromList = list[index];
-    if (itemFromList[idPropName] === idValue) {
+    const compared = idProp ? itemFromList[idProp] : getEntityId(itemFromList);
+    if (compared === idValue) {
       list.splice(index, 1);
       break;
     }
