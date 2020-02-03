@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TableRowMaterial from '@material-ui/core/TableRow';
-import CellValue, { EditIconCell, DeleteIconCell } from './TableCell';
+import { CellValue, EditIconCell, DeleteIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
 
 class TableRow extends Component {

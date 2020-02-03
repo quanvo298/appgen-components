@@ -4,6 +4,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { displayCellValue } from '../../helper/TableEditorHelper';
 import BasicElementForm from '../BasicForm/BasicElementForm';
+import { TABLE_MODE } from '../../utils/constant';
 
 export const CellValue = ({
   row,
