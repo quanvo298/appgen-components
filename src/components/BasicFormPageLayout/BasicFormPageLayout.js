@@ -6,10 +6,12 @@ import ContentList from '../ContentList/ContentList';
 
 const BasicFormPageLayout = ({ formConfig, contentListConfig }) => (
   <Wrapper>
-    <BasicForm {...formConfig} />
-    <Row pt={3}>
-      <ContentList {...contentListConfig} />
-    </Row>
+    {formConfig && <BasicForm {...formConfig} />}
+    {contentListConfig && (
+      <Row pt={3}>
+        <ContentList {...contentListConfig} />
+      </Row>
+    )}
   </Wrapper>
 );
 

@@ -58,9 +58,10 @@ class BasicElementForm extends Component {
     return null;
   }
 
+  getEditorRef = () => this.editorRef.current;
+
   validate = () => {
-    const elemenentFormValidate =
-      this.editorRef.current && this.editorRef.current[FUNCTION_VALIDATE];
+    const elemenentFormValidate = this.getEditorRef() && this.getEditorRef()[FUNCTION_VALIDATE];
     if (elemenentFormValidate) {
       return elemenentFormValidate();
     }

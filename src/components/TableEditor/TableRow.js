@@ -1,48 +1,8 @@
 import React, { Component } from 'react';
-import TableCell from '@material-ui/core/TableCell';
 import TableRowMaterial from '@material-ui/core/TableRow';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { displayCellValue } from '../../helper/TableEditorHelper';
-import BasicElementForm from '../BasicForm/BasicElementForm';
+import CellValue, { EditIconCell, DeleteIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
 
-const CellValue = ({
-  row,
-  column,
-  overrideColumn = {},
-  mode,
-  forwardRef,
-  onFormatCellValue,
-  ...restProps
-}) =>
-  TABLE_MODE.Edit === mode ? (
-    <TableCell>
-      <BasicElementForm
-        {...column}
-        {...overrideColumn}
-        {...restProps}
-        value={row[column.name]}
-        supportFormControl={false}
-        ref={forwardRef}
-      />
-    </TableCell>
-  ) : (
-    <TableCell>{displayCellValue(row, column, onFormatCellValue)}</TableCell>
-  );
-
-const EditIconCell = ({ mode, onClick }) =>
-  TABLE_MODE.View === mode && (
-    <TableCell width={16}>
-      <EditIcon onClick={onClick} />
-    </TableCell>
-  );
-
-const DeleteIconCell = ({ onClick }) => (
-  <TableCell width={16}>
-    <DeleteIcon onClick={onClick} />
-  </TableCell>
-);
 class TableRow extends Component {
   constructor(props) {
     super(props);

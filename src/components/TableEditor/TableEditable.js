@@ -54,6 +54,8 @@ class TableEditable extends Component {
     }
   };
 
+  getRowRef = rowIndexed => this.rowRefs[rowIndexed];
+
   validate = () => {
     const { columns } = this.props;
     const { gridData } = this.state;

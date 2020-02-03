@@ -34,6 +34,7 @@ class BasicFormWidget extends Component {
   constructor(props) {
     super(props);
     this.deleteDialogRef = React.createRef();
+    this.baseFormPropertiesRef = React.createRef();
     this.state = {
       modeForm: ModeFormType.NEW,
     };
@@ -77,6 +78,8 @@ class BasicFormWidget extends Component {
     return onAddNew;
   };
 
+  getBaseFormPropertiesRef = () => this.baseFormPropertiesRef.current;
+
   render() {
     const { classes, title, toolbarButtons } = this.props;
     const { modeForm } = this.state;
@@ -93,7 +96,12 @@ class BasicFormWidget extends Component {
     );
     return (
       <BasicBoxWidget title={title} buttonsBox={ButtonsBoxInstance}>
-        <BaseFormProperties {...this.props} modeForm={modeForm} classes={classes} />
+        <BaseFormProperties
+          {...this.props}
+          modeForm={modeForm}
+          classes={classes}
+          ref={this.baseFormPropertiesRef}
+        />
         <DeleteConfirmDialog onConfirm={this.makeSureDelete} ref={this.deleteDialogRef} />
       </BasicBoxWidget>
     );
