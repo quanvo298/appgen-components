@@ -1,110 +1,19 @@
 import React, { Component } from 'react';
-import classNames from 'classnames';
 import Select from 'react-select';
 import Typography from '@material-ui/core/Typography';
 import NoSsr from '@material-ui/core/NoSsr';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
-import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
+import { isArray } from 'util';
 import { withAutoSuggestStyles } from '../../utils/withBasicStyles';
+import Control from './Control';
+import NoOptionsMessage from './NoOptionsMessage';
+import { Menu, Option } from './Option';
+import { SingleValue, ValueContainer, MultiValue } from './Value';
 
-function NoOptionsMessage(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.noOptionsMessage}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-function inputComponent({ inputRef, ...props }) {
-  return <div ref={inputRef} {...props} />;
-}
-
-function Control(props) {
-  return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputComponent,
-        inputProps: {
-          className: props.selectProps.classes.input,
-          inputRef: props.innerRef,
-          children: props.children,
-          ...props.innerProps,
-        },
-      }}
-      {...props.selectProps.textFieldProps}
-    />
-  );
-}
-
-function Option(props) {
-  return (
-    <MenuItem
-      buttonRef={props.innerRef}
-      selected={props.isFocused}
-      component="div"
-      style={{
-        fontWeight: props.isSelected ? 500 : 400,
-      }}
-      {...props.innerProps}
-    >
-      {props.children}
-    </MenuItem>
-  );
-}
-
-function Placeholder(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.placeholder}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-function SingleValue(props) {
-  return (
-    <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
-      {props.children}
-    </Typography>
-  );
-}
-
-function ValueContainer(props) {
-  return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
-}
-
-function MultiValue(props) {
-  return (
-    <Chip
-      tabIndex={-1}
-      label={props.children}
-      className={classNames(props.selectProps.classes.chip, {
-        [props.selectProps.classes.chipFocused]: props.isFocused,
-      })}
-      onDelete={props.removeProps.onClick}
-      deleteIcon={<CancelIcon {...props.removeProps} />}
-    />
-  );
-}
-
-function Menu(props) {
-  return (
-    <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
-      {props.children}
-    </Paper>
-  );
-}
+const Placeholder = ({ selectProps, innerProps, children }) => (
+  <Typography color="textSecondary" className={selectProps.classes.placeholder} {...innerProps}>
+    {children}
+  </Typography>
+);
 
 const components = {
   Control,
@@ -117,50 +26,64 @@ const components = {
   ValueContainer,
 };
 
+const convertToOptions = ({ component = {} }) => {
+  const { data = [] } = component;
+  return data.reduce((jsonArray, element) => {
+    jsonArray.push({
+      value: element[component.valueAtt || 'value'],
+      label: element[component.labelAtt || 'label'],
+    });
+    return jsonArray;
+  }, []);
+};
+
 class AutoSelect extends Component {
   constructor(props) {
     super(props);
+    this.select = React.createRef();
     this.state = {
-      single: undefined,
+      autoSelectValue: undefined,
     };
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { single: valueFromState } = state;
+    const { autoSelectValue: valueFromState } = state;
     const { value: valueFromProps } = props;
-    if (valueFromState !== valueFromProps && valueFromProps) {
+    if (valueFromState !== valueFromProps) {
       return {
-        single: valueFromProps,
+        autoSelectValue: valueFromProps,
       };
     }
     return null;
   }
 
-  handleChange = () => selectedItem => {
+  componentDidUpdate() {
+    const { autoSelectValue } = this.state;
+    const { current } = this.select;
+    if (!autoSelectValue && current && current.select && current.select.hasValue()) {
+      current.select.clearValue();
+    }
+  }
+
+  handleChange = (selectedItem = {}) => {
+    const { multi } = this.props;
+    let { value } = selectedItem;
+    if (multi) {
+      value = isArray(selectedItem) ? selectedItem.map(item => item.value) : [];
+    }
     const target = {
-      target: { value: selectedItem && selectedItem.value, selectedItem, editor: this },
+      target: { value, selectedItem, editor: this },
     };
     this.props.onChange(target);
   };
 
-  convertToOptions = () => {
-    const { component = {} } = this.props;
-    const { data } = component;
-    const options = [];
-    if (data) {
-      data.forEach(element => {
-        options.push({
-          value: element[component.valueAtt || 'value'],
-          label: element[component.labelAtt || 'label'],
-        });
-      });
-    }
-    return options;
-  };
-
   getSelectedOption = options => {
-    const { single: singleValue } = this.state;
-    return options && options.find(({ value }) => value === singleValue);
+    const { autoSelectValue } = this.state;
+    const { multi } = this.props;
+    if (multi && autoSelectValue) {
+      return options && options.filter(({ value }) => autoSelectValue.includes(value));
+    }
+    return options && options.find(({ value }) => value === autoSelectValue);
   };
 
   getSelectStyle = () => {
@@ -177,18 +100,20 @@ class AutoSelect extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const options = this.convertToOptions();
+    const { classes, multi = false } = this.props;
+    const options = convertToOptions(this.props);
     return (
       <div className={classes.root}>
         <NoSsr>
           <Select
+            ref={this.select}
+            isMulti={multi}
             classes={classes}
             styles={this.getSelectStyle()}
             options={options}
             components={components}
             value={this.getSelectedOption(options)}
-            onChange={this.handleChange('single')}
+            onChange={this.handleChange}
             placeholder="Search element (start with a)"
             isClearable
           />

@@ -1,5 +1,5 @@
 const en = require('./en.json');
 
-module.exports = {
+export default {
   en,
 };

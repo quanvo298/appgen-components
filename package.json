@@ -2,51 +2,25 @@
   "name": "appgen-components",
   "version": "0.1.0",
   "private": true,
-  "main": "core/index.js",
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "1.2.12",
-    "@fortawesome/free-brands-svg-icons": "5.6.3",
-    "@fortawesome/free-regular-svg-icons": "5.7.0",
-    "@fortawesome/free-solid-svg-icons": "5.6.3",
-    "@fortawesome/react-fontawesome": "0.1.3",
-    "@material-ui/core": "4.4.0",
-    "@material-ui/icons": "4.2.1",
-    "@material-ui/styles": "4.3.3",
-    "@reach/router": "1.2.1",
-    "axios": "0.19.0",
-    "classnames": "2.2.6",
-    "clsx": "1.0.4",
-    "date-fns": "2.8.1",
-    "node-polyglot": "2.3.1",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
-    "react-redux": "7.1.0",
-    "react-select": "3.0.4",
-    "rebass": "3.1.1",
-    "redux-logger": "3.0.6",
-    "reselect": "4.0.0",
-    "styled-components": "4.3.2",
-    "styled-system": "5.0.12"
-  },
+  "main": "src/index.js",
   "scripts": {
     "buildDev": "rm -rf ../externalLib/appgen-components/core && babel src -d ../externalLib/appgen-components/core --copy-files",
     "build": "rm -rf core && babel src -d core --copy-files",
     "prepare": "npm run build",
     "lint": "eslint ."
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
+  },
+  "dependencies": {
+    "classnames": "2.2.6",
+    "clsx": "1.0.4",
+    "date-fns": "2.8.1",
+    "node-polyglot": "2.3.1",
+    "react-select": "3.0.4",
+    "rebass": "3.1.1"
   },
   "devDependencies": {
     "@babel/cli": "7.6.0",
@@ -79,6 +53,15 @@
     "nodemon": "1.19.1",
     "prettier": "1.18.2",
     "prop-types": "15.7.2"
+  },
+  "peerDependencies": {
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
+    "@material-ui/core": "4.4.0",
+    "@material-ui/icons": "4.2.1",
+    "@material-ui/styles": "4.3.3",
+    "styled-components": "5.0.1",
+    "styled-system": "5.1.5"
   },
   "jest": {
     "collectCoverageFrom": [

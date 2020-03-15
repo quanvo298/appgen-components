@@ -8,6 +8,8 @@ export const isString = str => typeof str === 'string';
 
 export const isObject = str => typeof str === 'object';
 
+export const isArray = str => str instanceof Array;
+
 export const removeAllWhiteSpace = str => str.replace(/\s/g, '');
 
 export const containString = (stringValue, regExp) => {

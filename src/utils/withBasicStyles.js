@@ -169,9 +169,10 @@ const TableEditorStyles = () => ({
 const AutoSuggestStyles = theme => ({
   input: {
     display: 'flex',
-    padding: '6px 0px',
+    padding: '10px 0px',
   },
   valueContainer: {
+    margin: 'auto',
     display: 'flex',
     flexWrap: 'wrap',
     flex: 1,
@@ -179,7 +180,7 @@ const AutoSuggestStyles = theme => ({
     overflow: 'hidden',
   },
   chip: {
-    margin: `${theme.spacing(1 / 2)}px ${theme.spacing(1 / 4)}px`,
+    height: 24,
   },
   chipFocused: {
     backgroundColor: emphasize(

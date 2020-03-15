@@ -21,13 +21,19 @@ import DeleteConfirmDialog from './components/Dialog/DeleteConfirmDialog';
 import BasicEditor from './components/ElementFormEditor/BasicEditor';
 import ElementFormEditor from './components/ElementFormEditor/ElementFormEditor';
 import { H1, H2, H3, H4, H5, H6, H7 } from './components/Heading/Heading';
-import ListItemWidget from './components/ListItemWidget/ListItemWidget';
+import {
+  ListItemCategory,
+  ListItemWidget,
+  ListItemCategoryHeaderDetail,
+  ListItemCategoryHeader,
+} from './components/ListItemWidget/ListItemWidget';
 import Head from './components/TableEditor/Head';
 import TableEditable from './components/TableEditor/TableEditable';
 import TableRow from './components/TableEditor/TableRow';
 import TableView from './components/TableEditor/TableView';
 import Text from './components/Text/Text';
 import ToolbarButton from './components/Toolbar/ToolbarButton';
+import LocalProvider from './utils/LocalProvider';
 
 export {
   AppBar,
@@ -59,11 +65,15 @@ export {
   H5,
   H6,
   H7,
+  ListItemCategory,
   ListItemWidget,
+  ListItemCategoryHeaderDetail,
+  ListItemCategoryHeader,
   Head,
   TableEditable,
   TableRow,
   TableView,
   Text,
   ToolbarButton,
+  LocalProvider,
 };

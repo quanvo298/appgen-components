@@ -41,6 +41,7 @@ const processAutoSelectComponent = props => (
     error={props.error}
     value={props.value}
     component={props.component}
+    multi={props.type === 'arrayObject'}
     onChange={props.onInputChange && props.onInputChange(props.name)}
   />
 );
