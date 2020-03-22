@@ -80,6 +80,8 @@ class BasicFormWidget extends Component {
 
   getBaseFormPropertiesRef = () => this.baseFormPropertiesRef.current;
 
+  getFormElement = elementName => this.getBaseFormPropertiesRef().formElementsRef[elementName];
+
   render() {
     const { classes, title, toolbarButtons } = this.props;
     const { modeForm } = this.state;

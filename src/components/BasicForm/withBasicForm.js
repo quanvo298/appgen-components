@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {
   handlePropertyChanged,
   handleCellChanged,
-  handleOvverideUpdatedItemSaved,
-  handleOvverideUpdatedItemModified,
+  handleUpdatedItemBeforeSaved,
+  handleUpdatedItemBeforeModified,
   handleValidatePropertyBeforeSaved,
   handleValidateUpdatedItemBeforeSaved,
   handleAfterSaved,
@@ -15,21 +15,26 @@ const withBasicForm = formConfig => ComposedComponent => {
     constructor(props) {
       super(props);
       this.setComposedComponentInstance = this.setComposedComponentInstance.bind(this);
+      this.basicFormRef = React.createRef();
     }
 
     setComposedComponentInstance = ref => {
       this.composedComponentInstance = ref;
+      const { current: basicFormCurrentRef } = this.basicFormRef;
+      if (ref && basicFormCurrentRef) {
+        ref.getFormElement = propName => basicFormCurrentRef.getFormElement(propName);
+      }
     };
 
     createFormConfig = () => {
       const { polyglot } = this.props;
-      const formConfigWrapper = formConfig(polyglot);
+      const basicFormConfig = formConfig(polyglot);
 
-      formConfigWrapper.onPropertyChange = (name, value, updatedItem) => {
+      basicFormConfig.onPropertyChange = (name, value, updatedItem) => {
         handlePropertyChanged(this.composedComponentInstance, name, value, updatedItem);
       };
 
-      formConfigWrapper.onCellChange = ({
+      basicFormConfig.onCellChange = ({
         propertyName,
         cellName,
         cellValue,
@@ -48,13 +53,13 @@ const withBasicForm = formConfig => ComposedComponent => {
         );
       };
 
-      formConfigWrapper.onOvverideUpdatedItemSaved = updatedItem =>
-        handleOvverideUpdatedItemSaved(this.composedComponentInstance, updatedItem);
+      basicFormConfig.onUpdatedItemBeforeSaved = updatedItem =>
+        handleUpdatedItemBeforeSaved(this.composedComponentInstance, updatedItem);
 
-      formConfigWrapper.onOvverideUpdatedItemModified = updatedItem =>
-        handleOvverideUpdatedItemModified(this.composedComponentInstance, updatedItem);
+      basicFormConfig.onUpdatedItemBeforeModified = updatedItem =>
+        handleUpdatedItemBeforeModified(this.composedComponentInstance, updatedItem);
 
-      formConfigWrapper.onValidatePropertyBeforeSaved = (
+      basicFormConfig.onValidatePropertyBeforeSaved = (
         validateStrategy,
         element,
         value,
@@ -68,18 +73,19 @@ const withBasicForm = formConfig => ComposedComponent => {
           updatedItem
         );
 
-      formConfigWrapper.onValidateUpdatedItemBeforeSaved = (validateStrategy, updatedItem) =>
+      basicFormConfig.onValidateUpdatedItemBeforeSaved = (validateStrategy, updatedItem) =>
         handleValidateUpdatedItemBeforeSaved(
           this.composedComponentInstance,
           validateStrategy,
           updatedItem
         );
 
-      formConfigWrapper.onAfterSaved = updatedItem => {
+      basicFormConfig.onAfterSaved = updatedItem => {
         handleAfterSaved(this.composedComponentInstance, updatedItem);
       };
 
-      return formConfigWrapper;
+      basicFormConfig.ref = this.basicFormRef;
+      return basicFormConfig;
     };
 
     render() {

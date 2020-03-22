@@ -200,14 +200,22 @@ const AutoSuggestStyles = theme => ({
     fontSize: 16,
   },
   paper: {
-    position: 'absolute',
-    zIndex: 1,
+    // position: 'absolute',
+    zIndex: 999,
     marginTop: theme.spacing(1),
     left: 0,
     right: 0,
   },
   divider: {
     height: theme.spacing(2),
+  },
+});
+
+const TabStyles = () => ({
+  mainContent: {
+    flex: 1,
+    padding: '36px 10px 0',
+    background: '#eaeff1',
   },
 });
 
@@ -224,6 +232,8 @@ export const withNotificationStyles = component => withStyles(NotificationStyles
 export const withDragableStyles = component => withStyles(DragableStyles)(component);
 
 export const withTableStyles = component => withStyles(TableEditorStyles)(component);
+
+export const withTabStyles = component => withStyles(TabStyles)(component);
 
 export const withAutoSuggestStyles = (component, option) =>
   withStyles(AutoSuggestStyles, option)(component);

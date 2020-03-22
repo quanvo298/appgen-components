@@ -14,11 +14,12 @@ import { createValidatorStrategy } from '../../helper/Validator';
 import PubSub, { SUBSCRIPTION } from '../../utils/PubSub';
 import { NotificationKind } from '../../utils/constant';
 import BasicFormLayout from './BasicFormLayout';
+import { getEntityId } from '../../helper/ModelHelper';
 
 class BasicFormProperties extends Component {
   constructor(props) {
     super(props);
-    this.elementFormRefs = {};
+    this.formElementsRef = {};
     this.state = {
       selectedItem: {},
     };
@@ -37,12 +38,12 @@ class BasicFormProperties extends Component {
     return null;
   }
 
-  renderElementForm = beforeChanges => {
+  renderFormElement = beforeChanges => {
     const { values: updatedItem } = this.state;
     Object.keys(updatedItem).forEach(elementName => {
       if (updatedItem[elementName] !== beforeChanges[elementName]) {
-        const elementFormRef = this.elementFormRefs[elementName];
-        elementFormRef.setValue(updatedItem[elementName]);
+        const formElementRef = this.formElementsRef[elementName];
+        formElementRef.setValue(updatedItem[elementName]);
       }
     });
   };
@@ -53,7 +54,7 @@ class BasicFormProperties extends Component {
     if (onPropertyChange) {
       const beforeChanges = { ...values };
       onPropertyChange(name, value, values);
-      this.renderElementForm(beforeChanges);
+      this.renderFormElement(beforeChanges);
     }
   };
 
@@ -63,7 +64,7 @@ class BasicFormProperties extends Component {
     if (onAfterPropertiesChanged) {
       const beforeChanges = { ...updatedItem };
       onAfterPropertiesChanged({ name, value, updatedItem });
-      this.renderElementForm(beforeChanges);
+      this.renderFormElement(beforeChanges);
     }
   };
 
@@ -89,18 +90,18 @@ class BasicFormProperties extends Component {
     });
   };
 
-  processOvverideUpdatedItemSaved = updatedItem => {
-    const { onOvverideUpdatedItemSaved } = this.props;
-    if (onOvverideUpdatedItemSaved) {
-      return onOvverideUpdatedItemSaved(updatedItem);
+  processUpdatedItemBeforeSaved = updatedItem => {
+    const { onUpdatedItemBeforeSaved } = this.props;
+    if (onUpdatedItemBeforeSaved) {
+      return onUpdatedItemBeforeSaved(updatedItem);
     }
     return updatedItem;
   };
 
-  processOvverideUpdatedItemModified = updatedItem => {
-    const { onOvverideUpdatedItemModified } = this.props;
-    if (onOvverideUpdatedItemModified) {
-      return onOvverideUpdatedItemModified(updatedItem);
+  processUpdatedItemBeforeModified = updatedItem => {
+    const { onUpdatedItemBeforeModified } = this.props;
+    if (onUpdatedItemBeforeModified) {
+      return onUpdatedItemBeforeModified(updatedItem);
     }
     return updatedItem;
   };
@@ -112,15 +113,15 @@ class BasicFormProperties extends Component {
     }
   };
 
-  processOvverideUpdatedItem = () => {
+  processUpdatedItem = () => {
     const { modeForm, selectedItem } = this.props;
     const { values } = this.state;
     if (isUpdatedForm(modeForm)) {
       const updatedItem = { ...selectedItem, ...values };
-      return this.processOvverideUpdatedItemModified(updatedItem);
+      return this.processUpdatedItemBeforeModified(updatedItem);
     }
     if (isNewForm(modeForm)) {
-      return this.processOvverideUpdatedItemSaved(values);
+      return this.processUpdatedItemBeforeSaved(values);
     }
     return values;
   };
@@ -139,19 +140,19 @@ class BasicFormProperties extends Component {
   processErrors = errors => {
     Object.keys(errors).forEach(elementName => {
       if (errors[elementName]) {
-        const elementFormRef = this.elementFormRefs[elementName];
-        elementFormRef.setError(true);
+        const formElementRef = this.formElementsRef[elementName];
+        formElementRef.setError(true);
       }
     });
   };
 
-  addElementFormRef = elementFormRef => {
-    if (elementFormRef) {
-      const { props } = elementFormRef;
+  addFormElementRef = formElementRef => {
+    if (formElementRef) {
+      const { props } = formElementRef;
 
       if (props) {
         const { name } = props;
-        this.elementFormRefs[name] = elementFormRef;
+        this.formElementsRef[name] = formElementRef;
       }
     }
   };
@@ -164,7 +165,7 @@ class BasicFormProperties extends Component {
       polyglot,
     } = this.props;
     const { values } = this.state;
-    const validationResult = validateElements(elements, values, this.elementFormRefs);
+    const validationResult = validateElements(elements, values, this.formElementsRef);
 
     const validateStrategy = createValidatorStrategy(polyglot);
 
@@ -187,7 +188,7 @@ class BasicFormProperties extends Component {
       }
       return;
     }
-    const updatedItem = this.processOvverideUpdatedItem();
+    const updatedItem = this.processUpdatedItem();
     validateUpdatedItemBeforeSaved(
       validationResult,
       updatedItem,
@@ -231,12 +232,15 @@ class BasicFormProperties extends Component {
 
   doSave() {
     const { disableSave, onSave, onUpdate, modeForm } = this.props;
+
+    const { selectedItem } = this.state;
     if (disableSave) {
       return false;
     }
 
-    if (isUpdatedForm(modeForm) && onUpdate) {
-      return true;
+    if (isUpdatedForm(modeForm)) {
+      const id = getEntityId(selectedItem);
+      return onUpdate && id !== -1;
     }
 
     if (onSave) {
@@ -265,7 +269,7 @@ class BasicFormProperties extends Component {
         onInputChange={this.onInputChange}
         onCellChange={onCellChange}
         onKeyPress={this.onKeyPress}
-        forwardRef={this.addElementFormRef}
+        forwardRef={this.addFormElementRef}
       />
     );
   }

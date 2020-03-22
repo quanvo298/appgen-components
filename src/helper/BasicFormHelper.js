@@ -15,8 +15,8 @@ export const FUNCTION_INTEGRATION = {
   BeforePropertyChanged: 'beforePropertyChanged',
   AfterPropertyChanged: 'afterPropertyChanged',
   ValidateUpdatedItemBeforeSaved: 'validateUpdatedItemBeforeSaved',
-  OvverideUpdatedItemSaved: 'ovverideUpdatedItemSaved',
-  OvverideUpdatedItemModified: 'ovverideUpdatedItemModified',
+  UpdatedItemBeforeSaved: 'updatedItemBeforeSaved',
+  UpdatedItemBeforeModified: 'updatedItemBeforeModified',
   AfterSaved: 'afterSaved',
 };
 
@@ -51,7 +51,7 @@ export const checkElementByRegExp = (elements, name, string) => {
   return !containString(string, regExp);
 };
 
-export const validateElements = (elements, elementsValue, elementFormRefs) => {
+export const validateElements = (elements, elementsValue, formElementsRef) => {
   const errors = {};
   const result = {
     disabled: false,
@@ -62,9 +62,9 @@ export const validateElements = (elements, elementsValue, elementFormRefs) => {
     const { name } = element;
     const elementValue = elementsValue[name];
 
-    const elemenentFormRef = elementFormRefs && elementFormRefs[name];
-    const elemenentFormValidate = elemenentFormRef && elemenentFormRef[FUNCTION_VALIDATE];
-    if (elemenentFormValidate && elemenentFormValidate()) {
+    const formElementRef = formElementsRef && formElementsRef[name];
+    const formElementValidate = formElementRef && formElementRef[FUNCTION_VALIDATE];
+    if (formElementValidate && formElementValidate()) {
       errors[name] = true;
       result.disabled = true;
     }
@@ -147,7 +147,7 @@ export const handlePropertyChanged = (composedComponentInstance, name, value, up
   const beforePropertyChanged =
     composedComponentInstance[FUNCTION_INTEGRATION.BeforePropertyChanged];
   if (beforePropertyChanged) {
-    beforePropertyChanged(name, value, updatedItem);
+    beforePropertyChanged({ name, value, updatedItem });
   }
 
   const propertyChangedFunction = composedComponentInstance[functionName];
@@ -179,32 +179,32 @@ export const handleCellChanged = (
   }
 };
 
-export const handleOvverideUpdatedItemSaved = (composedComponentInstance, updatedItem) => {
+export const handleUpdatedItemBeforeSaved = (composedComponentInstance, updatedItem) => {
   if (!(updatedItem && composedComponentInstance)) {
     return updatedItem;
   }
 
-  const ovverideUpdatedItemSaved =
-    composedComponentInstance[FUNCTION_INTEGRATION.OvverideUpdatedItemSaved];
-  if (ovverideUpdatedItemSaved) {
-    return ovverideUpdatedItemSaved(updatedItem);
+  const updatedItemBeforeSaved =
+    composedComponentInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeSaved];
+  if (updatedItemBeforeSaved) {
+    return updatedItemBeforeSaved(updatedItem);
   }
 
   return updatedItem;
 };
 
-export const handleOvverideUpdatedItemModified = (composedComponentInstance, updatedItem) => {
+export const handleUpdatedItemBeforeModified = (composedComponentInstance, updatedItem) => {
   if (!(updatedItem && composedComponentInstance)) {
     return updatedItem;
   }
 
-  const ovverideUpdatedItemModified =
-    composedComponentInstance[FUNCTION_INTEGRATION.OvverideUpdatedItemModified];
-  if (ovverideUpdatedItemModified) {
-    return ovverideUpdatedItemModified(updatedItem);
+  const updatedItemBeforeModified =
+    composedComponentInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeModified];
+  if (updatedItemBeforeModified) {
+    return updatedItemBeforeModified(updatedItem);
   }
 
-  return updatedItem;
+  return handleUpdatedItemBeforeSaved(composedComponentInstance, updatedItem);
 };
 
 export const createProperyValidationFunctionName = name => {

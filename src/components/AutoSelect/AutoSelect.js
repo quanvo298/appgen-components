@@ -65,14 +65,16 @@ class AutoSelect extends Component {
     }
   }
 
-  handleChange = (selectedItem = {}) => {
+  handleChange = selectedItem => {
     const { multi } = this.props;
-    let { value } = selectedItem;
+    let targetValue = null;
     if (multi) {
-      value = isArray(selectedItem) ? selectedItem.map(item => item.value) : [];
+      targetValue = isArray(selectedItem) ? selectedItem.map(item => item.value) : [];
+    } else if (selectedItem) {
+      targetValue = selectedItem.value;
     }
     const target = {
-      target: { value, selectedItem, editor: this },
+      target: { value: targetValue, selectedItem, editor: this },
     };
     this.props.onChange(target);
   };
