@@ -46,7 +46,7 @@ export const isUpdatedForm = modeForm => modeForm === ModeFormType.UPDATE;
 export const isNewForm = modeForm => !modeForm || modeForm === ModeFormType.NEW;
 
 export const checkElementByRegExp = (elements, name, string) => {
-  const element = getItemByName(name, PROPERTIES_SYSTEM.Name, elements);
+  const element = getItemByName(name, elements, PROPERTIES_SYSTEM.Name);
   const regExp = element.optProps && element.optProps.regExp;
   return !containString(string, regExp);
 };
