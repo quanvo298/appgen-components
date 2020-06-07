@@ -1,26 +1,20 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import AppBar from '../AppBar/AppBar';
-import Wrapper from '../Container/Wrapper';
+import React, { Fragment } from 'react';
+import clsx from 'clsx';
+import { Card, CardHeader, CardContent, CardActions, Divider } from '@material-ui/core';
 import { withBasicFormStyles } from '../../utils/withBasicStyles';
 
-const BasicBoxWidget = ({ title, buttonsBox, classes, children }) => (
-  <Paper className={classes.paper}>
-    <AppBar color="default">
-      <Toolbar>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
-            <Typography variant="h6">{title}</Typography>
-          </Grid>
-          {buttonsBox}
-        </Grid>
-      </Toolbar>
-    </AppBar>
-    <Wrapper className={classes.contentWrapper}>{children}</Wrapper>
-  </Paper>
+const BasicBoxWidget = ({ title, headerActions, cardActions, classes, children, className }) => (
+  <Card className={clsx(classes.card, className)}>
+    <CardHeader title={title} action={headerActions} className={classes.header} />
+    <Divider />
+    <CardContent className={classes.content}>{children}</CardContent>
+    {cardActions && (
+      <Fragment>
+        <Divider />
+        <CardActions className={classes.actions}>{cardActions}</CardActions>
+      </Fragment>
+    )}
+  </Card>
 );
 
 export default withBasicFormStyles(BasicBoxWidget);

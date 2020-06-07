@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withTableStyles } from '../../utils/withBasicStyles';
 import { usePolyglot } from '../../utils/LocalProvider';
 import { validate, processErrors } from '../../helper/TableEditorHelper';
@@ -78,7 +79,9 @@ class TableEditable extends Component {
     }
   };
 
-  onAddNewRow = () => {
+  onAddNewRow = event => {
+    event.preventDefault();
+    event.stopPropagation();
     let { gridData } = this.state;
     if (!gridData) {
       gridData = [];
@@ -101,7 +104,7 @@ class TableEditable extends Component {
     rowRef.changeCellDefition(cellName, newCellDefinition);
   };
 
-  handleInputChange = (cellName, value, rowIndexed) => {
+  handleChange = (cellName, value, rowIndexed) => {
     const { gridData } = this.state;
     const { onCellChange, onChange, componentName } = this.props;
     const rowData = gridData[rowIndexed];
@@ -124,36 +127,55 @@ class TableEditable extends Component {
 
   render() {
     const { gridData } = this.state;
-    const { columns, classes, mode, disabledNew, disabledDeleted, onFormatCellValue } = this.props;
+    const {
+      columns,
+      classes,
+      mode,
+      disabledNew,
+      disabledDeleted,
+      onFormatCellValue,
+      inputProps = {},
+    } = this.props;
+    const { disabled, inputRef, onAnimationStart } = inputProps;
+
     return (
-      <Wrapper>
-        <Table className={classes.table}>
-          <Head columns={columns} classes={classes} mode={mode} />
-          {isNotEmpty(gridData) && (
-            <TableBody>
-              {gridData.map((row, rowIndex) => (
-                <TableRow
-                  mode={mode}
-                  columns={columns}
-                  key={rowIndex}
-                  rowData={row}
-                  rowIndex={rowIndex}
-                  classes={classes}
-                  onFormatCellValue={onFormatCellValue}
-                  onInputChange={this.handleInputChange}
-                  disabledDeleted={disabledDeleted}
-                  onDeleteRow={this.onDeleteRow}
-                  onSelectedRow={this.onSelectedRow}
-                  ref={ref => {
-                    this.addRowRef(ref, rowIndex);
-                  }}
-                />
-              ))}
-            </TableBody>
-          )}
-        </Table>
-        <ButtonsBox disabledNew={disabledNew} onAddNewRow={this.onAddNewRow} />
-      </Wrapper>
+      <PerfectScrollbar>
+        <Wrapper
+          minWidth={1050}
+          ref={inputRef}
+          disabled={disabled}
+          // onFocus={onFocus}
+          // onBlur={onBlur}
+          onAnimationStart={onAnimationStart}
+        >
+          <Table className={classes.table}>
+            <Head columns={columns} classes={classes} mode={mode} />
+            {isNotEmpty(gridData) && (
+              <TableBody>
+                {gridData.map((row, rowIndex) => (
+                  <TableRow
+                    mode={mode}
+                    columns={columns}
+                    key={rowIndex}
+                    rowData={row}
+                    rowIndex={rowIndex}
+                    classes={classes}
+                    onFormatCellValue={onFormatCellValue}
+                    onChange={this.handleChange}
+                    disabledDeleted={disabledDeleted}
+                    onDeleteRow={this.onDeleteRow}
+                    onSelectedRow={this.onSelectedRow}
+                    ref={ref => {
+                      this.addRowRef(ref, rowIndex);
+                    }}
+                  />
+                ))}
+              </TableBody>
+            )}
+          </Table>
+          <ButtonsBox disabledNew={disabledNew} onAddNewRow={this.onAddNewRow} />
+        </Wrapper>
+      </PerfectScrollbar>
     );
   }
 }

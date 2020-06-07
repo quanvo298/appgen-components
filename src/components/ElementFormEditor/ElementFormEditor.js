@@ -1,36 +1,81 @@
 import React from 'react';
-import TableEditable from '../TableEditor/TableEditable';
+import GridEditor from '../GridEditor/GridEditor';
 import BasicEditor from './BasicEditor';
-import { TABLE_MODE } from '../../utils/constant';
+import Select from '../Select/Select';
+import AutoSelect from '../AutoSelect/AutoSelect';
+import { TrueOrFalseOptions } from '../config';
+import { isObject } from '../../utils/StringUtils';
+import { defaultFunc } from '../../utils/props';
 
-const GridComponent = ({ component, name, value, onInputChange, forwardRef, ...restProps }) => (
-  <TableEditable
-    {...component}
-    mode={TABLE_MODE.Edit}
-    gridData={value}
-    componentName={name}
-    disabledDeleted={component.disabledDeleted}
-    disabledNew={component.disabledNew}
-    onChange={onInputChange && onInputChange(name)}
-    ref={forwardRef}
+const processGridComponent = (props, ref) => <GridEditor {...props} ref={ref} />;
+
+const processSelectComponent = ({
+  type,
+  component,
+  error,
+  label,
+  name,
+  value,
+  onInputChange = defaultFunc,
+  variant = 'outlined',
+  ...restProps
+}) => {
+  const componentData = type === 'boolean' ? TrueOrFalseOptions : component.data;
+  const optionEmpty = type === 'boolean' ? true : component.optionEmpty;
+  const propsValueAtt = component.valueAtt || 'value';
+  let propsValue = value || '';
+  if (isObject(propsValue)) {
+    propsValue = propsValue[propsValueAtt] || '';
+  }
+  return (
+    <Select
+      fullWidth
+      error={error}
+      label={label}
+      variant={variant}
+      value={propsValue}
+      onChange={onInputChange(name)}
+      optionEmpty={optionEmpty}
+      options={componentData}
+      {...restProps}
+    />
+  );
+};
+
+const processAutoSelectComponent = ({
+  value,
+  error,
+  label,
+  component,
+  type,
+  onInputChange = defaultFunc,
+  name,
+  ...restProps
+}) => (
+  <AutoSelect
+    error={error}
+    value={value}
+    label={label}
+    component={component}
+    multi={type === 'arrayObject'}
+    onChange={onInputChange(name)}
     {...restProps}
   />
 );
 
-const ElementTagBaseOnComponent = React.forwardRef((props, ref) => {
-  switch (props.component.type) {
+const ElementFormEditor = React.forwardRef((props, ref) => {
+  const { onCellChange, ...restProps } = props;
+  const { type = '' } = props.component || {};
+
+  switch (type) {
     case 'grid':
-      return <GridComponent {...props} forwardRef={ref} />;
+      return processGridComponent({ ...restProps, onCellChange }, ref);
+    case 'select':
+      return processSelectComponent(restProps);
+    case 'auto-select':
+      return processAutoSelectComponent(restProps);
     default:
-      return <BasicEditor {...props} />;
+      return <BasicEditor {...restProps} />;
   }
 });
-
-const ElementFormEditor = ({ forwardedRef, ...restProps }) =>
-  restProps.component ? (
-    <ElementTagBaseOnComponent ref={forwardedRef} {...restProps} />
-  ) : (
-    <BasicEditor {...restProps} />
-  );
-
 export default ElementFormEditor;

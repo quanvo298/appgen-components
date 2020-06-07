@@ -61,10 +61,10 @@ export function getOneItemFromListByCriteria(criteria, itemList) {
 }
 
 export function updateItemFromList(item, idValue, list, idProp) {
-  const idPropName = idProp || ENTITY_PROPERTIES_SYSTEM.ID;
   for (let index = 0; index < list.length; index++) {
     const itemFromList = list[index];
-    if (itemFromList[idPropName] === idValue) {
+    const compared = idProp ? itemFromList[idProp] : getEntityId(itemFromList);
+    if (compared === idValue) {
       list[index] = item;
       break;
     }

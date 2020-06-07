@@ -1,33 +1,11 @@
 import React, { Component } from 'react';
-import FormLabel from '@material-ui/core/InputLabel';
-import Row from '../Container/Row';
-import Wrapper from '../Container/Wrapper';
 import ElementFormEditor from '../ElementFormEditor/ElementFormEditor';
 import { BaiscFormPropertyComponentType } from '../../utils/constant';
 import { FUNCTION_VALIDATE } from '../../helper/BasicFormHelper';
-import { isObject } from '../../utils/StringUtils';
+import { isObject, containString } from '../../utils/StringUtils';
 import { isObjectPropertyType } from '../../utils/FormatUtils';
 
-const LABEL_WIDTH = 200;
-
 const IGNORE_COMPONENT_TYPE = [BaiscFormPropertyComponentType.Grid];
-
-const ElementFormControl = React.forwardRef((props, ref) => (
-  <Row flexWrap="nowrap" m={2}>
-    <Wrapper position="relative" width={`${LABEL_WIDTH}px`} pt={16}>
-      <FormLabel position="relative" shrink={false}>
-        {props.label} {props.required && '*'}:
-      </FormLabel>
-    </Wrapper>
-    <Wrapper width={1} mx="0">
-      <ElementFormEditor {...props} forwardedRef={ref} />
-    </Wrapper>
-  </Row>
-));
-
-const ElementForm = React.forwardRef((props, ref) => (
-  <ElementFormEditor forwardRef={ref} {...props} />
-));
 
 class BasicElementForm extends Component {
   constructor(props) {
@@ -90,6 +68,8 @@ class BasicElementForm extends Component {
     this.setState({ value, fromSetState: true });
   };
 
+  getValue = () => this.state.value;
+
   doSupportObjectValue = elementValue => {
     const { type, component } = this.props;
     return (
@@ -110,32 +90,30 @@ class BasicElementForm extends Component {
   };
 
   hanldeInputChange = (name, valueKey) => event => {
-    const { onInputChange } = this.props;
+    const { onInputChange, optProps = {} } = this.props;
+    const { regExp } = optProps;
     const { target } = event;
     const elementValue = valueKey ? target[valueKey] : target.value;
+    if (regExp && elementValue && !containString(elementValue, regExp)) {
+      event.preventDefault();
+      return;
+    }
+
     if (onInputChange) {
       onInputChange(name, this.processElementValue(elementValue))(event);
     }
+
     if (this.doRender()) {
       this.setState({ value: elementValue, fromSetState: true });
     }
   };
 
   render() {
-    const { supportFormControl } = this.props;
+    const { optProps, ...restProps } = this.props;
     const { value, error, overridedDefinition } = this.state;
-    return supportFormControl ? (
-      <ElementFormControl
-        {...this.props}
-        {...overridedDefinition}
-        value={value}
-        error={error}
-        onInputChange={this.hanldeInputChange}
-        ref={this.editorRef}
-      />
-    ) : (
-      <ElementForm
-        {...this.props}
+    return (
+      <ElementFormEditor
+        {...restProps}
         {...overridedDefinition}
         value={value}
         error={error}
@@ -145,9 +123,5 @@ class BasicElementForm extends Component {
     );
   }
 }
-
-BasicElementForm.defaultProps = {
-  supportFormControl: true,
-};
 
 export default BasicElementForm;

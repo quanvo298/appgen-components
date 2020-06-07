@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {
   handlePropertyChanged,
   handleCellChanged,
-  handleUpdatedItemBeforeSaved,
-  handleUpdatedItemBeforeModified,
+  handleBeforeSaved,
+  handleBeforeModified,
   handleValidatePropertyBeforeSaved,
   handleValidateUpdatedItemBeforeSaved,
   handleAfterSaved,
@@ -15,15 +15,13 @@ const withBasicForm = formConfig => ComposedComponent => {
     constructor(props) {
       super(props);
       this.setComposedComponentInstance = this.setComposedComponentInstance.bind(this);
-      this.basicFormRef = React.createRef();
+      this.basicFormRef = React.createRef(null);
     }
+
+    getBasicForm = () => this.basicFormRef.current;
 
     setComposedComponentInstance = ref => {
       this.composedComponentInstance = ref;
-      const { current: basicFormCurrentRef } = this.basicFormRef;
-      if (ref && basicFormCurrentRef) {
-        ref.getFormElement = propName => basicFormCurrentRef.getFormElement(propName);
-      }
     };
 
     createFormConfig = () => {
@@ -53,11 +51,11 @@ const withBasicForm = formConfig => ComposedComponent => {
         );
       };
 
-      basicFormConfig.onUpdatedItemBeforeSaved = updatedItem =>
-        handleUpdatedItemBeforeSaved(this.composedComponentInstance, updatedItem);
+      basicFormConfig.onBeforeSaved = updatedItem =>
+        handleBeforeSaved(this.composedComponentInstance, updatedItem);
 
-      basicFormConfig.onUpdatedItemBeforeModified = updatedItem =>
-        handleUpdatedItemBeforeModified(this.composedComponentInstance, updatedItem);
+      basicFormConfig.onBeforeModified = updatedItem =>
+        handleBeforeModified(this.composedComponentInstance, updatedItem);
 
       basicFormConfig.onValidatePropertyBeforeSaved = (
         validateStrategy,
@@ -88,12 +86,25 @@ const withBasicForm = formConfig => ComposedComponent => {
       return basicFormConfig;
     };
 
+    getFormElement = propName => this.getBasicForm().getFormElement(propName);
+
+    setFieldValue = (propName, value) => {
+      this.getFormElement(propName).setValue(value);
+    };
+
+    getFieldValue = propName => this.getFormElement(propName).getValue();
+
+    getEditorRef = propName => this.getFormElement(propName).getEditorRef();
+
     render() {
       const basicFormConfig = this.createFormConfig();
       return (
         <ComposedComponent
           basicFormConfig={basicFormConfig}
           {...this.props}
+          setFieldValue={this.setFieldValue}
+          getFieldValue={this.getFieldValue}
+          getEditorRef={this.getEditorRef}
           ref={this.setComposedComponentInstance}
         />
       );

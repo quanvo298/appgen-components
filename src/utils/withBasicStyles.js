@@ -40,6 +40,15 @@ const BasicStyles = () => ({
     'text-align': 'center',
     margin: '20px 0px',
   },
+  card: {
+    flex: '1',
+  },
+  content: {
+    padding: 0,
+  },
+  actions: {
+    justifyContent: 'flex-end',
+  },
 });
 
 const NavigatorStyles = theme => ({

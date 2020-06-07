@@ -51,7 +51,7 @@ export const checkElementByRegExp = (elements, name, string) => {
   return !containString(string, regExp);
 };
 
-export const validateElements = (elements, elementsValue, formElementsRef) => {
+export const validateElements = (elements, elementsValue, formElementsRef = {}) => {
   const errors = {};
   const result = {
     disabled: false,
@@ -61,8 +61,7 @@ export const validateElements = (elements, elementsValue, formElementsRef) => {
   elements.forEach(element => {
     const { name } = element;
     const elementValue = elementsValue[name];
-
-    const formElementRef = formElementsRef && formElementsRef[name];
+    const formElementRef = formElementsRef[name];
     const formElementValidate = formElementRef && formElementRef[FUNCTION_VALIDATE];
     if (formElementValidate && formElementValidate()) {
       errors[name] = true;
@@ -179,7 +178,7 @@ export const handleCellChanged = (
   }
 };
 
-export const handleUpdatedItemBeforeSaved = (composedComponentInstance, updatedItem) => {
+export const handleBeforeSaved = (composedComponentInstance, updatedItem) => {
   if (!(updatedItem && composedComponentInstance)) {
     return updatedItem;
   }
@@ -193,7 +192,7 @@ export const handleUpdatedItemBeforeSaved = (composedComponentInstance, updatedI
   return updatedItem;
 };
 
-export const handleUpdatedItemBeforeModified = (composedComponentInstance, updatedItem) => {
+export const handleBeforeModified = (composedComponentInstance, updatedItem) => {
   if (!(updatedItem && composedComponentInstance)) {
     return updatedItem;
   }
@@ -204,7 +203,7 @@ export const handleUpdatedItemBeforeModified = (composedComponentInstance, updat
     return updatedItemBeforeModified(updatedItem);
   }
 
-  return handleUpdatedItemBeforeSaved(composedComponentInstance, updatedItem);
+  return handleBeforeSaved(composedComponentInstance, updatedItem);
 };
 
 export const createProperyValidationFunctionName = name => {

@@ -1,14 +1,26 @@
-import React, { Component } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { withBasicFormStyles } from '../../utils/withBasicStyles';
 import { ModeFormType } from '../../utils/constant';
 import { usePolyglot } from '../../utils/LocalProvider';
 import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
 import BasicBoxWidget from '../BasicBoxWidget/BasicBoxWidget';
-import { getEntityId } from '../../helper/ModelHelper';
 import ToolbarButton from '../Toolbar/ToolbarButton';
-import BaseFormProperties from './BasicFormProperties';
+import BasicFormLayout from './BasicFormLayout';
+import { isUpdated, getEntityId } from '../../helper/ModelHelper';
+import useBasicForm from '../../hooks/useBasicForm';
+import { isUpdatedForm } from '../../helper/BasicFormHelper';
 
-const ButtonsBox = ({ supportNew, supportDelete, handleAdd, handleDelete, toolbarButtons }) => {
+const ButtonsBox = ({
+  supportNew,
+  supportDelete,
+  handleAdd,
+  handleDelete,
+  supportSave,
+  supportReset,
+  onSave,
+  onReset,
+  toolbarButtons,
+}) => {
   const polyglot = usePolyglot();
   let cloneToolbarButtons = [];
   if (supportNew) {
@@ -24,90 +36,159 @@ const ButtonsBox = ({ supportNew, supportDelete, handleAdd, handleDelete, toolba
       color: 'secondary',
     });
   }
+  if (supportSave) {
+    cloneToolbarButtons.push({
+      label: polyglot.t('btn.save'),
+      onClick: onSave,
+      variant: 'contained',
+    });
+  }
+  if (supportReset) {
+    cloneToolbarButtons.push({
+      label: polyglot.t('btn.reset'),
+      onClick: onReset,
+      color: 'default',
+    });
+  }
   if (toolbarButtons) {
     cloneToolbarButtons = [...cloneToolbarButtons, ...toolbarButtons];
   }
   return <ToolbarButton toolbarButtons={cloneToolbarButtons} />;
 };
 
-class BasicFormWidget extends Component {
-  constructor(props) {
-    super(props);
-    this.deleteDialogRef = React.createRef();
-    this.baseFormPropertiesRef = React.createRef();
-    this.state = {
-      modeForm: ModeFormType.NEW,
+const BasicFormWidget = React.forwardRef(
+  (
+    {
+      selectedItem,
+      classes,
+      title,
+      toolbarButtons,
+      formToolbarButton,
+      FormComponentLayout,
+      elements,
+      disableDelete,
+      onDelete,
+      onAddNew,
+      onUpdate,
+      disableSave,
+      onSave,
+      disableReset,
+      onCellChange,
+      ...restProps
+    },
+    ref
+  ) => {
+    const deleteDialogRef = useRef(null);
+    const [modeForm, setModeForm] = useState(ModeFormType.NEW);
+
+    const { addFormElementRef, getValues, reset, save, onChange, assignToRef } = useBasicForm({
+      modeForm,
+      elements,
+      selectedItem,
+      onSave,
+      onUpdate,
+      ...restProps,
+    });
+
+    assignToRef(ref);
+
+    useEffect(() => {
+      if (!(isUpdated(selectedItem) && modeForm === ModeFormType.UPDATE)) {
+        setModeForm(isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW);
+      }
+    }, [selectedItem, modeForm]);
+
+    const doDelete = () => (disableDelete ? false : onDelete && modeForm === ModeFormType.UPDATE);
+
+    const doAdd = () => onAddNew;
+
+    const markNew = () => {
+      onAddNew();
     };
-  }
 
-  static getDerivedStateFromProps(props, state) {
-    const { selectedItem } = props;
-    const { modeForm } = state;
-    const newModeForm =
-      selectedItem && getEntityId(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
-    if (modeForm !== newModeForm)
-      return {
-        modeForm: newModeForm,
-      };
+    const markDelete = () => {
+      deleteDialogRef.current.show();
+    };
 
-    return null;
-  }
+    const doSave = () => {
+      if (disableSave) {
+        return false;
+      }
 
-  markNew = () => {
-    this.props.onAddNew();
-  };
+      if (isUpdatedForm(modeForm)) {
+        const id = getEntityId(selectedItem);
+        return onUpdate && id !== -1;
+      }
 
-  markDelete = () => {
-    this.deleteDialogRef.current.show();
-  };
+      return !!onSave;
+    };
 
-  makeSureDelete = () => {
-    const { onDelete, selectedItem } = this.props;
-    onDelete(selectedItem);
-    this.deleteDialogRef.current.close();
-  };
+    const doReset = () => !disableReset;
 
-  doDelete = () => {
-    const { disableDelete, onDelete } = this.props;
-    const { modeForm } = this.state;
-    return disableDelete ? false : onDelete && modeForm === ModeFormType.UPDATE;
-  };
+    const makeSureDelete = () => {
+      onDelete(selectedItem);
+      deleteDialogRef.current.close();
+    };
 
-  doAdd = () => {
-    const { onAddNew } = this.props;
-    return onAddNew;
-  };
+    const handleSave = () => save();
 
-  getBaseFormPropertiesRef = () => this.baseFormPropertiesRef.current;
+    const handleReset = () => reset();
 
-  getFormElement = elementName => this.getBaseFormPropertiesRef().formElementsRef[elementName];
+    const proceedToolbarButton = () => {
+      let proceedList = [];
+      if (formToolbarButton) {
+        proceedList = [...formToolbarButton];
+        /* proceedList.forEach(proceedItem => {
+        const { onClick: originalOnClick } = proceedItem;
+        if (originalOnClick) {
+          proceedItem.onClick = defaultFunc; // () => this.proceedValidateItem(callback);
+        }
+      }); */
+      }
+      return proceedList;
+    };
 
-  render() {
-    const { classes, title, toolbarButtons } = this.props;
-    const { modeForm } = this.state;
-    const supportDelete = this.doDelete();
-    const supportNew = this.doAdd();
-    const ButtonsBoxInstance = (
+    const HeaderButtonsBoxInstance = (
       <ButtonsBox
-        supportNew={supportNew}
-        supportDelete={supportDelete}
-        handleAdd={this.markNew}
-        handleDelete={this.markDelete}
+        supportNew={doAdd()}
+        supportDelete={doDelete()}
+        handleAdd={markNew}
+        handleDelete={markDelete}
         toolbarButtons={toolbarButtons}
       />
     );
+
+    const FormActionButtonsBoxInstance = (
+      <ButtonsBox
+        supportSave={doSave()}
+        supportReset={doReset()}
+        onSave={handleSave}
+        onReset={handleReset}
+        formToolbarButton={proceedToolbarButton()}
+      />
+    );
+
     return (
-      <BasicBoxWidget title={title} buttonsBox={ButtonsBoxInstance}>
-        <BaseFormProperties
-          {...this.props}
-          modeForm={modeForm}
-          classes={classes}
-          ref={this.baseFormPropertiesRef}
-        />
-        <DeleteConfirmDialog onConfirm={this.makeSureDelete} ref={this.deleteDialogRef} />
-      </BasicBoxWidget>
+      <form autoComplete="off" noValidate>
+        <BasicBoxWidget
+          title={title}
+          headerActions={HeaderButtonsBoxInstance}
+          cardActions={FormActionButtonsBoxInstance}
+        >
+          <BasicFormLayout
+            classes={classes}
+            FormComponentLayout={FormComponentLayout}
+            elements={elements}
+            onInputChange={onChange}
+            onCellChange={onCellChange}
+            elementsValue={getValues()}
+            ref={addFormElementRef}
+          />
+        </BasicBoxWidget>
+        <DeleteConfirmDialog onConfirm={makeSureDelete} ref={deleteDialogRef} />
+      </form>
     );
   }
-}
+);
 
 export default withBasicFormStyles(BasicFormWidget);

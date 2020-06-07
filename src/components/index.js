@@ -4,7 +4,6 @@ import AutoSelect from './AutoSelect/AutoSelect';
 import BasicBoxWidget from './BasicBoxWidget/BasicBoxWidget';
 import BasicElementForm from './BasicForm/BasicElementForm';
 import BasicFormLayout from './BasicForm/BasicFormLayout';
-import BasicFormProperties from './BasicForm/BasicFormProperties';
 import BasicFormWidget from './BasicForm/BasicFormWidget';
 import withBasicForm from './BasicForm/withBasicForm';
 import BasicFormPageLayout from './BasicFormPageLayout/BasicFormPageLayout';
@@ -27,10 +26,10 @@ import {
   ListItemCategoryHeaderDetail,
   ListItemCategoryHeader,
 } from './ListItemWidget/ListItemWidget';
-import Head from './TableEditor/Head';
-import TableEditable from './TableEditor/TableEditable';
-import TableRow from './TableEditor/TableRow';
-import TableView from './TableEditor/TableView';
+import Head from './Table/Head';
+import TableEditable from './Table/TableEditable';
+import TableRow from './Table/TableRow';
+import TableView from './Table/TableView';
 import Text from './Text/Text';
 import ToolbarButton from './Toolbar/ToolbarButton';
 import TabContainer from './Tabs/TabContainer';
@@ -42,7 +41,6 @@ export {
   BasicBoxWidget,
   BasicElementForm,
   BasicFormLayout,
-  BasicFormProperties,
   BasicFormWidget,
   withBasicForm,
   BasicFormPageLayout,

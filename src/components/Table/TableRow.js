@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TableRowMaterial from '@material-ui/core/TableRow';
+import MUITableRow from '@material-ui/core/TableRow';
 import { CellValue, EditIconCell, DeleteIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
 
@@ -53,7 +53,7 @@ class TableRow extends Component {
   changeCellDefition = (cellName, newCellDefinition) => {
     const currentCellDefinition = this.getCellDefinition(cellName);
     if (currentCellDefinition) {
-      const changedCellDefinition = { ...currentCellDefinition, ...newCellDefinition };
+      const changedCellDefinition = { ...currentCellDefinition, ...newCellDefinition, label: '' };
       this.elementFormRefs[cellName].changeDefinition(changedCellDefinition);
     }
   };
@@ -61,7 +61,7 @@ class TableRow extends Component {
   handleInputChange = (cellName, value, rowIndex, column) => () => {
     const { rowData } = this.state;
     rowData[cellName] = value;
-    this.props.onInputChange(cellName, value, rowIndex, column);
+    this.props.onChange(cellName, value, rowIndex, column);
   };
 
   render() {
@@ -76,7 +76,7 @@ class TableRow extends Component {
       onDeleteRow,
     } = this.props;
     return (
-      <TableRowMaterial
+      <MUITableRow
         key={rowIndex}
         className={TABLE_MODE.View === mode ? classes.trEditor : ''}
         hover
@@ -98,7 +98,7 @@ class TableRow extends Component {
         {!disabledDeleted && (
           <DeleteIconCell mode={mode} onClick={() => onDeleteRow(rowData, rowIndex)} />
         )}
-      </TableRowMaterial>
+      </MUITableRow>
     );
   }
 }

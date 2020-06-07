@@ -1,5 +1,5 @@
 import React from 'react';
-import TableEditable from '../TableEditor/TableEditable';
+import TableEditable from '../Table/TableEditable';
 import BasicBoxWidget from '../BasicBoxWidget/BasicBoxWidget';
 
 const ContentList = ({ title, init, gridData }) => (

@@ -1,76 +1,46 @@
 import React from 'react';
-import { usePolyglot } from '../../utils/LocalProvider';
-import ToolbarButton from '../Toolbar/ToolbarButton';
-import ElementForm from './BasicElementForm';
+import BasicElementForm from './BasicElementForm';
 import Wrapper from '../Container/Wrapper';
+import Row from '../Container/Row';
 
-const ButtonsBox = ({ supportSave, supportReset, onSave, onReset, toolbarButtons }) => {
-  const polyglot = usePolyglot();
-  let cloneToolbarButtons = [];
-  if (toolbarButtons) {
-    cloneToolbarButtons = [...cloneToolbarButtons, ...toolbarButtons];
-  }
-  if (supportSave) {
-    cloneToolbarButtons.push({
-      label: polyglot.t('btn.save'),
-      onClick: onSave,
-    });
-  }
-  if (supportReset) {
-    cloneToolbarButtons.push({
-      label: polyglot.t('btn.reset'),
-      onClick: onReset,
-      color: 'default',
-    });
-  }
-  return <ToolbarButton toolbarButtons={cloneToolbarButtons} />;
-};
-
-const BasicFormLayout = ({
-  FormComponentLayout,
-  elements,
-  elementsValue,
-  classes,
-  doSave,
-  onSave,
-  doReset,
-  onReset,
-  forwardRef,
-  formToolbarButton,
-  ...restProps
-}) => (
-  <Wrapper>
+const BasicFormLayout = React.forwardRef((props, ref) => {
+  const {
+    FormComponentLayout,
+    elements,
+    elementsValue,
+    classes,
+    doSave,
+    onSave,
+    doReset,
+    onReset,
+    formToolbarButton,
+    ...restProps
+  } = props;
+  return (
     <Wrapper>
       {FormComponentLayout ? (
         <FormComponentLayout
           elements={elements}
           elementsValue={elementsValue}
-          forwardRef={forwardRef}
+          ref={ref}
           {...restProps}
         />
       ) : (
         elements &&
         elements.map((element, index) => (
-          <ElementForm
-            ref={forwardRef}
-            key={index}
-            {...element}
-            {...restProps}
-            value={elementsValue[element.name]}
-          />
+          <Row mx={2} my={3}>
+            <BasicElementForm
+              ref={ref}
+              key={index}
+              {...element}
+              {...restProps}
+              value={elementsValue[element.name]}
+            />
+          </Row>
         ))
       )}
     </Wrapper>
-    <Wrapper className={classes.menuWrapper}>
-      <ButtonsBox
-        supportSave={doSave}
-        supportReset={doReset}
-        onSave={onSave}
-        onReset={onReset}
-        toolbarButtons={formToolbarButton}
-      />
-    </Wrapper>
-  </Wrapper>
-);
+  );
+});
 
 export default BasicFormLayout;

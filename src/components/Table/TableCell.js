@@ -21,8 +21,9 @@ export const CellValue = ({
         {...column}
         {...overrideColumn}
         {...restProps}
+        variant="standard"
+        label=""
         value={row[column.name]}
-        supportFormControl={false}
         ref={forwardRef}
       />
     </TableCell>
@@ -32,14 +33,14 @@ export const CellValue = ({
 
 export const EditIconCell = ({ mode, onClick }) =>
   TABLE_MODE.View === mode && (
-    <TableCell width={16}>
-      <EditIcon onClick={onClick} />
+    <TableCell width={24}>
+      <EditIcon onClick={onClick} size={24} />
     </TableCell>
   );
 
 export const DeleteIconCell = ({ onClick }) => (
-  <TableCell width={16}>
-    <DeleteIcon onClick={onClick} />
+  <TableCell width={24}>
+    <DeleteIcon onClick={onClick} size={24} />
   </TableCell>
 );
 
