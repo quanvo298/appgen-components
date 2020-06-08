@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useRef } from 'react';
 import {
   handlePropertyChanged,
   handleCellChanged,
@@ -11,106 +11,96 @@ import {
 import withPolyglot from '../../utils/withPolyglot';
 
 const withBasicForm = formConfig => ComposedComponent => {
-  class BasicFormComponent extends Component {
-    constructor(props) {
-      super(props);
-      this.setComposedComponentInstance = this.setComposedComponentInstance.bind(this);
-      this.basicFormRef = React.createRef(null);
-    }
+  const BasicFormComponent = ({ polyglot, ...restProps }) => {
+    const basicFormRef = useRef(null);
+    const composedComponentInstance = useRef(null);
 
-    getBasicForm = () => this.basicFormRef.current;
+    const getBasicForm = () => basicFormRef.current;
 
-    setComposedComponentInstance = ref => {
-      this.composedComponentInstance = ref;
+    const setComposedComponentInstance = ref => {
+      composedComponentInstance.current = ref;
     };
 
-    createFormConfig = () => {
-      const { polyglot } = this.props;
-      const basicFormConfig = formConfig(polyglot);
+    const getComposedComponentInstance = () => composedComponentInstance.current;
 
-      basicFormConfig.onPropertyChange = (name, value, updatedItem) => {
-        handlePropertyChanged(this.composedComponentInstance, name, value, updatedItem);
-      };
+    const onPropertyChange = (name, value, updatedItem) => {
+      handlePropertyChanged(getComposedComponentInstance(), name, value, updatedItem);
+    };
 
-      basicFormConfig.onCellChange = ({
+    const onCellChange = ({ propertyName, cellName, cellValue, rowIndexed, gridData, event }) => {
+      handleCellChanged(
+        getComposedComponentInstance(),
         propertyName,
         cellName,
         cellValue,
         rowIndexed,
         gridData,
-        event,
-      }) => {
-        handleCellChanged(
-          this.composedComponentInstance,
-          propertyName,
-          cellName,
-          cellValue,
-          rowIndexed,
-          gridData,
-          event
-        );
-      };
+        event
+      );
+    };
 
-      basicFormConfig.onBeforeSaved = updatedItem =>
-        handleBeforeSaved(this.composedComponentInstance, updatedItem);
+    const onBeforeSaved = updatedItem =>
+      handleBeforeSaved(getComposedComponentInstance(), updatedItem);
 
-      basicFormConfig.onBeforeModified = updatedItem =>
-        handleBeforeModified(this.composedComponentInstance, updatedItem);
+    const onBeforeModified = updatedItem =>
+      handleBeforeModified(getComposedComponentInstance(), updatedItem);
 
-      basicFormConfig.onValidatePropertyBeforeSaved = (
+    const onValidatePropertyBeforeSaved = (validateStrategy, element, value, updatedItem) =>
+      handleValidatePropertyBeforeSaved(
+        getComposedComponentInstance(),
         validateStrategy,
         element,
         value,
         updatedItem
-      ) =>
-        handleValidatePropertyBeforeSaved(
-          this.composedComponentInstance,
-          validateStrategy,
-          element,
-          value,
-          updatedItem
-        );
-
-      basicFormConfig.onValidateUpdatedItemBeforeSaved = (validateStrategy, updatedItem) =>
-        handleValidateUpdatedItemBeforeSaved(
-          this.composedComponentInstance,
-          validateStrategy,
-          updatedItem
-        );
-
-      basicFormConfig.onAfterSaved = updatedItem => {
-        handleAfterSaved(this.composedComponentInstance, updatedItem);
-      };
-
-      basicFormConfig.ref = this.basicFormRef;
-      return basicFormConfig;
-    };
-
-    getFormElement = propName => this.getBasicForm().getFormElement(propName);
-
-    setFieldValue = (propName, value) => {
-      this.getFormElement(propName).setValue(value);
-    };
-
-    getFieldValue = propName => this.getFormElement(propName).getValue();
-
-    getEditorRef = propName => this.getFormElement(propName).getEditorRef();
-
-    render() {
-      const basicFormConfig = this.createFormConfig();
-      return (
-        <ComposedComponent
-          basicFormConfig={basicFormConfig}
-          {...this.props}
-          setFieldValue={this.setFieldValue}
-          getFieldValue={this.getFieldValue}
-          getEditorRef={this.getEditorRef}
-          ref={this.setComposedComponentInstance}
-        />
       );
-    }
-  }
 
+    const onValidateUpdatedItemBeforeSaved = (validateStrategy, updatedItem) =>
+      handleValidateUpdatedItemBeforeSaved(
+        getComposedComponentInstance(),
+        validateStrategy,
+        updatedItem
+      );
+
+    const onAfterSaved = updatedItem => {
+      handleAfterSaved(getComposedComponentInstance(), updatedItem);
+    };
+
+    const createFormConfig = () => ({
+      ...formConfig(polyglot),
+      onCellChange,
+      onPropertyChange,
+      onBeforeSaved,
+      onBeforeModified,
+      onValidatePropertyBeforeSaved,
+      onValidateUpdatedItemBeforeSaved,
+      onAfterSaved,
+      ref: basicFormRef,
+    });
+
+    const getFormElement = propName => getBasicForm().getFormElement(propName);
+
+    const setFieldValue = (propName, value) => {
+      getFormElement(propName).setValue(value);
+    };
+
+    const getFieldValue = propName => getFormElement(propName).getValue();
+
+    const composedComponentProps = {
+      setFieldValue,
+      getFieldValue,
+      ...getBasicForm(),
+    };
+
+    return (
+      <ComposedComponent
+        basicFormConfig={createFormConfig()}
+        polyglot={polyglot}
+        {...restProps}
+        {...composedComponentProps}
+        ref={setComposedComponentInstance}
+      />
+    );
+  };
   return withPolyglot(BasicFormComponent);
 };
 

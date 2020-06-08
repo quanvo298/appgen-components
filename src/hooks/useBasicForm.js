@@ -111,7 +111,7 @@ const useBasicForm = ({
     );
   };
 
-  const validate = () => {
+  const getUpdateItemAndValidate = () => {
     const values = getValues();
     const validationResult = validateElements(elements, values, getFormElements());
     const validateStrategy = createValidatorStrategy(polyglot);
@@ -144,11 +144,10 @@ const useBasicForm = ({
       showErrorMessage(validateStrategy);
       return false;
     }
-    return true;
+    return updatedItem;
   };
 
-  const newOrUpdate = () => {
-    const updatedItem = processUpdatedItem();
+  const saveOrUpdate = updatedItem => {
     if (isUpdatedForm(modeForm)) {
       onUpdate(updatedItem);
       processAfterSaved(updatedItem);
@@ -159,14 +158,21 @@ const useBasicForm = ({
   };
 
   const save = () => {
-    if (validate()) {
-      newOrUpdate();
+    const updatedItem = getUpdateItemAndValidate();
+    if (updatedItem) {
+      saveOrUpdate(updatedItem);
     }
   };
 
   const assignToRef = ref => {
     if (ref) {
-      ref.current = { ...ref.current, getFormElement, getFormElements, getValues };
+      ref.current = {
+        ...ref.current,
+        getFormElement,
+        getFormElements,
+        getValues,
+        getUpdateItemAndValidate,
+      };
     }
   };
 
@@ -176,6 +182,7 @@ const useBasicForm = ({
     getValues,
     reset,
     save,
+    getUpdateItemAndValidate,
     onChange,
   };
 };

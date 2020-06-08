@@ -51,7 +51,7 @@ const ButtonsBox = ({
     });
   }
   if (toolbarButtons) {
-    cloneToolbarButtons = [...cloneToolbarButtons, ...toolbarButtons];
+    cloneToolbarButtons = [...toolbarButtons, ...cloneToolbarButtons];
   }
   return <ToolbarButton toolbarButtons={cloneToolbarButtons} />;
 };
@@ -63,7 +63,7 @@ const BasicFormWidget = React.forwardRef(
       classes,
       title,
       toolbarButtons,
-      formToolbarButton,
+      formToolbarButtons = [],
       FormComponentLayout,
       elements,
       disableDelete,
@@ -134,20 +134,6 @@ const BasicFormWidget = React.forwardRef(
 
     const handleReset = () => reset();
 
-    const proceedToolbarButton = () => {
-      let proceedList = [];
-      if (formToolbarButton) {
-        proceedList = [...formToolbarButton];
-        /* proceedList.forEach(proceedItem => {
-        const { onClick: originalOnClick } = proceedItem;
-        if (originalOnClick) {
-          proceedItem.onClick = defaultFunc; // () => this.proceedValidateItem(callback);
-        }
-      }); */
-      }
-      return proceedList;
-    };
-
     const HeaderButtonsBoxInstance = (
       <ButtonsBox
         supportNew={doAdd()}
@@ -164,7 +150,7 @@ const BasicFormWidget = React.forwardRef(
         supportReset={doReset()}
         onSave={handleSave}
         onReset={handleReset}
-        formToolbarButton={proceedToolbarButton()}
+        toolbarButtons={formToolbarButtons}
       />
     );
 
