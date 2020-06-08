@@ -1,14 +1,14 @@
 import React, { Component, forwardRef } from 'react';
-import { LocalProviderCtx } from './LocalProvider';
+import { LocaleProviderCtx } from './LocaleProvider';
 
 const withPolyglot = WrappedComponent => {
   class Wrapped extends Component {
     render() {
       const { forwardedRef, ...restProps } = this.props;
       return (
-        <LocalProviderCtx.Consumer>
+        <LocaleProviderCtx.Consumer>
           {polyglot => <WrappedComponent ref={forwardedRef} {...restProps} polyglot={polyglot} />}
-        </LocalProviderCtx.Consumer>
+        </LocaleProviderCtx.Consumer>
       );
     }
   }

@@ -1,5 +1,5 @@
-import LocalProvider, { usePolyglot } from './LocalProvider';
+import LocaleProvider, { usePolyglot } from './LocaleProvider';
 
 export * from './StringUtils';
 export * from './CollectionUtils';
-export { usePolyglot, LocalProvider };
+export { usePolyglot, LocaleProvider };

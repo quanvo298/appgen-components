@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { withBasicFormStyles } from '../../utils/withBasicStyles';
 import { ModeFormType } from '../../utils/constant';
-import { usePolyglot } from '../../utils/LocalProvider';
+import { usePolyglot } from '../../utils/LocaleProvider';
 import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
 import BasicBoxWidget from '../BasicBoxWidget/BasicBoxWidget';
 import ToolbarButton from '../Toolbar/ToolbarButton';

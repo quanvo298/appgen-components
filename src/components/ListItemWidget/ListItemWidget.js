@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Wrapper from '../Container/Wrapper';
 import BasicButton from '../Button/BasicButton';
 import { makeListItemStyles } from '../../utils/withBasicStyles';
-import { usePolyglot } from '../../utils/LocalProvider';
+import { usePolyglot } from '../../utils/LocaleProvider';
 
 const ListItemComponent = ({
   iconComponent,

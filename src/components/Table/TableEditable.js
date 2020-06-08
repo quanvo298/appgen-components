@@ -3,7 +3,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withTableStyles } from '../../utils/withBasicStyles';
-import { usePolyglot } from '../../utils/LocalProvider';
+import { usePolyglot } from '../../utils/LocaleProvider';
 import { validate, processErrors } from '../../helper/TableEditorHelper';
 import Wrapper from '../Container/Wrapper';
 import BasicButton from '../Button/BasicButton';

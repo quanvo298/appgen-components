@@ -4,7 +4,7 @@ import Wrapper from '../../components/Container/Wrapper';
 import Header from '../../components/AppBar/Header';
 import NavBar from './NavBar';
 import SiteNavigation from './navigation.config';
-import { usePolyglot } from '../../utils/LocalProvider';
+import { usePolyglot } from '../../utils/LocaleProvider';
 
 const createNavigationConfig = navigation => {
   const polyglot = usePolyglot();

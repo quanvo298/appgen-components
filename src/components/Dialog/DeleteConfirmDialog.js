@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePolyglot } from '../../utils/LocalProvider';
+import { usePolyglot } from '../../utils/LocaleProvider';
 import ConfirmDialog from './ConfirmDialog';
 
 const DeleteConfirmDialog = React.forwardRef((props, ref) => (
