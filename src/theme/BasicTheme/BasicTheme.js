@@ -4,19 +4,17 @@ import Wrapper from '../../components/Container/Wrapper';
 import Header from '../../components/AppBar/Header';
 import NavBar from './NavBar';
 import SiteNavigation from './navigation.config';
-import { usePolyglot } from '../../utils/LocaleProvider';
 
-const createNavigationConfig = navigation => {
-  const polyglot = usePolyglot();
+const createNavigationConfig = (navigation, polyglot) => {
   const originalSiteNavigation = SiteNavigation(polyglot);
   const siteNavigation = navigation && navigation(polyglot);
   return siteNavigation || originalSiteNavigation;
 };
 
-const BasicThemeWidget = ({ classes, navigation, children }) => (
+const BasicThemeWidget = ({ classes, navigation, children, polyglot }) => (
   <Wrapper className={classes.root}>
     <nav className={classes.drawer}>
-      <NavBar navigationConfig={createNavigationConfig(navigation)} />
+      <NavBar navigationConfig={createNavigationConfig(navigation, polyglot)} />
     </nav>
     <Wrapper className={classes.appContent}>
       <Header />
