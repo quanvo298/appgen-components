@@ -65,7 +65,8 @@ class BasicElementForm extends Component {
   };
 
   setValue = value => {
-    this.setState({ value, fromSetState: true });
+    const { name } = this.props;
+    this.onChange(name, value);
   };
 
   getValue = () => this.state.value;
@@ -90,12 +91,18 @@ class BasicElementForm extends Component {
   };
 
   hanldeInputChange = (name, valueKey) => event => {
-    const { onInputChange, optProps = {} } = this.props;
-    const { regExp } = optProps;
     const { target } = event;
     const elementValue = valueKey ? target[valueKey] : target.value;
+    this.onChange(name, elementValue, event);
+  };
+
+  onChange = (name, elementValue, event) => {
+    const { onInputChange, optProps = {} } = this.props;
+    const { regExp } = optProps;
     if (regExp && elementValue && !containString(elementValue, regExp)) {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
       return;
     }
 

@@ -18,18 +18,20 @@ const TextInput = ({
   type,
   error,
   disabled,
+  readonly,
+  required,
   variant = 'outlined',
   inputProps = {},
   labelProps = {},
   onInputChange = defaultFunc,
-  textInputProps = {},
 }) => (
   <TextField
     label={label}
     variant={variant}
     fullWidth
+    required={required}
     error={error}
-    disabled={disabled}
+    disabled={disabled || readonly}
     InputLabelProps={{
       ...labelProps,
     }}
@@ -37,7 +39,6 @@ const TextInput = ({
     InputProps={{ ...inputProps }}
     value={getValueBaseonType(value, type)}
     type={type}
-    {...textInputProps}
   />
 );
 

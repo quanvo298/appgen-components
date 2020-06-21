@@ -74,6 +74,7 @@ const BasicFormWidget = React.forwardRef(
       onSave,
       disableReset,
       onCellChange,
+      onGetCellDefinition,
       ...restProps
     },
     ref
@@ -167,6 +168,7 @@ const BasicFormWidget = React.forwardRef(
             elements={elements}
             onInputChange={onChange}
             onCellChange={onCellChange}
+            onGetCellDefinition={onGetCellDefinition}
             elementsValue={getValues()}
             ref={addFormElementRef}
           />

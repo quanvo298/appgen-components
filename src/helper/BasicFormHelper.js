@@ -138,7 +138,17 @@ const createCellChangedFunctionName = name => {
   return `${name}CellChanged`;
 };
 
-export const handlePropertyChanged = (composedComponentInstance, name, value, updatedItem) => {
+const createCellDefinitionFunctionName = name => {
+  return `${name}CellDefinition`;
+};
+
+export const handlePropertyChanged = (
+  composedComponentInstance,
+  name,
+  value,
+  updatedItem,
+  event
+) => {
   if (!(name && composedComponentInstance)) {
     return;
   }
@@ -146,17 +156,17 @@ export const handlePropertyChanged = (composedComponentInstance, name, value, up
   const beforePropertyChanged =
     composedComponentInstance[FUNCTION_INTEGRATION.BeforePropertyChanged];
   if (beforePropertyChanged) {
-    beforePropertyChanged({ name, value, updatedItem });
+    beforePropertyChanged({ name, value, updatedItem, event });
   }
 
   const propertyChangedFunction = composedComponentInstance[functionName];
   if (propertyChangedFunction) {
-    propertyChangedFunction(value, updatedItem);
+    propertyChangedFunction(value, updatedItem, event);
   }
 
   const afterPropertyChanged = composedComponentInstance[FUNCTION_INTEGRATION.AfterPropertyChanged];
   if (afterPropertyChanged) {
-    afterPropertyChanged({ name, value, updatedItem });
+    afterPropertyChanged({ name, value, updatedItem, event });
   }
 };
 
@@ -176,6 +186,22 @@ export const handleCellChanged = (
       cellChanged({ propertyName, cellName, cellValue, rowIndexed, gridData, event });
     }
   }
+};
+
+export const handleGetCellDefinition = (
+  composedComponentInstance,
+  propertyName,
+  cellName,
+  rowIndexed
+) => {
+  if (composedComponentInstance && propertyName && cellName) {
+    const functionName = createCellDefinitionFunctionName(propertyName);
+    const cellChanged = composedComponentInstance[functionName];
+    if (cellChanged) {
+      return cellChanged({ propertyName, cellName, rowIndexed });
+    }
+  }
+  return {};
 };
 
 export const handleBeforeSaved = (composedComponentInstance, updatedItem) => {

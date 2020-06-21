@@ -67,9 +67,9 @@ const useBasicForm = ({
     reset();
   }, [selectedItem]);
 
-  const onChange = (name, value) => () => {
+  const onChange = (name, value) => event => {
     setValue(name, value);
-    onPropertyChange(name, value, getValues());
+    onPropertyChange(name, value, getValues())(event);
     if (onAfterPropertiesChanged) {
       onAfterPropertiesChanged({ name, value, updateItem: cloneDeep(getValues) });
     }

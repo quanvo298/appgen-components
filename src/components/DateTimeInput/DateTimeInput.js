@@ -5,23 +5,24 @@ import { defaultFunc } from '../../utils/props';
 
 const DateTimeInput = React.forwardRef((props, ref) => {
   const {
-    optionEmpty,
-    options,
-    type,
-    component,
     label,
     name,
     value,
     error,
     disabled,
-    onInputChange = defaultFunc,
+    onChange = defaultFunc,
     variant = 'outlined',
     ref: propRef,
-    ...restProps
   } = props;
+
+  const handleChange = dateValue => {
+    onChange({ target: { value: dateValue } });
+  };
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
+        name={name}
         disableToolbar
         variant="inline"
         inputVariant={variant}
@@ -31,12 +32,9 @@ const DateTimeInput = React.forwardRef((props, ref) => {
         fullWidth
         error={error}
         disabled={disabled}
-        onChange={onInputChange}
+        onChange={handleChange}
         ref={propRef || ref}
-        KeyboardButtonProps={{
-          'aria-label': 'change date',
-        }}
-        {...restProps}
+        autoOk
       />
     </MuiPickersUtilsProvider>
   );

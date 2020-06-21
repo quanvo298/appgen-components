@@ -45,13 +45,15 @@ class TableRow extends Component {
     }
   };
 
-  getCellDefinition = cellName => {
-    const { columns } = this.props;
-    return columns.find(column => column.name === cellName);
+  getCellDefinition = (cellName, rowIndex, column) => {
+    const { onGetCellDefinition } = this.props;
+    return onGetCellDefinition && onGetCellDefinition(cellName, rowIndex, column);
   };
 
-  changeCellDefition = (cellName, newCellDefinition) => {
-    const currentCellDefinition = this.getCellDefinition(cellName);
+  changeCellDefinition = (cellName, newCellDefinition) => {
+    const { columns } = this.props;
+    const currentCellDefinition = columns.find(({ name }) => name === cellName);
+
     if (currentCellDefinition) {
       const changedCellDefinition = { ...currentCellDefinition, ...newCellDefinition, label: '' };
       this.elementFormRefs[cellName].changeDefinition(changedCellDefinition);
@@ -86,6 +88,7 @@ class TableRow extends Component {
             key={colIndex}
             row={rowData}
             column={column}
+            overrideColumn={this.getCellDefinition(column.name, rowIndex, column)}
             mode={mode}
             onFormatCellValue={onFormatCellValue}
             forwardRef={ref => {

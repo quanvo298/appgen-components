@@ -8,7 +8,7 @@ import { TABLE_MODE } from '../../utils/constant';
 
 export const CellValue = ({
   row,
-  column,
+  column = {},
   overrideColumn = {},
   mode,
   forwardRef,
@@ -23,7 +23,7 @@ export const CellValue = ({
         {...restProps}
         variant="standard"
         label=""
-        value={row[column.name]}
+        value={row[column.name] || overrideColumn.defaultValue || column.defaultValue}
         ref={forwardRef}
       />
     </TableCell>

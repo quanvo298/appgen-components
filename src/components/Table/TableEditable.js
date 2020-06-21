@@ -99,9 +99,9 @@ class TableEditable extends Component {
     }
   };
 
-  changeCellDefition = (cellName, rowIndexed, newCellDefinition) => {
+  changeCellDefinition = (cellName, rowIndexed, newCellDefinition) => {
     const rowRef = this.rowRefs[rowIndexed];
-    rowRef.changeCellDefition(cellName, newCellDefinition);
+    rowRef.changeCellDefinition(cellName, newCellDefinition);
   };
 
   handleChange = (cellName, value, rowIndexed) => {
@@ -123,6 +123,19 @@ class TableEditable extends Component {
     if (onChange) {
       onChange(event);
     }
+  };
+
+  handleGetCellDefinition = (cellName, rowIndexed) => {
+    const { onGetCellDefinition, componentName } = this.props;
+
+    return (
+      onGetCellDefinition &&
+      onGetCellDefinition({
+        propertyName: componentName,
+        cellName,
+        rowIndexed,
+      })
+    );
   };
 
   render() {
@@ -161,6 +174,7 @@ class TableEditable extends Component {
                     rowIndex={rowIndex}
                     classes={classes}
                     onFormatCellValue={onFormatCellValue}
+                    onGetCellDefinition={this.handleGetCellDefinition}
                     onChange={this.handleChange}
                     disabledDeleted={disabledDeleted}
                     onDeleteRow={this.onDeleteRow}

@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import {
   handlePropertyChanged,
   handleCellChanged,
+  handleGetCellDefinition,
   handleBeforeSaved,
   handleBeforeModified,
   handleValidatePropertyBeforeSaved,
@@ -23,8 +24,8 @@ const withBasicForm = formConfig => ComposedComponent => {
 
     const getComposedComponentInstance = () => composedComponentInstance.current;
 
-    const onPropertyChange = (name, value, updatedItem) => {
-      handlePropertyChanged(getComposedComponentInstance(), name, value, updatedItem);
+    const onPropertyChange = (name, value, updatedItem) => event => {
+      handlePropertyChanged(getComposedComponentInstance(), name, value, updatedItem, event);
     };
 
     const onCellChange = ({ propertyName, cellName, cellValue, rowIndexed, gridData, event }) => {
@@ -36,6 +37,15 @@ const withBasicForm = formConfig => ComposedComponent => {
         rowIndexed,
         gridData,
         event
+      );
+    };
+
+    const onGetCellDefinition = ({ propertyName, cellName, rowIndexed }) => {
+      return handleGetCellDefinition(
+        getComposedComponentInstance(),
+        propertyName,
+        cellName,
+        rowIndexed
       );
     };
 
@@ -68,6 +78,7 @@ const withBasicForm = formConfig => ComposedComponent => {
     const createFormConfig = () => ({
       ...formConfig(polyglot),
       onCellChange,
+      onGetCellDefinition,
       onPropertyChange,
       onBeforeSaved,
       onBeforeModified,
@@ -83,7 +94,8 @@ const withBasicForm = formConfig => ComposedComponent => {
       getFormElement(propName).setValue(value);
     };
 
-    const getFieldValue = propName => getFormElement(propName).getValue();
+    const getFieldValue = propName =>
+      getFormElement(propName) && getFormElement(propName).getValue();
 
     const composedComponentProps = {
       setFieldValue,

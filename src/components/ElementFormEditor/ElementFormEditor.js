@@ -64,18 +64,16 @@ const processAutoSelectComponent = ({
 );
 
 const ElementFormEditor = React.forwardRef((props, ref) => {
-  const { onCellChange, ...restProps } = props;
-  const { type = '' } = props.component || {};
-
-  switch (type) {
+  const { type: componentType = '' } = props.component || {};
+  switch (componentType) {
     case 'grid':
-      return processGridComponent({ ...restProps, onCellChange }, ref);
+      return processGridComponent(props, ref);
     case 'select':
-      return processSelectComponent(restProps);
+      return processSelectComponent(props);
     case 'auto-select':
-      return processAutoSelectComponent(restProps);
+      return processAutoSelectComponent(props);
     default:
-      return <BasicEditor {...restProps} />;
+      return <BasicEditor {...props} />;
   }
 });
 export default ElementFormEditor;

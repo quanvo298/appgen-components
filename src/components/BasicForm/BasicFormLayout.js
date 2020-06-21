@@ -28,10 +28,9 @@ const BasicFormLayout = React.forwardRef((props, ref) => {
       ) : (
         elements &&
         elements.map((element, index) => (
-          <Row mx={2} my={3}>
+          <Row mx={2} my={3} key={index}>
             <BasicElementForm
               ref={ref}
-              key={index}
               {...element}
               {...restProps}
               value={elementsValue[element.name]}

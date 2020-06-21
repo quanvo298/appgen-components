@@ -1,18 +1,16 @@
 import React from 'react';
-import { Checkbox } from '@material-ui/core';
+import Checkbox from '../Checkbox/Checkbox';
 import TextInput from '../TextInput/TextInput';
 import NumberField from '../NumberField/NumberField';
 import DateTimeInput from '../DateTimeInput/DateTimeInput';
 
-import { defaultFunc } from '../../utils/props';
-
 const processNumberComponent = props => <NumberField {...props} />;
 
-const processDateTimeComponent = props => <DateTimeInput {...props} />;
-
-const processBooleanType = ({ value, onInputChange = defaultFunc, name }) => (
-  <Checkbox checked={value} onChange={onInputChange(name, 'checked')} value="true" />
+const processDateTimeComponent = ({ name, onInputChange, ...restProps }) => (
+  <DateTimeInput onChange={onInputChange(name)} {...restProps} />
 );
+
+const processBooleanType = props => <Checkbox {...props} />;
 
 const processOtherType = ({ name, value, label, type, error, disabled, ...restProps }) => (
   <TextInput
@@ -28,12 +26,13 @@ const processOtherType = ({ name, value, label, type, error, disabled, ...restPr
 );
 
 const ElementTagBaseOnType = props => {
-  switch (props.type) {
+  const propType = props.type || '';
+  switch (propType.toLowerCase()) {
     case 'boolean':
       return processBooleanType(props);
     case 'number':
       return processNumberComponent(props);
-    case 'Date':
+    case 'date':
       return processDateTimeComponent(props);
     default:
       return processOtherType(props);

@@ -19,6 +19,7 @@ export const NotificationKind = {
 
 export const BaiscFormPropertyComponentType = {
   Grid: 'grid',
+  AutoSuggest: 'auto-suggest',
 };
 
 export const PropertyDataType = {

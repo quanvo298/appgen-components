@@ -26,7 +26,18 @@ const convertToOptions = (component = {}) => {
   }, []);
 };
 
-const AutoSelect = ({ component, multi, value, onChange = defaultFunc, ...props }) => {
+const AutoSelect = ({
+  component,
+  multi,
+  value,
+  onChange = defaultFunc,
+  name,
+  label,
+  error,
+  disabled,
+  required,
+  variant = 'outlined',
+}) => {
   const autoSelectRef = useRef(null);
   const options = convertToOptions(component);
   const defaultValue = getSelectedOption(options, multi, value);
@@ -52,13 +63,18 @@ const AutoSelect = ({ component, multi, value, onChange = defaultFunc, ...props 
       renderInput={params => (
         <TextField
           {...params}
-          variant="outlined"
-          label={props.label}
+          required={required}
+          variant={variant}
+          label={label}
           placeholder="Search element (start with a)"
         />
       )}
       ref={autoSelectRef}
-      {...props}
+      name={name}
+      label={label}
+      error={error}
+      disabled={disabled}
+      required={required}
     />
   );
 };

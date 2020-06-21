@@ -7,15 +7,13 @@ import { defaultFunc } from '../../utils/props';
 const Select = ({
   optionEmpty,
   options,
-  type,
-  component,
-  error,
-  label,
-  name,
   value,
-  onInputChange = defaultFunc,
+  label,
+  error,
+  disabled,
+  required,
   variant = 'outlined',
-  ...restProps
+  onChange = defaultFunc,
 }) => (
   <FormControl fullWidth variant={variant}>
     {label && <InputLabel>{label}</InputLabel>}
@@ -26,8 +24,9 @@ const Select = ({
       label={label}
       variant={variant}
       value={value}
-      onChange={onInputChange(name)}
-      {...restProps}
+      disabled={disabled}
+      required={required}
+      onChange={onChange}
     >
       {optionEmpty && <option value="" />}
       {options.map((option, index) => (

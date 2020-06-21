@@ -11,11 +11,12 @@ const TableEditableComponent = React.forwardRef(function TableEditableComponent(
     component,
     name,
     value,
-    onInputChange = defaultFunc,
     label,
     forwardRef,
     inputRef,
-    onCellChange,
+    onInputChange = defaultFunc,
+    onCellChange = defaultFunc,
+    onGetCellDefinition = defaultFunc,
     ...inputProps
   } = props;
   return (
@@ -30,25 +31,29 @@ const TableEditableComponent = React.forwardRef(function TableEditableComponent(
       inputProps={inputProps}
       onChange={onInputChange(name)}
       onCellChange={onCellChange}
+      onGetCellDefinition={onGetCellDefinition}
     />
   );
 });
 
 const GridEditorComponent = React.forwardRef((props, ref) => {
   const {
-    children,
     classes,
     component,
     name,
     value = [],
-    onInputChange = defaultFunc,
     label,
+    error,
+    disabled,
+    required,
     variant = 'outlined',
     inputProps,
-    labelWidth = 0,
+    labelProps,
+    onInputChange,
     onCellChange,
+    onGetCellDefinition,
+    labelWidth = 0,
     forwardRef,
-    ...restProps
   } = props;
   const InputComponent = {
     standard: <Input />,
@@ -68,10 +73,12 @@ const GridEditorComponent = React.forwardRef((props, ref) => {
       value,
       onInputChange,
       onCellChange,
+      onGetCellDefinition,
       forwardRef,
       placeholder: label,
       defaultValue: label,
       ...inputProps,
+      ...labelProps,
       classes: inputProps
         ? mergeClasses({
             baseClasses: classes,
@@ -82,7 +89,9 @@ const GridEditorComponent = React.forwardRef((props, ref) => {
     notched: true,
     ref,
     variant,
-    ...restProps,
+    error,
+    disabled,
+    required,
   });
 });
 
