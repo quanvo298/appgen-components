@@ -12,3 +12,4 @@ storybook-static/*
 serviceWorker.js
 wqappgen
 babel.config.js
+core

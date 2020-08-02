@@ -62,6 +62,7 @@ const BasicFormWidget = React.forwardRef(
       selectedItem,
       classes,
       title,
+      showTitle = true,
       toolbarButtons,
       formToolbarButtons = [],
       FormComponentLayout,
@@ -159,6 +160,7 @@ const BasicFormWidget = React.forwardRef(
       <form autoComplete="off" noValidate>
         <BasicBoxWidget
           title={title}
+          showTitle={showTitle}
           headerActions={HeaderButtonsBoxInstance}
           cardActions={FormActionButtonsBoxInstance}
         >

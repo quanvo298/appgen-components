@@ -9,6 +9,7 @@ import {
   handleValidateUpdatedItemBeforeSaved,
   handleAfterSaved,
 } from '../../helper/BasicFormHelper';
+import { mergeFormConfig } from '../../helper/FormModuleHelper';
 import withPolyglot from '../../utils/withPolyglot';
 
 const withBasicForm = formConfig => ComposedComponent => {
@@ -76,7 +77,7 @@ const withBasicForm = formConfig => ComposedComponent => {
     };
 
     const createFormConfig = () => ({
-      ...formConfig(polyglot),
+      ...mergeFormConfig(getComposedComponentInstance(), formConfig, polyglot),
       onCellChange,
       onGetCellDefinition,
       onPropertyChange,

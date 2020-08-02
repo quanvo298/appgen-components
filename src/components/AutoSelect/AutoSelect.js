@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import MUIAutocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { defaultFunc } from '../../utils/props';
+import Row from '../Container/Row';
+import Wrapper from '../Container/Wrapper';
+import MaterialIcon from '../Icon/MaterialIcon';
 
 const getSelectedOption = (options, multi, autoSelectValue) => {
   if (options && autoSelectValue && multi) {
@@ -37,14 +40,19 @@ const AutoSelect = ({
   disabled,
   required,
   variant = 'outlined',
+  onIconClick = defaultFunc,
+  showIcon = false,
+  iconName = 'Add',
 }) => {
   const autoSelectRef = useRef(null);
   const options = convertToOptions(component);
   const defaultValue = getSelectedOption(options, multi, value);
 
   const handleChange = (event, itemValue) => {
-    const targetValue =
-      itemValue && multi ? itemValue.map(item => item.value) : itemValue && itemValue.value;
+    let targetValue = null;
+    if (itemValue) {
+      targetValue = multi ? itemValue.map(item => item.value) : itemValue.value;
+    }
     const target = {
       target: { value: targetValue, selectItem: itemValue },
     };
@@ -52,30 +60,37 @@ const AutoSelect = ({
   };
 
   return (
-    <MUIAutocomplete
-      multiple={multi}
-      filterSelectedOptions
-      options={options}
-      getOptionLabel={option => option.label}
-      fullWidth
-      value={defaultValue}
-      onChange={handleChange}
-      renderInput={params => (
-        <TextField
-          {...params}
-          required={required}
-          variant={variant}
-          label={label}
-          placeholder="Search element (start with a)"
-        />
+    <Row width={1}>
+      <MUIAutocomplete
+        multiple={multi}
+        filterSelectedOptions
+        options={options}
+        getOptionLabel={option => option.label}
+        fullWidth
+        value={defaultValue}
+        onChange={handleChange}
+        renderInput={params => (
+          <TextField
+            {...params}
+            required={required}
+            variant={variant}
+            label={label}
+            placeholder="Search element (start with a)"
+          />
+        )}
+        ref={autoSelectRef}
+        name={name}
+        label={label}
+        error={error}
+        disabled={disabled}
+        required={required}
+      />
+      {showIcon && (
+        <Wrapper mx={2}>
+          <MaterialIcon iconName={iconName} onIconClick={onIconClick} />
+        </Wrapper>
       )}
-      ref={autoSelectRef}
-      name={name}
-      label={label}
-      error={error}
-      disabled={disabled}
-      required={required}
-    />
+    </Row>
   );
 };
 

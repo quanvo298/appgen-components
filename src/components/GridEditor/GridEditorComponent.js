@@ -17,6 +17,7 @@ const TableEditableComponent = React.forwardRef(function TableEditableComponent(
     onInputChange = defaultFunc,
     onCellChange = defaultFunc,
     onGetCellDefinition = defaultFunc,
+    required,
     ...inputProps
   } = props;
   return (
@@ -29,6 +30,7 @@ const TableEditableComponent = React.forwardRef(function TableEditableComponent(
       disabledNew={component.disabledNew}
       ref={forwardRef || ref}
       inputProps={inputProps}
+      required={required}
       onChange={onInputChange(name)}
       onCellChange={onCellChange}
       onGetCellDefinition={onGetCellDefinition}
@@ -73,6 +75,7 @@ const GridEditorComponent = React.forwardRef((props, ref) => {
       value,
       onInputChange,
       onCellChange,
+      required,
       onGetCellDefinition,
       forwardRef,
       placeholder: label,

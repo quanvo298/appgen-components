@@ -1,6 +1,7 @@
 import AppBar from './AppBar/AppBar';
 import Header from './AppBar/Header';
 import AutoSelect from './AutoSelect/AutoSelect';
+import AutoSelectFormDialog from './AutoSelect/AutoSelectFormDialog';
 import BasicBoxWidget from './BasicBoxWidget/BasicBoxWidget';
 import BasicElementForm from './BasicForm/BasicElementForm';
 import BasicFormLayout from './BasicForm/BasicFormLayout';
@@ -15,6 +16,7 @@ import DragableContainer from './Container/DragableContainer';
 import Row from './Container/Row';
 import Wrapper from './Container/Wrapper';
 import ContentList from './ContentList/ContentList';
+import FormDialog from './Dialog/FormDialog';
 import ConfirmDialog from './Dialog/ConfirmDialog';
 import DeleteConfirmDialog from './Dialog/DeleteConfirmDialog';
 import BasicEditor from './ElementFormEditor/BasicEditor';
@@ -38,6 +40,7 @@ export {
   AppBar,
   Header,
   AutoSelect,
+  AutoSelectFormDialog,
   BasicBoxWidget,
   BasicElementForm,
   BasicFormLayout,
@@ -52,6 +55,7 @@ export {
   Row,
   Wrapper,
   ContentList,
+  FormDialog,
   ConfirmDialog,
   DeleteConfirmDialog,
   BasicEditor,

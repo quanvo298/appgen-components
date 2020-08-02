@@ -28,7 +28,7 @@ const DateTimeInput = React.forwardRef((props, ref) => {
         inputVariant={variant}
         format="MM/dd/yyyy"
         label={label}
-        value={value}
+        value={value || null}
         fullWidth
         error={error}
         disabled={disabled}

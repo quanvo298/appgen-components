@@ -17,7 +17,7 @@ export const FUNCTION_INTEGRATION = {
   ValidateUpdatedItemBeforeSaved: 'validateUpdatedItemBeforeSaved',
   UpdatedItemBeforeSaved: 'updatedItemBeforeSaved',
   UpdatedItemBeforeModified: 'updatedItemBeforeModified',
-  AfterSaved: 'afterSaved',
+  AfterSaved: 'onAfterSaved',
 };
 
 export const processInitialValues = (elements = [], selectedItem) => {

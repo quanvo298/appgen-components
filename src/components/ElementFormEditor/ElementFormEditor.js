@@ -6,6 +6,7 @@ import AutoSelect from '../AutoSelect/AutoSelect';
 import { TrueOrFalseOptions } from '../config';
 import { isObject } from '../../utils/StringUtils';
 import { defaultFunc } from '../../utils/props';
+import { getEditorComponent } from '../../helper/ConfigModuleHelper';
 
 const processGridComponent = (props, ref) => <GridEditor {...props} ref={ref} />;
 
@@ -72,8 +73,13 @@ const ElementFormEditor = React.forwardRef((props, ref) => {
       return processSelectComponent(props);
     case 'auto-select':
       return processAutoSelectComponent(props);
-    default:
+    default: {
+      const EditorComponent = getEditorComponent(componentType);
+      if (EditorComponent) {
+        return <EditorComponent {...props} />;
+      }
       return <BasicEditor {...props} />;
+    }
   }
 });
 export default ElementFormEditor;

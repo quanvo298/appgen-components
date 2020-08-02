@@ -42,10 +42,11 @@ module.exports = {
     'react/forbid-prop-types': 'off',
     'import/no-unresolved':'off',
     'jsx-a11y/no-static-element-interactions': 'off',
-    'no-underscore-dangle': 'off',
     'guard-for-in':'off',
     'no-continue': 'off',
     'react/no-danger': 'off',
-    "import/no-cycle": 'off'
+    "import/no-cycle": 'off',
+    'no-void':'off',
+    'import/prefer-default-export': 'off'
   },
 };

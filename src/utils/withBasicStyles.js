@@ -228,6 +228,19 @@ const TabStyles = () => ({
   },
 });
 
+const FormDialogStyles = theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
 export const withBasicFormStyles = component => withStyles(BasicStyles)(component);
 
 export const withLayoutStyles = component => withStyles(LayoutStyles)(component);
@@ -246,5 +259,7 @@ export const withTabStyles = component => withStyles(TabStyles)(component);
 
 export const withAutoSuggestStyles = (component, option) =>
   withStyles(AutoSuggestStyles, option)(component);
+
+export const withFormDialogStyles = component => withStyles(FormDialogStyles)(component);
 
 export const makeListItemStyles = makeStyles(ListItem);
