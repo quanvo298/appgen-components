@@ -14,6 +14,7 @@ const NumberField = ({
   onKeyPress,
   label,
   variant = 'outlined',
+  required,
 }) => {
   const [isEditing, setEditing] = useState(false);
 
@@ -21,6 +22,7 @@ const NumberField = ({
     const newEditing = disabled ? false : !isEditing;
     setEditing(newEditing);
   };
+
   const type = isEditing ? PropertyDataType.Number : PropertyDataType.Text;
 
   let textValue = value;
@@ -47,16 +49,17 @@ const NumberField = ({
       variant={variant}
       error={error}
       InputLabelProps={{
-        shrink: true,
+        shrink: textValue || isEditing,
         ...elementProps,
       }}
       onChange={onInputChange && onInputChange(name)}
       onKeyPress={onKeyPress && onKeyPress(name)}
-      {...fieldEvents}
-      value={textValue || ''}
       type={type}
       disabled={disabled}
+      required={required}
+      {...fieldEvents}
       InputProps={{ ...inputProps }}
+      value={textValue || null}
     />
   );
 };

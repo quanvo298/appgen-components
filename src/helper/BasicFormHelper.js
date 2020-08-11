@@ -63,11 +63,10 @@ export const validateElements = (elements, elementsValue, formElementsRef = {}) 
     const elementValue = elementsValue[name];
     const formElementRef = formElementsRef[name];
     const formElementValidate = formElementRef && formElementRef[FUNCTION_VALIDATE];
-    if (formElementValidate && formElementValidate()) {
+    if (formElementValidate && !formElementValidate()) {
       errors[name] = true;
       result.disabled = true;
     }
-
     if (!errors[name] && validateElement(element, elementValue)) {
       errors[name] = true;
       result.disabled = true;

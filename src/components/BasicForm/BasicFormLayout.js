@@ -22,7 +22,7 @@ const BasicFormLayout = React.forwardRef((props, ref) => {
         <FormComponentLayout
           elements={elements}
           elementsValue={elementsValue}
-          ref={ref}
+          forwardRef={ref}
           {...restProps}
         />
       ) : (

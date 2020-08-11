@@ -75,13 +75,13 @@ const AutoSelect = ({
             required={required}
             variant={variant}
             label={label}
+            error={error}
             placeholder="Search element (start with a)"
           />
         )}
         ref={autoSelectRef}
         name={name}
         label={label}
-        error={error}
         disabled={disabled}
         required={required}
       />

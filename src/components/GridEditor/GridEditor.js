@@ -4,9 +4,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import GridEditorComponent from './GridEditorComponent';
 
 const GridEditor = React.forwardRef((props, ref) => {
-  const { label, variant = 'outlined', required, ...restProps } = props;
+  const { label, variant = 'outlined', error, required, ...restProps } = props;
   return (
-    <FormControl fullWidth variant={variant} required>
+    <FormControl fullWidth variant={variant} required error={error}>
       {label && <InputLabel shrink>{label}</InputLabel>}
       <GridEditorComponent
         variant={variant}
@@ -14,6 +14,7 @@ const GridEditor = React.forwardRef((props, ref) => {
         required={required}
         {...restProps}
         forwardRef={ref}
+        error={error}
       />
     </FormControl>
   );

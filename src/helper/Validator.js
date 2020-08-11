@@ -4,13 +4,13 @@ import { isEmpty, isNotEmpty } from '../utils/CollectionUtils';
 
 export const validateElement = (element, newValue) => {
   if (element.required && PropertyDataType.ArrayObject === element.type) {
-    return isEmpty(newValue);
+    return !isEmpty(newValue);
   }
 
   if (element.required) {
-    return isBlank(newValue);
+    return !isBlank(newValue);
   }
-  return false;
+  return true;
 };
 
 const buildValidatorStrategy = polyglot => {

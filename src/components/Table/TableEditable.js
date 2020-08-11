@@ -60,12 +60,12 @@ class TableEditable extends Component {
   validate = () => {
     const { columns } = this.props;
     const { gridData } = this.state;
-    if (gridData) {
+    if (gridData.length) {
       const { hasError, errors } = validate(gridData, columns);
       if (hasError) {
         processErrors(this.rowRefs, errors);
       }
-      return hasError;
+      return !hasError;
     }
     return false;
   };

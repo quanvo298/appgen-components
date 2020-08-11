@@ -43,7 +43,7 @@ class BasicElementForm extends Component {
     if (elemenentFormValidate) {
       return elemenentFormValidate();
     }
-    return false;
+    return true;
   };
 
   doRender = () => {
@@ -55,9 +55,7 @@ class BasicElementForm extends Component {
   };
 
   setError = error => {
-    if (this.doRender()) {
-      this.setState({ error, fromSetState: true });
-    }
+    this.setState({ error, fromSetState: true });
   };
 
   changeDefinition = definition => {

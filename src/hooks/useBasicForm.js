@@ -37,12 +37,16 @@ const useBasicForm = ({
 
   const getFormElement = propName => getFormElements()[propName];
 
+  const addFormElement = (propName, formElementRef) => {
+    formElementsRef.current[propName] = formElementRef;
+  };
+
   const addFormElementRef = formElementRef => {
     if (formElementRef) {
       const { props = {} } = formElementRef;
       const { name } = props;
       if (name) {
-        getFormElements()[name] = formElementRef;
+        addFormElement(name, formElementRef);
       }
     }
   };
@@ -124,6 +128,7 @@ const useBasicForm = ({
       validateStrategy
     );
     const { disabled, errors } = validationResult;
+
     if (disabled) {
       processErrors(errors);
 
@@ -140,6 +145,7 @@ const useBasicForm = ({
       onValidateUpdatedItemBeforeSaved,
       validateStrategy
     );
+
     if (validationResult.disabled && validateStrategy.hasErrors()) {
       showErrorMessage(validateStrategy);
       return false;
