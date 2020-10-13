@@ -3,7 +3,6 @@ import { mergeClasses } from '@material-ui/styles';
 import { OutlinedInput, FilledInput, Input } from '@material-ui/core';
 import TableEditable from '../Table/TableEditable';
 import { TABLE_MODE } from '../../utils/constant';
-import { defaultFunc } from '../../utils/props';
 
 const TableEditableComponent = React.forwardRef(function TableEditableComponent(props, ref) {
   const {
@@ -14,9 +13,9 @@ const TableEditableComponent = React.forwardRef(function TableEditableComponent(
     label,
     forwardRef,
     inputRef,
-    onInputChange = defaultFunc,
-    onCellChange = defaultFunc,
-    onGetCellDefinition = defaultFunc,
+    onInputChange,
+    onCellChange,
+    onGetCellDefinition,
     required,
     ...inputProps
   } = props;
@@ -43,7 +42,7 @@ const GridEditorComponent = React.forwardRef((props, ref) => {
     classes,
     component,
     name,
-    value = [],
+    objectValue,
     label,
     error,
     disabled,
@@ -72,7 +71,7 @@ const GridEditorComponent = React.forwardRef((props, ref) => {
       type: undefined, // We render a select. We can ignore the type provided by the `Input`.
       component,
       name,
-      value,
+      value: objectValue,
       onInputChange,
       onCellChange,
       required,

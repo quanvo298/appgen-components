@@ -1,19 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { withTableStyles } from '../../utils/withBasicStyles';
+import { useTableStyles } from '../../utils/withBasicStyles';
 import { usePolyglot } from '../../utils/LocaleProvider';
-import { validate, processErrors } from '../../helper/TableEditorHelper';
+import { validate as tableValidate, processErrors } from '../../helper/TableEditorHelper';
 import Wrapper from '../Container/Wrapper';
 import BasicButton from '../Button/BasicButton';
 import { isNotEmpty } from '../../utils/CollectionUtils';
 import { processInitialValues } from '../../helper/BasicFormHelper';
 import Head from './Head';
 import TableRow from './TableRow';
+import useGetSetRef from '../../hooks/useGetSetRef';
+import { assignToRef } from '../../utils';
+import { defaultFunc } from '../../utils/props';
 
 const ButtonsBox = ({ disabledNew, onAddNewRow }) => {
   const polyglot = usePolyglot();
+
   return (
     <Wrapper my={2} textAlign="end">
       {!disabledNew && (
@@ -25,172 +29,146 @@ const ButtonsBox = ({ disabledNew, onAddNewRow }) => {
   );
 };
 
-class TableEditable extends Component {
-  constructor(props) {
-    super(props);
-    this.rowRefs = [];
-    this.state = {
-      gridData: undefined,
-      setFromState: false,
-    };
-  }
+const TableEditable = React.forwardRef((props, ref) => {
+  const classes = useTableStyles();
+  const {
+    gridData: propGridData = {},
+    mode,
+    disabledDeleted,
+    disabledNew,
+    columns,
+    onFormatCellValue,
+    onChange: propChange = defaultFunc,
+    onSelectedRow: propSelectedRow = defaultFunc,
+    onCellChange = defaultFunc,
+    onGetCellDefinition = defaultFunc,
+    componentName,
+  } = props;
+  // const { disabled, inputRef, onAnimationStart } = inputProps;
+  const {
+    get: getRowRefs,
+    setProp: setRowRef,
+    getProp: getRowRef,
+    removeProp: removeRowRef,
+  } = useGetSetRef([]);
+  const [gridData, setGridData] = useState(propGridData.value);
 
-  static getDerivedStateFromProps(props, state) {
-    const { gridData: gridDataFromState, setFromState } = state;
-    const { gridData: gridDataFromProps } = props;
-    const shouldBeUpdated = setFromState || gridDataFromState !== gridDataFromProps;
-    if (shouldBeUpdated) {
-      const gridData = setFromState ? gridDataFromState : gridDataFromProps;
-      return {
-        gridData,
-        setFromState: false,
-      };
-    }
-    return null;
-  }
+  useEffect(() => {
+    setGridData(propGridData.value);
+  }, [propGridData]);
 
-  addRowRef = (elementFormRef, rowIndexed) => {
+  const addRowRef = (elementFormRef, rowIndexed) => {
     if (elementFormRef) {
-      this.rowRefs[rowIndexed] = elementFormRef;
+      setRowRef(rowIndexed, elementFormRef);
     }
   };
 
-  getRowRef = rowIndexed => this.rowRefs[rowIndexed];
-
-  validate = () => {
-    const { columns } = this.props;
-    const { gridData } = this.state;
-    if (gridData.length) {
-      const { hasError, errors } = validate(gridData, columns);
+  const validate = () => {
+    if (gridData && gridData.length) {
+      const { hasError, errors } = tableValidate(gridData, columns);
       if (hasError) {
-        processErrors(this.rowRefs, errors);
+        processErrors(getRowRefs(), errors);
       }
       return !hasError;
     }
     return false;
   };
 
-  onDeleteRow = (rowData, rowIndex) => {
-    const { gridData } = this.state;
+  const onChange = () => {
+    const event = { target: { value: gridData, ref } };
+    propChange(event);
+  };
+
+  const onDeleteRow = (rowData, rowIndex) => {
     if (gridData) {
-      this.rowRefs.splice(rowIndex, 1);
+      removeRowRef(rowIndex);
       gridData.splice(rowIndex, 1);
-      this.setState({ gridData, setFromState: true });
+      setGridData([...gridData]);
+      onChange();
     }
   };
 
-  onAddNewRow = event => {
+  const onAddNewRow = event => {
     event.preventDefault();
     event.stopPropagation();
-    let { gridData } = this.state;
-    if (!gridData) {
-      gridData = [];
-    }
-    const { columns } = this.props;
+    const data = gridData || [];
     const initialValues = processInitialValues(columns);
-    gridData.push(initialValues);
-    this.setState({ gridData, setFromState: true });
+    data.push(initialValues);
+    setGridData([...data]);
+    onChange();
   };
 
-  onSelectedRow = (row, rowIndex) => {
-    const { onSelectedRow } = this.props;
-    if (onSelectedRow) {
-      onSelectedRow(row, rowIndex);
-    }
+  const onSelectedRow = (row, rowIndex) => {
+    propSelectedRow(row, rowIndex);
   };
 
-  changeCellDefinition = (cellName, rowIndexed, newCellDefinition) => {
-    const rowRef = this.rowRefs[rowIndexed];
-    rowRef.changeCellDefinition(cellName, newCellDefinition);
+  const changeCellDefinition = (cellName, rowIndexed, newCellDefinition) => {
+    getRowRef(rowIndexed).changeCellDefinition(cellName, newCellDefinition);
   };
 
-  handleChange = (cellName, value, rowIndexed) => {
-    const { gridData } = this.state;
-    const { onCellChange, onChange, componentName } = this.props;
+  const handleCellChange = (cellName, value, rowIndexed) => {
     const rowData = gridData[rowIndexed];
-    const event = { target: { value: gridData, ref: this } };
+    const { current } = ref;
+    const event = { target: { value: gridData, ref: current } };
     rowData[cellName] = value;
-    if (onCellChange) {
-      onCellChange({
-        propertyName: componentName,
-        cellName,
-        cellValue: value,
-        rowIndexed,
-        gridData,
-        event,
-      });
-    }
-    if (onChange) {
-      onChange(event);
-    }
+    onCellChange({
+      propertyName: componentName,
+      cellName,
+      cellValue: value,
+      rowIndexed,
+      gridData,
+      event,
+    });
+
+    onChange();
   };
 
-  handleGetCellDefinition = (cellName, rowIndexed) => {
-    const { onGetCellDefinition, componentName } = this.props;
-
-    return (
-      onGetCellDefinition &&
-      onGetCellDefinition({
-        propertyName: componentName,
-        cellName,
-        rowIndexed,
-      })
-    );
+  const handleGetCellDefinition = (cellName, rowIndexed) => {
+    onGetCellDefinition({
+      propertyName: componentName,
+      cellName,
+      rowIndexed,
+    });
   };
 
-  render() {
-    const { gridData } = this.state;
-    const {
-      columns,
-      classes,
-      mode,
-      disabledNew,
-      disabledDeleted,
-      onFormatCellValue,
-      inputProps = {},
-    } = this.props;
-    const { disabled, inputRef, onAnimationStart } = inputProps;
+  assignToRef(ref, {
+    validate,
+    changeCellDefinition,
+  });
 
-    return (
-      <PerfectScrollbar>
-        <Wrapper
-          minWidth={1050}
-          ref={inputRef}
-          disabled={disabled}
-          // onFocus={onFocus}
-          // onBlur={onBlur}
-          onAnimationStart={onAnimationStart}
-        >
-          <Table className={classes.table}>
-            <Head columns={columns} classes={classes} mode={mode} />
-            {isNotEmpty(gridData) && (
-              <TableBody>
-                {gridData.map((row, rowIndex) => (
-                  <TableRow
-                    mode={mode}
-                    columns={columns}
-                    key={rowIndex}
-                    rowData={row}
-                    rowIndex={rowIndex}
-                    classes={classes}
-                    onFormatCellValue={onFormatCellValue}
-                    onGetCellDefinition={this.handleGetCellDefinition}
-                    onChange={this.handleChange}
-                    disabledDeleted={disabledDeleted}
-                    onDeleteRow={this.onDeleteRow}
-                    onSelectedRow={this.onSelectedRow}
-                    ref={ref => {
-                      this.addRowRef(ref, rowIndex);
-                    }}
-                  />
-                ))}
-              </TableBody>
-            )}
-          </Table>
-          <ButtonsBox disabledNew={disabledNew} onAddNewRow={this.onAddNewRow} />
-        </Wrapper>
-      </PerfectScrollbar>
-    );
-  }
-}
-export default withTableStyles(TableEditable);
+  return (
+    <PerfectScrollbar>
+      <Wrapper>
+        <Table className={classes.table}>
+          <Head columns={columns} classes={classes} mode={mode} />
+          {isNotEmpty(gridData) && (
+            <TableBody>
+              {gridData.map((row, rowIndex) => (
+                <TableRow
+                  mode={mode}
+                  columns={columns}
+                  key={row.id || rowIndex}
+                  rowData={row}
+                  rowIndex={rowIndex}
+                  classes={classes}
+                  onFormatCellValue={onFormatCellValue}
+                  onGetCellDefinition={handleGetCellDefinition}
+                  onChange={handleCellChange}
+                  disabledDeleted={disabledDeleted}
+                  onDeleteRow={onDeleteRow}
+                  onSelectedRow={onSelectedRow}
+                  ref={rowRef => {
+                    addRowRef(rowRef, rowIndex);
+                  }}
+                />
+              ))}
+            </TableBody>
+          )}
+        </Table>
+        <ButtonsBox disabledNew={disabledNew} onAddNewRow={onAddNewRow} />
+      </Wrapper>
+    </PerfectScrollbar>
+  );
+});
+
+export default TableEditable;

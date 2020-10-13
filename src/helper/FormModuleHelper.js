@@ -37,15 +37,17 @@ export const processToMergeFormConfig = (originalFormConfig, additionalFormConfi
   return originalFormConfig;
 };
 
-export const mergeFormConfig = (composedComponentInstance, formConfig, polyglot) => {
+export const mergeFormConfig = ({ viewName, formConfig, polyglot }) => {
   const config = formConfig(polyglot);
-  if (composedComponentInstance) {
-    const { displayName, name } = composedComponentInstance.constructor;
-    const componentName = displayName || name;
+  if (viewName) {
+    const componentName = viewName;
     const formModule = getFormModuleConfig(componentName);
     if (formModule && formModule.formConfig) {
-      const additionnalFormConfig = formModule.formConfig({ config, polyglot });
-      return processToMergeFormConfig(config, additionnalFormConfig);
+      const additionalFormConfig = formModule.formConfig({
+        originalFormConfig: config,
+        polyglot,
+      });
+      return processToMergeFormConfig(config, additionalFormConfig);
     }
   }
   return config;

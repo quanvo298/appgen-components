@@ -27,7 +27,6 @@ const TextInput = ({
 }) => (
   <TextField
     label={label}
-    variant={variant}
     fullWidth
     required={required}
     error={error}
@@ -39,6 +38,7 @@ const TextInput = ({
     InputProps={{ ...inputProps }}
     value={getValueBaseonType(value, type)}
     type={type}
+    {...(Boolean(variant) && { variant })}
   />
 );
 

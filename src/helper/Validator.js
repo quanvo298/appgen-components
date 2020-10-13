@@ -1,14 +1,18 @@
 import { PropertyDataType } from '../utils/constant';
 import { isBlank, isNotBlank } from '../utils/StringUtils';
-import { isEmpty, isNotEmpty } from '../utils/CollectionUtils';
+import { isNotEmpty } from '../utils/CollectionUtils';
 
 export const validateElement = (element, newValue) => {
   if (element.required && PropertyDataType.ArrayObject === element.type) {
-    return !isEmpty(newValue);
+    return isNotEmpty(newValue);
+  }
+
+  if (element.required && !newValue) {
+    return false;
   }
 
   if (element.required) {
-    return !isBlank(newValue);
+    return isNotBlank(newValue.toString());
   }
   return true;
 };

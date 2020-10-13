@@ -25,7 +25,7 @@ const DateTimeInput = React.forwardRef((props, ref) => {
         name={name}
         disableToolbar
         variant="inline"
-        inputVariant={variant}
+        {...(Boolean(variant) && { inputVariant: variant })}
         format="MM/dd/yyyy"
         label={label}
         value={value || null}

@@ -12,18 +12,20 @@ const processDateTimeComponent = ({ name, onInputChange, ...restProps }) => (
 
 const processBooleanType = props => <Checkbox {...props} />;
 
-const processOtherType = ({ name, value, label, type, error, disabled, ...restProps }) => (
-  <TextInput
-    fullWidth
-    name={name}
-    label={label}
-    error={error}
-    value={value}
-    type={type}
-    disabled={disabled}
-    {...restProps}
-  />
-);
+const processOtherType = ({ name, value, label, type, error, disabled, ...restProps }) => {
+  return (
+    <TextInput
+      fullWidth
+      name={name}
+      label={label}
+      error={error}
+      value={value}
+      type={type}
+      disabled={disabled}
+      {...restProps}
+    />
+  );
+};
 
 const ElementTagBaseOnType = props => {
   const propType = props.type || '';

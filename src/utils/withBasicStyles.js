@@ -253,7 +253,7 @@ export const withNotificationStyles = component => withStyles(NotificationStyles
 
 export const withDragableStyles = component => withStyles(DragableStyles)(component);
 
-export const withTableStyles = component => withStyles(TableEditorStyles)(component);
+export const useTableStyles = makeStyles(TableEditorStyles);
 
 export const withTabStyles = component => withStyles(TabStyles)(component);
 

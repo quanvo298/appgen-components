@@ -11,7 +11,7 @@ const Checkbox = ({ name, value, label, error, disabled, onInputChange = default
     <FormControlLabel
       control={<MCheckbox name={name} checked={Boolean(value)} onChange={handleChange} />}
       label={label}
-      error={error}
+      error={error || undefined}
       disabled={disabled}
     />
   );

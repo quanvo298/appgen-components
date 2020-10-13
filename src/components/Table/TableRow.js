@@ -1,108 +1,85 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MUITableRow from '@material-ui/core/TableRow';
 import { CellValue, EditIconCell, DeleteIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
+import useGetSetRef from '../../hooks/useGetSetRef';
+import { defaultFunc } from '../../utils/props';
+import { assignToRef } from '../../utils';
 
-class TableRow extends Component {
-  constructor(props) {
-    super(props);
-    this.elementFormRefs = {};
-    this.state = {
-      rowData: undefined,
-      rowIndex: -1,
-      setFromState: false,
-    };
-  }
+const TableRow = React.forwardRef((props, ref) => {
+  const {
+    classes,
+    mode,
+    columns,
+    disabledDeleted,
+    rowData,
+    rowIndex,
+    onFormatCellValue,
+    onSelectedRow = defaultFunc,
+    onDeleteRow = defaultFunc,
+    onGetCellDefinition = defaultFunc,
+    onChange = defaultFunc,
+  } = props;
+  const { getProp: getCellRef, setProp: setCellRef } = useGetSetRef({});
+  // const [rowData, _] = useState(propRowData);
+  // const [rowIndex, setRowIndex] = useState(propRowIndex);
 
-  static getDerivedStateFromProps(props, state) {
-    const { rowData: rowDataFromState, rowIndex: rowIndexFromState, setFromState } = state;
-    const { rowData: rowDataFromProps, rowIndex: rowIndexFromProps } = props;
-    const shouldBeUpdated =
-      setFromState ||
-      rowDataFromProps !== rowDataFromState ||
-      rowIndexFromProps !== rowIndexFromState;
-    if (shouldBeUpdated) {
-      const rowData = setFromState ? rowDataFromState : rowDataFromProps;
-      const rowIndex = setFromState ? rowIndexFromState : rowIndexFromProps;
-      return {
-        rowData,
-        rowIndex,
-        setFromState: false,
-      };
-    }
-    return null;
-  }
-
-  setError = elementName => {
-    const ref = this.elementFormRefs[elementName];
-    ref.setError(true);
+  const setError = cellName => {
+    const cellRef = getCellRef(cellName);
+    cellRef.setFieldError(true);
   };
 
-  addElementFormRef = elementFormRef => {
+  const addElementFormRef = elementFormRef => {
     if (elementFormRef) {
-      const { props } = elementFormRef;
-      this.elementFormRefs[props.name] = elementFormRef;
+      const { name } = elementFormRef;
+      setCellRef(name, elementFormRef);
     }
   };
 
-  getCellDefinition = (cellName, rowIndex, column) => {
-    const { onGetCellDefinition } = this.props;
-    return onGetCellDefinition && onGetCellDefinition(cellName, rowIndex, column);
+  const getCellDefinition = (cellName, index, column) => {
+    return onGetCellDefinition(cellName, index, column);
   };
 
-  changeCellDefinition = (cellName, newCellDefinition) => {
-    const { columns } = this.props;
+  const changeCellDefinition = (cellName, newCellDefinition) => {
     const currentCellDefinition = columns.find(({ name }) => name === cellName);
 
     if (currentCellDefinition) {
       const changedCellDefinition = { ...currentCellDefinition, ...newCellDefinition, label: '' };
-      this.elementFormRefs[cellName].changeDefinition(changedCellDefinition);
+      getCellRef(cellName).changeDefinition(changedCellDefinition);
     }
   };
 
-  handleInputChange = (cellName, value, rowIndex, column) => () => {
-    const { rowData } = this.state;
+  const handleInputChange = (cellName, value, index, column) => () => {
     rowData[cellName] = value;
-    this.props.onChange(cellName, value, rowIndex, column);
+    onChange(cellName, value, index, column);
   };
 
-  render() {
-    const { rowData, rowIndex } = this.state;
-    const {
-      columns,
-      classes,
-      mode,
-      onFormatCellValue,
-      disabledDeleted,
-      onSelectedRow,
-      onDeleteRow,
-    } = this.props;
-    return (
-      <MUITableRow
-        key={rowIndex}
-        className={TABLE_MODE.View === mode ? classes.trEditor : ''}
-        hover
-      >
-        {columns.map((column, colIndex) => (
-          <CellValue
-            key={colIndex}
-            row={rowData}
-            column={column}
-            overrideColumn={this.getCellDefinition(column.name, rowIndex, column)}
-            mode={mode}
-            onFormatCellValue={onFormatCellValue}
-            forwardRef={ref => {
-              this.addElementFormRef(ref, rowIndex);
-            }}
-            onInputChange={(name, value) => this.handleInputChange(name, value, rowIndex, column)}
-          />
-        ))}
-        <EditIconCell mode={mode} onClick={() => onSelectedRow(rowData, rowIndex)} />
-        {!disabledDeleted && (
-          <DeleteIconCell mode={mode} onClick={() => onDeleteRow(rowData, rowIndex)} />
-        )}
-      </MUITableRow>
-    );
-  }
-}
+  assignToRef(ref, {
+    changeCellDefinition,
+    setError,
+  });
+
+  return (
+    <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>
+      {columns.map((column, colIndex) => (
+        <CellValue
+          key={colIndex}
+          row={rowData}
+          column={column}
+          overrideColumn={getCellDefinition(column.name, rowIndex, column)}
+          mode={mode}
+          onFormatCellValue={onFormatCellValue}
+          forwardRef={cellRef => {
+            addElementFormRef(cellRef, rowIndex);
+          }}
+          onInputChange={(name, value) => handleInputChange(name, value, rowIndex, column)}
+        />
+      ))}
+      <EditIconCell mode={mode} onClick={() => onSelectedRow(rowData, rowIndex)} />
+      {!disabledDeleted && (
+        <DeleteIconCell mode={mode} onClick={() => onDeleteRow(rowData, rowIndex)} />
+      )}
+    </MUITableRow>
+  );
+});
 export default TableRow;

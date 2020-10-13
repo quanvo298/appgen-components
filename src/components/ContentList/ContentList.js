@@ -10,7 +10,7 @@ const ContentList = ({ title, init, gridData }) => (
       {...init}
       mode="view"
       width={1}
-      gridData={gridData}
+      gridData={{ value: gridData }}
     />
   </BasicBoxWidget>
 );

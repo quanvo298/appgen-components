@@ -46,10 +46,9 @@ const NumberField = ({
     <TextField
       label={label}
       fullWidth
-      variant={variant}
       error={error}
       InputLabelProps={{
-        shrink: textValue || isEditing,
+        shrink: Boolean(textValue) || isEditing,
         ...elementProps,
       }}
       onChange={onInputChange && onInputChange(name)}
@@ -59,7 +58,8 @@ const NumberField = ({
       required={required}
       {...fieldEvents}
       InputProps={{ ...inputProps }}
-      value={textValue || null}
+      value={textValue || ''}
+      {...(Boolean(variant) && { variant })}
     />
   );
 };

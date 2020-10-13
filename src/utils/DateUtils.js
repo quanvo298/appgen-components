@@ -1,5 +1,5 @@
 import { parse, parseISO, format } from 'date-fns';
-import { isNumber } from './StringUtils';
+import { isNumber } from './ObjectUtils';
 
 export const DATE_LONG_FORMAT = 'dd/MM/yyyy hh:mm:ss';
 

@@ -1,7 +1,7 @@
 import { formatDateShort, parseDate } from './DateUtils';
 import { getCurrentLocale } from './LocaleProvider';
 import { PropertyDataType } from './constant';
-import { isNumber, isString } from './StringUtils';
+import { isNumber, isString } from './ObjectUtils';
 
 export const formatCellDateValue = date => {
   if (date && isNumber(date)) {

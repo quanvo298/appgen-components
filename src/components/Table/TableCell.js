@@ -14,23 +14,24 @@ export const CellValue = ({
   forwardRef,
   onFormatCellValue,
   ...restProps
-}) =>
-  TABLE_MODE.Edit === mode ? (
+}) => {
+  const cellValue = row[column.name] || overrideColumn.defaultValue || column.defaultValue;
+  return TABLE_MODE.Edit === mode ? (
     <TableCell>
       <BasicElementForm
         {...column}
         {...overrideColumn}
         {...restProps}
-        variant="standard"
+        variant={null}
         label=""
-        value={row[column.name] || overrideColumn.defaultValue || column.defaultValue}
+        value={cellValue}
         ref={forwardRef}
       />
     </TableCell>
   ) : (
     <TableCell>{displayCellValue(row, column, onFormatCellValue)}</TableCell>
   );
-
+};
 export const EditIconCell = ({ mode, onClick }) =>
   TABLE_MODE.View === mode && (
     <TableCell width={24}>

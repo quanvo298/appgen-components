@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import PubSub, { SUBSCRIPTION } from '../utils/PubSub';
 import {
@@ -13,58 +13,49 @@ import {
 import { NotificationKind } from '../utils/constant';
 import { createValidatorStrategy } from '../helper/Validator';
 import { defaultFunc } from '../utils/props';
+import { useBasicFormCtx } from '../components/BasicForm/BasicFormProvider';
+import { usePolyglot } from '../utils';
+import useGetSetRef from './useGetSetRef';
 
 const useBasicForm = ({
   modeForm,
-  elements = [],
   selectedItem,
-  onPropertyChange = defaultFunc,
-  onAfterPropertiesChanged,
-  onValidatePropertyBeforeSaved,
-  onValidateUpdatedItemBeforeSaved,
-  onBeforeSaved,
-  onBeforeModified,
+  elements = [],
   onUpdate = defaultFunc,
   onSave = defaultFunc,
-  onAfterSaved = defaultFunc,
-  polyglot,
 }) => {
-  const formElementsRef = useRef({});
-  const valuesRef = useRef({});
-  const [, setInitialValues] = useState(null);
+  const polyglot = usePolyglot();
+  const basicFormContext = useBasicFormCtx();
+  const { formConfig = {} } = basicFormContext;
+  const {
+    onPropertyChange = defaultFunc,
+    onAfterPropertiesChanged,
+    onValidatePropertyBeforeSaved,
+    onValidateUpdatedItemBeforeSaved,
+    onBeforeSaved,
+    onBeforeModified,
+    onAfterSaved = defaultFunc,
+  } = formConfig;
 
-  const getFormElements = () => formElementsRef.current;
+  const { get: getFormElements, setProp: setFormElement } = useGetSetRef({});
+  const { get: getValues, set: setValues, setProp: setValue } = useGetSetRef({});
 
   const getFormElement = propName => getFormElements()[propName];
-
-  const addFormElement = (propName, formElementRef) => {
-    formElementsRef.current[propName] = formElementRef;
-  };
-
-  const addFormElementRef = formElementRef => {
-    if (formElementRef) {
-      const { props = {} } = formElementRef;
-      const { name } = props;
-      if (name) {
-        addFormElement(name, formElementRef);
-      }
+  const addFormElementRef = (formElementRef = {}) => {
+    const { name } = formElementRef;
+    if (name) {
+      setFormElement(name, formElementRef);
     }
-  };
-
-  const getValues = () => valuesRef.current;
-
-  const setValues = values => {
-    valuesRef.current = values;
-  };
-
-  const setValue = (name, value) => {
-    valuesRef.current[name] = value;
   };
 
   const reset = () => {
     const initial = cloneDeep(processInitialValues(elements, selectedItem));
     setValues(initial);
-    setInitialValues(initial);
+    const formElements = getFormElements();
+    Object.keys(formElements).forEach(elementName => {
+      formElements[elementName].setFieldValue(initial[elementName]);
+      formElements[elementName].setFieldError(false);
+    });
   };
 
   useEffect(() => {
@@ -75,14 +66,14 @@ const useBasicForm = ({
     setValue(name, value);
     onPropertyChange(name, value, getValues())(event);
     if (onAfterPropertiesChanged) {
-      onAfterPropertiesChanged({ name, value, updateItem: cloneDeep(getValues) });
+      onAfterPropertiesChanged({ name, value, updateItem: cloneDeep(getValues()) });
     }
   };
 
   const processErrors = errors => {
     const formElements = getFormElements();
     Object.keys(formElements).forEach(elementName => {
-      formElements[elementName].setError(errors[elementName]);
+      formElements[elementName].setFieldError(errors[elementName]);
     });
   };
 
@@ -115,7 +106,7 @@ const useBasicForm = ({
     );
   };
 
-  const getUpdateItemAndValidate = () => {
+  const validateAndGetUpdateItem = () => {
     const values = getValues();
     const validationResult = validateElements(elements, values, getFormElements());
     const validateStrategy = createValidatorStrategy(polyglot);
@@ -164,31 +155,25 @@ const useBasicForm = ({
   };
 
   const save = () => {
-    const updatedItem = getUpdateItemAndValidate();
+    const updatedItem = validateAndGetUpdateItem();
     if (updatedItem) {
       saveOrUpdate(updatedItem);
     }
   };
 
-  const assignToRef = ref => {
-    if (ref) {
-      ref.current = {
-        ...ref.current,
-        getFormElement,
-        getFormElements,
-        getValues,
-        getUpdateItemAndValidate,
-      };
-    }
-  };
+  basicFormContext.setFormWidget({
+    validateAndGetUpdateItem,
+    getFormElement,
+    getFormElements,
+    getValues,
+  });
 
   return {
-    assignToRef,
     addFormElementRef,
     getValues,
     reset,
     save,
-    getUpdateItemAndValidate,
+    validateAndGetUpdateItem,
     onChange,
   };
 };

@@ -2,3 +2,6 @@
 **/node_modules
 .DS_store
 **/core
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/appgen-components.iml

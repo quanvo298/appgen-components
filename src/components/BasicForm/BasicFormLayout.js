@@ -3,7 +3,7 @@ import BasicElementForm from './BasicElementForm';
 import Wrapper from '../Container/Wrapper';
 import Row from '../Container/Row';
 
-const BasicFormLayout = React.forwardRef((props, ref) => {
+const BasicFormLayout = props => {
   const {
     FormComponentLayout,
     elements,
@@ -14,15 +14,17 @@ const BasicFormLayout = React.forwardRef((props, ref) => {
     doReset,
     onReset,
     formToolbarButton,
+    addFormElementRef,
     ...restProps
   } = props;
+
   return (
     <Wrapper>
       {FormComponentLayout ? (
         <FormComponentLayout
           elements={elements}
           elementsValue={elementsValue}
-          forwardRef={ref}
+          forwardRef={addFormElementRef}
           {...restProps}
         />
       ) : (
@@ -30,7 +32,7 @@ const BasicFormLayout = React.forwardRef((props, ref) => {
         elements.map((element, index) => (
           <Row mx={2} my={3} key={index}>
             <BasicElementForm
-              ref={ref}
+              ref={addFormElementRef}
               {...element}
               {...restProps}
               value={elementsValue[element.name]}
@@ -40,6 +42,6 @@ const BasicFormLayout = React.forwardRef((props, ref) => {
       )}
     </Wrapper>
   );
-});
+};
 
 export default BasicFormLayout;

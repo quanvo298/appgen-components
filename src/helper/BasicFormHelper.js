@@ -23,12 +23,17 @@ export const FUNCTION_INTEGRATION = {
 export const processInitialValues = (elements = [], selectedItem) => {
   const values = {};
   elements.reduce((result, element) => {
-    result[element.name] = selectedItem
-      ? selectedItem[element.name]
-      : element.defaultValue || undefined;
+    const value = selectedItem ? selectedItem[element.name] : element.defaultValue || null;
+    if (value) {
+      result[element.name] = value;
+    }
     return result;
   }, values);
-  values.id = getEntityId(selectedItem);
+
+  const entityId = getEntityId(selectedItem);
+  if (entityId) {
+    values.id = entityId;
+  }
   return values;
 };
 
@@ -67,7 +72,8 @@ export const validateElements = (elements, elementsValue, formElementsRef = {}) 
       errors[name] = true;
       result.disabled = true;
     }
-    if (!errors[name] && validateElement(element, elementValue)) {
+
+    if (!errors[name] && !validateElement(element, elementValue)) {
       errors[name] = true;
       result.disabled = true;
     }
@@ -141,36 +147,29 @@ const createCellDefinitionFunctionName = name => {
   return `${name}CellDefinition`;
 };
 
-export const handlePropertyChanged = (
-  composedComponentInstance,
-  name,
-  value,
-  updatedItem,
-  event
-) => {
-  if (!(name && composedComponentInstance)) {
+export const handlePropertyChanged = (formViewInstance, name, value, updatedItem, event) => {
+  if (!(name && formViewInstance)) {
     return;
   }
   const functionName = createProperyChangedFunctionName(name);
-  const beforePropertyChanged =
-    composedComponentInstance[FUNCTION_INTEGRATION.BeforePropertyChanged];
+  const beforePropertyChanged = formViewInstance[FUNCTION_INTEGRATION.BeforePropertyChanged];
   if (beforePropertyChanged) {
     beforePropertyChanged({ name, value, updatedItem, event });
   }
 
-  const propertyChangedFunction = composedComponentInstance[functionName];
+  const propertyChangedFunction = formViewInstance[functionName];
   if (propertyChangedFunction) {
     propertyChangedFunction(value, updatedItem, event);
   }
 
-  const afterPropertyChanged = composedComponentInstance[FUNCTION_INTEGRATION.AfterPropertyChanged];
+  const afterPropertyChanged = formViewInstance[FUNCTION_INTEGRATION.AfterPropertyChanged];
   if (afterPropertyChanged) {
     afterPropertyChanged({ name, value, updatedItem, event });
   }
 };
 
 export const handleCellChanged = (
-  composedComponentInstance,
+  formViewInstance,
   propertyName,
   cellName,
   cellValue,
@@ -178,24 +177,19 @@ export const handleCellChanged = (
   gridData,
   event
 ) => {
-  if (composedComponentInstance && propertyName && cellName) {
+  if (formViewInstance && propertyName && cellName) {
     const functionName = createCellChangedFunctionName(propertyName);
-    const cellChanged = composedComponentInstance[functionName];
+    const cellChanged = formViewInstance[functionName];
     if (cellChanged) {
       cellChanged({ propertyName, cellName, cellValue, rowIndexed, gridData, event });
     }
   }
 };
 
-export const handleGetCellDefinition = (
-  composedComponentInstance,
-  propertyName,
-  cellName,
-  rowIndexed
-) => {
-  if (composedComponentInstance && propertyName && cellName) {
+export const handleGetCellDefinition = (formViewInstance, propertyName, cellName, rowIndexed) => {
+  if (formViewInstance && propertyName && cellName) {
     const functionName = createCellDefinitionFunctionName(propertyName);
-    const cellChanged = composedComponentInstance[functionName];
+    const cellChanged = formViewInstance[functionName];
     if (cellChanged) {
       return cellChanged({ propertyName, cellName, rowIndexed });
     }
@@ -203,13 +197,12 @@ export const handleGetCellDefinition = (
   return {};
 };
 
-export const handleBeforeSaved = (composedComponentInstance, updatedItem) => {
-  if (!(updatedItem && composedComponentInstance)) {
+export const handleBeforeSaved = (formViewInstance, updatedItem) => {
+  if (!(updatedItem && formViewInstance)) {
     return updatedItem;
   }
 
-  const updatedItemBeforeSaved =
-    composedComponentInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeSaved];
+  const updatedItemBeforeSaved = formViewInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeSaved];
   if (updatedItemBeforeSaved) {
     return updatedItemBeforeSaved(updatedItem);
   }
@@ -217,18 +210,18 @@ export const handleBeforeSaved = (composedComponentInstance, updatedItem) => {
   return updatedItem;
 };
 
-export const handleBeforeModified = (composedComponentInstance, updatedItem) => {
-  if (!(updatedItem && composedComponentInstance)) {
+export const handleBeforeModified = (formViewInstance, updatedItem) => {
+  if (!(updatedItem && formViewInstance)) {
     return updatedItem;
   }
 
   const updatedItemBeforeModified =
-    composedComponentInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeModified];
+    formViewInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeModified];
   if (updatedItemBeforeModified) {
     return updatedItemBeforeModified(updatedItem);
   }
 
-  return handleBeforeSaved(composedComponentInstance, updatedItem);
+  return handleBeforeSaved(formViewInstance, updatedItem);
 };
 
 export const createProperyValidationFunctionName = name => {
@@ -236,16 +229,16 @@ export const createProperyValidationFunctionName = name => {
 };
 
 export const handleValidatePropertyBeforeSaved = (
-  composedComponentInstance,
+  formViewInstance,
   validateStrategy,
   element,
   value,
   updatedItem
 ) => {
-  if (element && composedComponentInstance && validateStrategy) {
+  if (element && formViewInstance && validateStrategy) {
     const { name } = element;
     const functionName = createProperyValidationFunctionName(name);
-    const vaidatePropertyFunction = composedComponentInstance[functionName];
+    const vaidatePropertyFunction = formViewInstance[functionName];
     if (vaidatePropertyFunction) {
       vaidatePropertyFunction(validateStrategy, value, updatedItem);
     }
@@ -253,24 +246,24 @@ export const handleValidatePropertyBeforeSaved = (
 };
 
 export const handleValidateUpdatedItemBeforeSaved = (
-  composedComponentInstance,
+  formViewInstance,
   validateStrategy,
   updatedItem
 ) => {
-  if (composedComponentInstance && validateStrategy) {
+  if (formViewInstance && validateStrategy) {
     const ovverideValidateUpdatedItemBeforeSaved =
-      composedComponentInstance[FUNCTION_INTEGRATION.ValidateUpdatedItemBeforeSaved];
+      formViewInstance[FUNCTION_INTEGRATION.ValidateUpdatedItemBeforeSaved];
     if (ovverideValidateUpdatedItemBeforeSaved) {
       ovverideValidateUpdatedItemBeforeSaved(validateStrategy, updatedItem);
     }
   }
 };
 
-export const handleAfterSaved = (composedComponentInstance, updatedItem) => {
-  if (!composedComponentInstance) {
+export const handleAfterSaved = (formViewInstance, updatedItem) => {
+  if (!formViewInstance) {
     return;
   }
-  const afterSaved = composedComponentInstance[FUNCTION_INTEGRATION.AfterSaved];
+  const afterSaved = formViewInstance[FUNCTION_INTEGRATION.AfterSaved];
   if (afterSaved) {
     afterSaved(updatedItem);
   }

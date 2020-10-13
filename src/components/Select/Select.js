@@ -22,11 +22,11 @@ const Select = ({
       fullWidth
       error={error}
       label={label}
-      variant={variant}
       value={value}
       disabled={disabled}
       required={required}
       onChange={onChange}
+      {...(Boolean(variant) && { variant })}
     >
       {optionEmpty && <option value="" />}
       {options.map((option, index) => (

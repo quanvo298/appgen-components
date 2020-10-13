@@ -1,117 +1,86 @@
-import React, { useRef } from 'react';
-import {
-  handlePropertyChanged,
-  handleCellChanged,
-  handleGetCellDefinition,
-  handleBeforeSaved,
-  handleBeforeModified,
-  handleValidatePropertyBeforeSaved,
-  handleValidateUpdatedItemBeforeSaved,
-  handleAfterSaved,
-} from '../../helper/BasicFormHelper';
-import { mergeFormConfig } from '../../helper/FormModuleHelper';
+import React, { useEffect } from 'react';
+import useBasicFormConfig from '../../hooks/useBasicFormConfig';
 import withPolyglot from '../../utils/withPolyglot';
+import { defaultFunc } from '../../utils/props';
+import BasicFormProvider from './BasicFormProvider';
+import BasicFormContext from '../../utils/BasicFormContext';
+
+const initialFormWidgetFunctions = {
+  getValues: defaultFunc,
+  validateAndGetUpdateItem: defaultFunc,
+};
+
+const initialFieldFunctions = {
+  setFieldValue: defaultFunc,
+  getFieldValue: defaultFunc,
+  setFieldComponentData: defaultFunc,
+  getFieldComponent: defaultFunc,
+};
 
 const withBasicForm = formConfig => ComposedComponent => {
   const BasicFormComponent = ({ polyglot, ...restProps }) => {
-    const basicFormRef = useRef(null);
-    const composedComponentInstance = useRef(null);
-
-    const getBasicForm = () => basicFormRef.current;
-
-    const setComposedComponentInstance = ref => {
-      composedComponentInstance.current = ref;
-    };
-
-    const getComposedComponentInstance = () => composedComponentInstance.current;
-
-    const onPropertyChange = (name, value, updatedItem) => event => {
-      handlePropertyChanged(getComposedComponentInstance(), name, value, updatedItem, event);
-    };
-
-    const onCellChange = ({ propertyName, cellName, cellValue, rowIndexed, gridData, event }) => {
-      handleCellChanged(
-        getComposedComponentInstance(),
-        propertyName,
-        cellName,
-        cellValue,
-        rowIndexed,
-        gridData,
-        event
-      );
-    };
-
-    const onGetCellDefinition = ({ propertyName, cellName, rowIndexed }) => {
-      return handleGetCellDefinition(
-        getComposedComponentInstance(),
-        propertyName,
-        cellName,
-        rowIndexed
-      );
-    };
-
-    const onBeforeSaved = updatedItem =>
-      handleBeforeSaved(getComposedComponentInstance(), updatedItem);
-
-    const onBeforeModified = updatedItem =>
-      handleBeforeModified(getComposedComponentInstance(), updatedItem);
-
-    const onValidatePropertyBeforeSaved = (validateStrategy, element, value, updatedItem) =>
-      handleValidatePropertyBeforeSaved(
-        getComposedComponentInstance(),
-        validateStrategy,
-        element,
-        value,
-        updatedItem
-      );
-
-    const onValidateUpdatedItemBeforeSaved = (validateStrategy, updatedItem) =>
-      handleValidateUpdatedItemBeforeSaved(
-        getComposedComponentInstance(),
-        validateStrategy,
-        updatedItem
-      );
-
-    const onAfterSaved = updatedItem => {
-      handleAfterSaved(getComposedComponentInstance(), updatedItem);
-    };
-
-    const createFormConfig = () => ({
-      ...mergeFormConfig(getComposedComponentInstance(), formConfig, polyglot),
-      onCellChange,
-      onGetCellDefinition,
-      onPropertyChange,
-      onBeforeSaved,
-      onBeforeModified,
-      onValidatePropertyBeforeSaved,
-      onValidateUpdatedItemBeforeSaved,
-      onAfterSaved,
-      ref: basicFormRef,
+    const { formConfig: basicFormConfig, setFormView } = useBasicFormConfig({
+      viewName: ComposedComponent.name,
+      formConfig,
+      polyglot,
     });
 
-    const getFormElement = propName => getBasicForm().getFormElement(propName);
+    const basicFormContext = new BasicFormContext({ formConfig: basicFormConfig });
 
-    const setFieldValue = (propName, value) => {
-      getFormElement(propName).setValue(value);
+    useEffect(() => {
+      const formView = basicFormContext.getFormView();
+      if (formView?.postRender) {
+        formView.postRender();
+      }
+    });
+
+    const getField = propName => {
+      const formWidget = basicFormContext.getFormWidget();
+      const formElement = (formWidget && formWidget.getFormElement(propName)) || {};
+      return {
+        ...initialFieldFunctions,
+        ...formElement,
+      };
     };
 
-    const getFieldValue = propName =>
-      getFormElement(propName) && getFormElement(propName).getValue();
+    const setFieldValue = (propName, value) => {
+      getField(propName).setFieldValue(value);
+    };
+
+    const getFieldValue = propName => getField(propName).getFieldValue();
+
+    const setFieldComponentData = (propName, data) => {
+      getField(propName).setFieldComponentData(data);
+    };
+
+    const getFieldComponent = propName => getField(propName).getFieldComponent();
 
     const composedComponentProps = {
       setFieldValue,
       getFieldValue,
-      ...getBasicForm(),
+      setFieldComponentData,
+      getFieldComponent,
+      ...{
+        ...initialFormWidgetFunctions,
+        ...basicFormContext.getFormWidget(),
+      },
+    };
+
+    const setViewInstance = ref => {
+      basicFormContext.setFormView(ref);
+      setFormView(ref);
     };
 
     return (
-      <ComposedComponent
-        basicFormConfig={createFormConfig()}
-        polyglot={polyglot}
-        {...restProps}
-        {...composedComponentProps}
-        ref={setComposedComponentInstance}
-      />
+      <BasicFormProvider basicFormContext={basicFormContext}>
+        <ComposedComponent
+          basicFormConfig={basicFormConfig}
+          polyglot={polyglot}
+          {...restProps}
+          {...composedComponentProps}
+          ref={setViewInstance}
+        />
+      </BasicFormProvider>
     );
   };
   return withPolyglot(BasicFormComponent);

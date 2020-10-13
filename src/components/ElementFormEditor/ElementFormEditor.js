@@ -4,7 +4,7 @@ import BasicEditor from './BasicEditor';
 import Select from '../Select/Select';
 import AutoSelect from '../AutoSelect/AutoSelect';
 import { TrueOrFalseOptions } from '../config';
-import { isObject } from '../../utils/StringUtils';
+import { isObject } from '../../utils/ObjectUtils';
 import { defaultFunc } from '../../utils/props';
 import { getEditorComponent } from '../../helper/ConfigModuleHelper';
 
@@ -64,6 +64,11 @@ const processAutoSelectComponent = ({
   />
 );
 
+const processEditorComponent = (
+  EditorComponent,
+  { onInputChange = defaultFunc, name, ...restProps }
+) => <EditorComponent onChange={onInputChange(name)} {...restProps} />;
+
 const ElementFormEditor = React.forwardRef((props, ref) => {
   const { type: componentType = '' } = props.component || {};
   switch (componentType) {
@@ -76,7 +81,7 @@ const ElementFormEditor = React.forwardRef((props, ref) => {
     default: {
       const EditorComponent = getEditorComponent(componentType);
       if (EditorComponent) {
-        return <EditorComponent {...props} />;
+        return processEditorComponent(EditorComponent, props);
       }
       return <BasicEditor {...props} />;
     }

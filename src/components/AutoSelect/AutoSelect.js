@@ -5,8 +5,11 @@ import { defaultFunc } from '../../utils/props';
 import Row from '../Container/Row';
 import Wrapper from '../Container/Wrapper';
 import MaterialIcon from '../Icon/MaterialIcon';
+import { isObject } from '../../utils';
 
-const getSelectedOption = (options, multi, autoSelectValue) => {
+const getSelectedOption = (options, multi, itemValue) => {
+  const autoSelectValue = itemValue && isObject(itemValue) ? itemValue.value : itemValue;
+
   if (options && autoSelectValue && multi) {
     return options.filter(({ value }) => autoSelectValue.includes(value));
   }
@@ -73,10 +76,10 @@ const AutoSelect = ({
           <TextField
             {...params}
             required={required}
-            variant={variant}
             label={label}
             error={error}
             placeholder="Search element (start with a)"
+            {...(Boolean(variant) && { variant })}
           />
         )}
         ref={autoSelectRef}
