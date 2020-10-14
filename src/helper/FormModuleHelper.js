@@ -1,13 +1,12 @@
 import { formModules } from '../utils/loadModules';
 import { convertToMapByName } from '../utils/CollectionUtils';
 
-export const Prefix = 'override';
+export const Prefix = 'form.override';
 
-export const createFormModuleConfigName = componentName =>
-  `./${componentName}/${componentName}.config.${Prefix}.js`;
+export const createFormModuleName = componentName =>
+  `./${componentName}/${componentName}.${Prefix}.js`;
 
-export const getFormModuleConfig = componentName =>
-  formModules[createFormModuleConfigName(componentName)];
+export const getFormModule = componentName => formModules[createFormModuleName(componentName)];
 
 export const processToMergeFormConfigElements = (
   originalElements = [],
@@ -41,7 +40,7 @@ export const mergeFormConfig = ({ viewName, formConfig, polyglot }) => {
   const config = formConfig(polyglot);
   if (viewName) {
     const componentName = viewName;
-    const formModule = getFormModuleConfig(componentName);
+    const formModule = getFormModule(componentName);
     if (formModule && formModule.formConfig) {
       const additionalFormConfig = formModule.formConfig({
         originalFormConfig: config,
@@ -51,4 +50,16 @@ export const mergeFormConfig = ({ viewName, formConfig, polyglot }) => {
     }
   }
   return config;
+};
+
+export const mergeFormIntegration = ({ viewName, formView }) => {
+  if (formView) {
+    const componentName = viewName;
+    const formModule = getFormModule(componentName);
+    const { integration } = formModule || {};
+    if (integration) {
+      const formIntegration = integration(formView);
+      Object.assign(formView, formIntegration);
+    }
+  }
 };

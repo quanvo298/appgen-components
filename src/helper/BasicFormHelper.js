@@ -17,6 +17,8 @@ export const FUNCTION_INTEGRATION = {
   ValidateUpdatedItemBeforeSaved: 'validateUpdatedItemBeforeSaved',
   UpdatedItemBeforeSaved: 'updatedItemBeforeSaved',
   UpdatedItemBeforeModified: 'updatedItemBeforeModified',
+  BeforeSaved: 'onBeforeSaved',
+  BeforeModified: 'onBeforeModified',
   AfterSaved: 'onAfterSaved',
 };
 
@@ -147,6 +149,10 @@ const createCellDefinitionFunctionName = name => {
   return `${name}CellDefinition`;
 };
 
+export const createProperyValidationFunctionName = name => {
+  return `${name}Validation`;
+};
+
 export const handlePropertyChanged = (formViewInstance, name, value, updatedItem, event) => {
   if (!(name && formViewInstance)) {
     return;
@@ -202,9 +208,14 @@ export const handleBeforeSaved = (formViewInstance, updatedItem) => {
     return updatedItem;
   }
 
-  const updatedItemBeforeSaved = formViewInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeSaved];
-  if (updatedItemBeforeSaved) {
-    return updatedItemBeforeSaved(updatedItem);
+  let beforeSaved = formViewInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeSaved];
+  if (beforeSaved) {
+    return beforeSaved(updatedItem);
+  }
+
+  beforeSaved = formViewInstance[FUNCTION_INTEGRATION.BeforeSaved];
+  if (beforeSaved) {
+    return beforeSaved(updatedItem);
   }
 
   return updatedItem;
@@ -215,17 +226,17 @@ export const handleBeforeModified = (formViewInstance, updatedItem) => {
     return updatedItem;
   }
 
-  const updatedItemBeforeModified =
-    formViewInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeModified];
-  if (updatedItemBeforeModified) {
-    return updatedItemBeforeModified(updatedItem);
+  let beforeModified = formViewInstance[FUNCTION_INTEGRATION.UpdatedItemBeforeModified];
+  if (beforeModified) {
+    return beforeModified(updatedItem);
+  }
+
+  beforeModified = formViewInstance[FUNCTION_INTEGRATION.BeforeModified];
+  if (beforeModified) {
+    return beforeModified(updatedItem);
   }
 
   return handleBeforeSaved(formViewInstance, updatedItem);
-};
-
-export const createProperyValidationFunctionName = name => {
-  return `${name}Validation`;
 };
 
 export const handleValidatePropertyBeforeSaved = (
@@ -251,10 +262,10 @@ export const handleValidateUpdatedItemBeforeSaved = (
   updatedItem
 ) => {
   if (formViewInstance && validateStrategy) {
-    const ovverideValidateUpdatedItemBeforeSaved =
+    const validateUpdatedItemBeforeSavedExt =
       formViewInstance[FUNCTION_INTEGRATION.ValidateUpdatedItemBeforeSaved];
-    if (ovverideValidateUpdatedItemBeforeSaved) {
-      ovverideValidateUpdatedItemBeforeSaved(validateStrategy, updatedItem);
+    if (validateUpdatedItemBeforeSavedExt) {
+      validateUpdatedItemBeforeSavedExt(validateStrategy, updatedItem);
     }
   }
 };

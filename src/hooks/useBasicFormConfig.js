@@ -8,11 +8,19 @@ import {
   handleValidateUpdatedItemBeforeSaved,
   handleAfterSaved,
 } from '../helper/BasicFormHelper';
-import { mergeFormConfig } from '../helper/FormModuleHelper';
+import { mergeFormConfig, mergeFormIntegration } from '../helper/FormModuleHelper';
 import useGetSetRef from './useGetSetRef';
+import BasicFormContext from '../utils/BasicFormContext';
 
 const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
-  const { get: getFormView, set: setFormView } = useGetSetRef(null);
+  const { get: getFormView, set: setFormViewRef } = useGetSetRef(null);
+  const basicFormContext = new BasicFormContext();
+
+  const setFormView = formView => {
+    mergeFormIntegration({ viewName, formView });
+    setFormViewRef(formView);
+    basicFormContext.setFormView(formView);
+  };
 
   const onPropertyChange = (name, value, updatedItem) => event => {
     handlePropertyChanged(getFormView(), name, value, updatedItem, event);
@@ -63,10 +71,13 @@ const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
     };
   };
 
+  const basicFormConfig = createFormConfig();
+  basicFormContext.setFormConfig(basicFormConfig);
+
   return {
-    getFormView,
     setFormView,
-    formConfig: createFormConfig(),
+    formConfig: basicFormConfig,
+    basicFormContext,
   };
 };
 

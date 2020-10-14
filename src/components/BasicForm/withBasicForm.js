@@ -3,7 +3,6 @@ import useBasicFormConfig from '../../hooks/useBasicFormConfig';
 import withPolyglot from '../../utils/withPolyglot';
 import { defaultFunc } from '../../utils/props';
 import BasicFormProvider from './BasicFormProvider';
-import BasicFormContext from '../../utils/BasicFormContext';
 
 const initialFormWidgetFunctions = {
   getValues: defaultFunc,
@@ -19,13 +18,11 @@ const initialFieldFunctions = {
 
 const withBasicForm = formConfig => ComposedComponent => {
   const BasicFormComponent = ({ polyglot, ...restProps }) => {
-    const { formConfig: basicFormConfig, setFormView } = useBasicFormConfig({
+    const { formConfig: basicFormConfig, setFormView, basicFormContext } = useBasicFormConfig({
       viewName: ComposedComponent.name,
       formConfig,
       polyglot,
     });
-
-    const basicFormContext = new BasicFormContext({ formConfig: basicFormConfig });
 
     useEffect(() => {
       const formView = basicFormContext.getFormView();
@@ -66,11 +63,6 @@ const withBasicForm = formConfig => ComposedComponent => {
       },
     };
 
-    const setViewInstance = ref => {
-      basicFormContext.setFormView(ref);
-      setFormView(ref);
-    };
-
     return (
       <BasicFormProvider basicFormContext={basicFormContext}>
         <ComposedComponent
@@ -78,7 +70,7 @@ const withBasicForm = formConfig => ComposedComponent => {
           polyglot={polyglot}
           {...restProps}
           {...composedComponentProps}
-          ref={setViewInstance}
+          ref={setFormView}
         />
       </BasicFormProvider>
     );

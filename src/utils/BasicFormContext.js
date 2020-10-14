@@ -1,9 +1,13 @@
 class BasicFormContext {
   constructor(props) {
-    const { formConfig } = props;
+    const { formConfig } = props || {};
     this.formConfig = formConfig;
     this.formWidget = null;
     this.formView = null;
+  }
+
+  setFormConfig(formConfig) {
+    this.formConfig = formConfig;
   }
 
   setFormWidget(basicFormWidget) {
