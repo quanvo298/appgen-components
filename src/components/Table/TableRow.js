@@ -61,20 +61,26 @@ const TableRow = React.forwardRef((props, ref) => {
 
   return (
     <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>
-      {columns.map((column, colIndex) => (
-        <CellValue
-          key={colIndex}
-          row={rowData}
-          column={column}
-          overrideColumn={getCellDefinition(column.name, rowIndex, column)}
-          mode={mode}
-          onFormatCellValue={onFormatCellValue}
-          forwardRef={cellRef => {
-            addElementFormRef(cellRef, rowIndex);
-          }}
-          onInputChange={(name, value) => handleInputChange(name, value, rowIndex, column)}
-        />
-      ))}
+      {columns.map((column, colIndex) => {
+        const overrideColumn = getCellDefinition(column.name, rowIndex, column) || {};
+        const cellValue =
+          rowData[column.name] || overrideColumn.defaultValue || column.defaultValue;
+        const key = colIndex + column.name + (cellValue ? cellValue.toString() : '');
+        return (
+          <CellValue
+            key={key}
+            row={rowData}
+            column={column}
+            mode={mode}
+            onFormatCellValue={onFormatCellValue}
+            cellValue={cellValue}
+            forwardRef={cellRef => {
+              addElementFormRef(cellRef, rowIndex);
+            }}
+            onInputChange={(name, value) => handleInputChange(name, value, rowIndex, column)}
+          />
+        );
+      })}
       <EditIconCell mode={mode} onClick={() => onSelectedRow(rowData, rowIndex)} />
       {!disabledDeleted && (
         <DeleteIconCell mode={mode} onClick={() => onDeleteRow(rowData, rowIndex)} />

@@ -7,6 +7,7 @@ import {
   handleValidatePropertyBeforeSaved,
   handleValidateUpdatedItemBeforeSaved,
   handleAfterSaved,
+  handleRenderContentListCellValue,
 } from '../helper/BasicFormHelper';
 import { mergeFormConfig, mergeFormIntegration } from '../helper/FormModuleHelper';
 import useGetSetRef from './useGetSetRef';
@@ -56,6 +57,16 @@ const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
     handleAfterSaved(getFormView(), updatedItem);
   };
 
+  const renderContentListCellValue = ({ cellName, cellValue, rowIndexed, gridData }) => {
+    return handleRenderContentListCellValue(
+      getFormView(),
+      cellName,
+      cellValue,
+      rowIndexed,
+      gridData
+    );
+  };
+
   const createFormConfig = () => {
     const basicFormConfig = mergeFormConfig({ viewName, formConfig, polyglot });
     return {
@@ -68,6 +79,7 @@ const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
       onValidatePropertyBeforeSaved,
       onValidateUpdatedItemBeforeSaved,
       onAfterSaved,
+      renderContentListCellValue,
     };
   };
 

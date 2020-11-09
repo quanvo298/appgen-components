@@ -13,15 +13,15 @@ export const CellValue = ({
   mode,
   forwardRef,
   onFormatCellValue,
-  ...restProps
+  cellValue,
+  onInputChange,
 }) => {
-  const cellValue = row[column.name] || overrideColumn.defaultValue || column.defaultValue;
   return TABLE_MODE.Edit === mode ? (
     <TableCell>
       <BasicElementForm
         {...column}
         {...overrideColumn}
-        {...restProps}
+        onInputChange={onInputChange}
         variant={null}
         label=""
         value={cellValue}

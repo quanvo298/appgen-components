@@ -70,6 +70,7 @@ const withBasicForm = formConfig => ComposedComponent => {
           polyglot={polyglot}
           {...restProps}
           {...composedComponentProps}
+          getFormWidget={() => basicFormContext.getFormWidget()}
           ref={setFormView}
         />
       </BasicFormProvider>

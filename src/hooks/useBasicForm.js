@@ -8,6 +8,7 @@ import {
   validatePropertyBeforeSaved,
   validateUpdatedItemBeforeSaved,
   processInitialValues,
+  reduceSelectedItem,
 } from '../helper/BasicFormHelper';
 
 import { NotificationKind } from '../utils/constant';
@@ -19,11 +20,12 @@ import useGetSetRef from './useGetSetRef';
 
 const useBasicForm = ({
   modeForm,
-  selectedItem,
+  selectedItem: propSelectedItem,
   elements = [],
   onUpdate = defaultFunc,
   onSave = defaultFunc,
 }) => {
+  let selectedItem = propSelectedItem;
   const polyglot = usePolyglot();
   const basicFormContext = useBasicFormCtx();
   const { formConfig = {} } = basicFormContext;
@@ -49,6 +51,7 @@ const useBasicForm = ({
   };
 
   const reset = () => {
+    selectedItem = reduceSelectedItem(basicFormContext.getFormView(), propSelectedItem);
     const initial = cloneDeep(processInitialValues(elements, selectedItem));
     setValues(initial);
     const formElements = getFormElements();
@@ -60,7 +63,7 @@ const useBasicForm = ({
 
   useEffect(() => {
     reset();
-  }, [selectedItem]);
+  }, [propSelectedItem]);
 
   const onChange = (name, value) => event => {
     setValue(name, value);

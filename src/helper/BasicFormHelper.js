@@ -2,7 +2,7 @@ import { ModeFormType } from '../utils/constant';
 import { getItemByName } from '../utils/CollectionUtils';
 import { containString } from '../utils/StringUtils';
 import { validateElement } from './Validator';
-import { getEntityId } from './ModelHelper';
+import { getEntityId, isUpdated } from './ModelHelper';
 
 export const FUNCTION_VALIDATE = 'validate';
 
@@ -20,6 +20,19 @@ export const FUNCTION_INTEGRATION = {
   BeforeSaved: 'onBeforeSaved',
   BeforeModified: 'onBeforeModified',
   AfterSaved: 'onAfterSaved',
+  RenderContentListCellValue: 'renderContentListCellValue',
+  ReduceSelectedItem: 'reduceSelectedItem',
+};
+
+export const reduceSelectedItem = (formViewInstance, selectedItem) => {
+  if (!(formViewInstance && selectedItem && isUpdated(selectedItem))) {
+    return selectedItem;
+  }
+  const reduce = formViewInstance[FUNCTION_INTEGRATION.ReduceSelectedItem];
+  if (reduce) {
+    return reduce({ selectedItem });
+  }
+  return selectedItem;
 };
 
 export const processInitialValues = (elements = [], selectedItem) => {
@@ -278,4 +291,22 @@ export const handleAfterSaved = (formViewInstance, updatedItem) => {
   if (afterSaved) {
     afterSaved(updatedItem);
   }
+};
+
+export const handleRenderContentListCellValue = (
+  formViewInstance,
+  cellName,
+  cellValue,
+  rowIndexed,
+  gridData
+) => {
+  if (!formViewInstance) {
+    return cellValue;
+  }
+  const renderContentListCellValue =
+    formViewInstance[FUNCTION_INTEGRATION.RenderContentListCellValue];
+  if (renderContentListCellValue) {
+    return renderContentListCellValue({ cellName, cellValue, rowIndexed, gridData });
+  }
+  return cellValue;
 };
