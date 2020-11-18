@@ -3,6 +3,7 @@ import { getItemByName } from '../utils/CollectionUtils';
 import { containString } from '../utils/StringUtils';
 import { validateElement } from './Validator';
 import { getEntityId, isUpdated } from './ModelHelper';
+import { formatCellValue } from './TableEditorHelper';
 
 export const FUNCTION_VALIDATE = 'validate';
 
@@ -20,7 +21,7 @@ export const FUNCTION_INTEGRATION = {
   BeforeSaved: 'onBeforeSaved',
   BeforeModified: 'onBeforeModified',
   AfterSaved: 'onAfterSaved',
-  RenderContentListCellValue: 'renderContentListCellValue',
+  DisplayContentListCellValue: 'displayListCellValue',
   ReduceSelectedItem: 'reduceSelectedItem',
 };
 
@@ -298,15 +299,16 @@ export const handleRenderContentListCellValue = (
   cellName,
   cellValue,
   rowIndexed,
-  gridData
+  gridData,
+  column
 ) => {
-  if (!formViewInstance) {
-    return cellValue;
+  if (formViewInstance) {
+    const renderContentListCellValue =
+      formViewInstance[FUNCTION_INTEGRATION.DisplayContentListCellValue];
+
+    if (renderContentListCellValue) {
+      return renderContentListCellValue({ cellName, cellValue, rowIndexed, gridData, column });
+    }
   }
-  const renderContentListCellValue =
-    formViewInstance[FUNCTION_INTEGRATION.RenderContentListCellValue];
-  if (renderContentListCellValue) {
-    return renderContentListCellValue({ cellName, cellValue, rowIndexed, gridData });
-  }
-  return cellValue;
+  return formatCellValue({ cellValue, column, rowIndexed });
 };

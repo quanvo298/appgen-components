@@ -28,17 +28,14 @@ export const isNumberPropertyType = type => type === PropertyDataType.Number;
 export const isObjectPropertyType = type => type === PropertyDataType.Object;
 
 export const formatValueBaseOnType = ({ cellValue, type }) => {
-  if (!cellValue) {
-    return cellValue;
-  }
+  if (cellValue) {
+    if (isDatePropertyType(type)) {
+      return formatCellDateValue(cellValue);
+    }
 
-  if (isDatePropertyType(type)) {
-    return formatCellDateValue(cellValue);
+    if (isNumberPropertyType(type)) {
+      return formatCellNumberValue(cellValue);
+    }
   }
-
-  if (isNumberPropertyType(type)) {
-    return formatCellNumberValue(cellValue);
-  }
-
   return cellValue;
 };

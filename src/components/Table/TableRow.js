@@ -68,6 +68,7 @@ const TableRow = React.forwardRef((props, ref) => {
         const key = colIndex + column.name + (cellValue ? cellValue.toString() : '');
         return (
           <CellValue
+            rowIndex={rowIndex}
             key={key}
             row={rowData}
             column={column}

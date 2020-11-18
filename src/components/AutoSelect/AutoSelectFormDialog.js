@@ -66,7 +66,7 @@ const AutoSelectFormDialog = ({
       />
       {displayFormDialog && (
         <FormDialog title={formDialogTitle} open={openDialog} onClose={handleCloseModal}>
-          <FormDialogComponent onAfterSaved={handleAfterSaved} />
+          <FormDialogComponent onAfterFormSaved={handleAfterSaved} />
         </FormDialog>
       )}
     </Fragment>

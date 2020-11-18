@@ -57,13 +57,14 @@ const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
     handleAfterSaved(getFormView(), updatedItem);
   };
 
-  const renderContentListCellValue = ({ cellName, cellValue, rowIndexed, gridData }) => {
+  const renderContentListCellValue = ({ cellName, cellValue, rowIndexed, column, gridData }) => {
     return handleRenderContentListCellValue(
       getFormView(),
       cellName,
       cellValue,
       rowIndexed,
-      gridData
+      gridData,
+      column
     );
   };
 

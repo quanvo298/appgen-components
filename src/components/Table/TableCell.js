@@ -15,6 +15,7 @@ export const CellValue = ({
   onFormatCellValue,
   cellValue,
   onInputChange,
+  rowIndex,
 }) => {
   return TABLE_MODE.Edit === mode ? (
     <TableCell>
@@ -29,7 +30,7 @@ export const CellValue = ({
       />
     </TableCell>
   ) : (
-    <TableCell>{displayCellValue(row, column, onFormatCellValue)}</TableCell>
+    <TableCell>{displayCellValue(row, column, rowIndex, onFormatCellValue)}</TableCell>
   );
 };
 export const EditIconCell = ({ mode, onClick }) =>

@@ -1,13 +1,8 @@
 import { PROPERTIES_SYSTEM, validateElements } from './BasicFormHelper';
 import { formatValueBaseOnType } from '../utils/FormatUtils';
 
-export const displayCellValue = (row, column, onFormatCellValue) => {
+export const formatCellValue = ({ cellValue, column }) => {
   const { name: columnName } = column;
-  const cellValue = row[columnName];
-  if (onFormatCellValue) {
-    return onFormatCellValue({ cellName: columnName, cellValue, row, column });
-  }
-
   if (cellValue instanceof Object) {
     const { component } = column;
     return component && component.labelAtt
@@ -15,7 +10,18 @@ export const displayCellValue = (row, column, onFormatCellValue) => {
       : cellValue[PROPERTIES_SYSTEM.Label];
   }
 
-  return formatValueBaseOnType({ cellName: columnName, cellValue, row, column, type: column.type });
+  return formatValueBaseOnType({ cellName: columnName, cellValue, type: column.type });
+};
+
+export const displayCellValue = (row, column, rowIndex, onFormatCellValue) => {
+  const { name: columnName } = column;
+  const cellValue = row[columnName];
+
+  if (onFormatCellValue) {
+    return onFormatCellValue({ cellName: columnName, cellValue, row, column, rowIndex });
+  }
+
+  return formatCellValue({ cellValue, row, column, rowIndex });
 };
 
 export const validate = (gridData, elements) => {
