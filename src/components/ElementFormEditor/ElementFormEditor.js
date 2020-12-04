@@ -8,7 +8,9 @@ import { isObject } from '../../utils/ObjectUtils';
 import { defaultFunc } from '../../utils/props';
 import { getEditorComponent } from '../../helper/ConfigModuleHelper';
 
-const processGridComponent = (props, ref) => <GridEditor {...props} ref={ref} />;
+const processGridComponent = (props, ref) => {
+  return <GridEditor {...props} ref={ref} />;
+};
 
 const processSelectComponent = ({
   type,

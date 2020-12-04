@@ -25,9 +25,10 @@ export const BaiscFormPropertyComponentType = {
 export const PropertyDataType = {
   Boolean: 'boolean',
   Number: 'number',
-  ArrayObject: 'arrayObject',
   Date: 'date',
+  ArrayObject: 'arrayObject',
   Object: 'object',
+  Document: 'document',
 };
 
 export const SearchOperation = {

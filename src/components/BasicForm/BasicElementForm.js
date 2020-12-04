@@ -5,8 +5,8 @@ import ElementFormEditor from '../ElementFormEditor/ElementFormEditor';
 import { BaiscFormPropertyComponentType } from '../../utils/constant';
 import { FUNCTION_VALIDATE } from '../../helper/BasicFormHelper';
 import { containString } from '../../utils/StringUtils';
-import { isObject, assignToRef } from '../../utils/ObjectUtils';
-import { isObjectPropertyType } from '../../utils/FormatUtils';
+import { assignToRef } from '../../utils/ObjectUtils';
+import { processElementValue, convertToElementValue } from '../../helper/ElementValueHelper';
 
 const IGNORE_COMPONENT_TYPE = [BaiscFormPropertyComponentType.Grid];
 
@@ -19,22 +19,38 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     optProps = {},
     variant,
   } = props;
-  const { get: getEditorRef, ref: editorRef } = useGetSetRef(null);
-  const [objectValue, setObjectValue] = useState({ value: propValue });
-  const [error, setError] = useState(false);
+
   const {
     getFieldComponent,
     setComponentData,
     getFieldDefinition,
     setFieldDefinition,
+    getDefaultValue,
   } = useFieldDefinition(props);
 
-  const processElementValue = elementValue => {
-    const { type, component = { data: [] } } = getFieldDefinition();
-    if (elementValue && !isObject(elementValue) && isObjectPropertyType(type)) {
-      return component.data.find(comp => comp.value === elementValue);
+  const convertToObjectValue = elementValue => {
+    if (elementValue == null) {
+      return { value: null };
     }
-    return elementValue;
+    const { type, component = { data: [] } } = getFieldDefinition();
+    const convertedValue = convertToElementValue({
+      elementValue,
+      type,
+      component,
+    });
+    return {
+      value: convertedValue,
+    };
+  };
+
+  const initialValue = propValue || getDefaultValue();
+  const { get: getEditorRef, ref: editorRef } = useGetSetRef(null);
+  const [value, setValue] = useState(initialValue);
+  const [error, setError] = useState(false);
+
+  const processFieldValue = elementValue => {
+    const { type, component = { data: [] } } = getFieldDefinition();
+    return processElementValue({ elementValue, type, component });
   };
 
   const doRender = () => {
@@ -42,9 +58,10 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     return component ? !IGNORE_COMPONENT_TYPE.includes(component.type) : true;
   };
 
-  const onChange = (propElementValue, event) => {
+  const processChange = (propElementValue, event, render) => {
     const { regExp } = optProps;
-    const elementValue = processElementValue(propElementValue);
+    const elementValue = processFieldValue(propElementValue);
+
     if (event && event.preventDefault) event.preventDefault();
 
     if (regExp && elementValue && !containString(elementValue, regExp)) {
@@ -54,22 +71,20 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     if (onInputChange) {
       onInputChange(propName, elementValue)(event);
     }
-    if (doRender()) {
-      setObjectValue({ value: elementValue });
+    if (render) {
+      setValue(elementValue);
     }
   };
 
   const handleInputChange = (_, valueKey = 'value') => event => {
     const { target } = event;
-    onChange(target[valueKey], event);
+    processChange(target[valueKey], event, doRender());
   };
 
-  const getFieldValue = () => objectValue.value;
+  const getFieldValue = () => value;
 
   const setFieldValue = fieldValue => {
-    const elementValue = processElementValue(fieldValue);
-    if (onInputChange) onInputChange(propName, elementValue)();
-    setObjectValue({ value: elementValue });
+    processChange(fieldValue, null, true);
   };
 
   const setFieldError = fieldError => {
@@ -101,12 +116,14 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     validate,
   });
 
+  const objectValue = convertToObjectValue(getFieldValue());
+
   return (
     <ElementFormEditor
       variant={variant}
       {...getFieldDefinition()}
-      objectValue={{ value: getFieldValue() }}
-      value={getFieldValue()}
+      objectValue={objectValue}
+      value={objectValue ? objectValue.value : null}
       error={error}
       ref={editorRef}
       onInputChange={handleInputChange}

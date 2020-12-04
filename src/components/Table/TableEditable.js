@@ -44,7 +44,7 @@ const TableEditable = React.forwardRef((props, ref) => {
     onGetCellDefinition = defaultFunc,
     componentName,
   } = props;
-  // const { disabled, inputRef, onAnimationStart } = inputProps;
+
   const {
     get: getRowRefs,
     setProp: setRowRef,

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { withBasicFormStyles } from '../../utils/withBasicStyles';
 import { ModeFormType } from '../../utils/constant';
 import { usePolyglot } from '../../utils/LocaleProvider';
@@ -6,7 +6,7 @@ import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
 import BasicBoxWidget from '../BasicBoxWidget/BasicBoxWidget';
 import ToolbarButton from '../Toolbar/ToolbarButton';
 import BasicFormLayout from './BasicFormLayout';
-import { isUpdated, getEntityId } from '../../helper/ModelHelper';
+import { getEntityId } from '../../helper/ModelHelper';
 import useBasicForm from '../../hooks/useBasicForm';
 import { isUpdatedForm } from '../../helper/BasicFormHelper';
 
@@ -56,9 +56,6 @@ const ButtonsBox = ({
   return <ToolbarButton toolbarButtons={cloneToolbarButtons} />;
 };
 
-const getModelForm = selectedItem =>
-  isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
-
 const BasicFormWidget = ({
   selectedItem,
   classes,
@@ -79,21 +76,12 @@ const BasicFormWidget = ({
   onGetCellDefinition,
 }) => {
   const deleteDialogRef = useRef(null);
-  const [modeForm, setModeForm] = useState(getModelForm(selectedItem));
-
-  const { addFormElementRef, getValues, reset, save, onChange } = useBasicForm({
-    modeForm,
+  const { addFormElementRef, getValues, reset, save, onChange, modeForm } = useBasicForm({
     selectedItem,
     elements,
     onUpdate,
     onSave,
   });
-
-  useEffect(() => {
-    if (!(isUpdated(selectedItem) && modeForm === ModeFormType.UPDATE)) {
-      setModeForm(getModelForm(selectedItem));
-    }
-  }, [selectedItem, modeForm]);
 
   const doDelete = () => (disableDelete ? false : onDelete && modeForm === ModeFormType.UPDATE);
 

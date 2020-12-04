@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { PropertyDataType } from '../../utils/constant';
-import { formatValueBaseOnType } from '../../utils/FormatUtils';
+import { formatCellNumberValue } from '../../utils/FormatUtils';
 
 const NumberField = ({
   name,
@@ -27,9 +27,7 @@ const NumberField = ({
 
   let textValue = value;
   if (textValue) {
-    textValue = isEditing
-      ? textValue
-      : formatValueBaseOnType({ cellValue: textValue, type: PropertyDataType.Number });
+    textValue = isEditing ? textValue : formatCellNumberValue(textValue);
   }
   let fieldEvents = {};
   if (isEditing) {

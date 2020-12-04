@@ -1,5 +1,5 @@
 import { PROPERTIES_SYSTEM, validateElements } from './BasicFormHelper';
-import { formatValueBaseOnType } from '../utils/FormatUtils';
+import { formatCellValueBaseOnType } from '../utils/FormatUtils';
 
 export const formatCellValue = ({ cellValue, column }) => {
   const { name: columnName } = column;
@@ -10,7 +10,7 @@ export const formatCellValue = ({ cellValue, column }) => {
       : cellValue[PROPERTIES_SYSTEM.Label];
   }
 
-  return formatValueBaseOnType({ cellName: columnName, cellValue, type: column.type });
+  return formatCellValueBaseOnType({ cellName: columnName, cellValue, type: column.type });
 };
 
 export const displayCellValue = (row, column, rowIndex, onFormatCellValue) => {

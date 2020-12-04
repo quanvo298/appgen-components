@@ -50,6 +50,7 @@ export const processInitialValues = (elements = [], selectedItem) => {
   if (entityId) {
     values.id = entityId;
   }
+
   return values;
 };
 
@@ -168,7 +169,7 @@ export const createProperyValidationFunctionName = name => {
 };
 
 export const handlePropertyChanged = (formViewInstance, name, value, updatedItem, event) => {
-  if (!(name && formViewInstance)) {
+  if (!(name && formViewInstance) || !event) {
     return;
   }
   const functionName = createProperyChangedFunctionName(name);

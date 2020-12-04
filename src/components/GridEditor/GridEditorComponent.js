@@ -19,6 +19,7 @@ const TableEditableComponent = React.forwardRef(function TableEditableComponent(
     required,
     ...inputProps
   } = props;
+
   return (
     <TableEditable
       {...component}

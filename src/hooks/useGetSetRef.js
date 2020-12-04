@@ -27,6 +27,16 @@ const useGetSetRef = (initialRef = null) => {
     delete currentRef.current[name];
   };
 
+  const clearPropsRef = () => {
+    if (!currentRef.current) {
+      return;
+    }
+    Object.keys(propName => {
+      delete currentRef.current[propName];
+    });
+    currentRef.current = initialRef;
+  };
+
   return {
     get: getRef,
     set: setRef,
@@ -34,6 +44,7 @@ const useGetSetRef = (initialRef = null) => {
     setProp: setPropRef,
     getProp: getPropRef,
     removeProp: removePropRef,
+    clearProps: clearPropsRef,
   };
 };
 

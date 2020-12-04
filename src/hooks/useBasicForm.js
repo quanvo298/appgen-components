@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import PubSub, { SUBSCRIPTION } from '../utils/PubSub';
 import {
@@ -11,21 +11,23 @@ import {
   reduceSelectedItem,
 } from '../helper/BasicFormHelper';
 
-import { NotificationKind } from '../utils/constant';
+import { ModeFormType, NotificationKind } from '../utils/constant';
 import { createValidatorStrategy } from '../helper/Validator';
 import { defaultFunc } from '../utils/props';
 import { useBasicFormCtx } from '../components/BasicForm/BasicFormProvider';
 import { usePolyglot } from '../utils';
 import useGetSetRef from './useGetSetRef';
+import { isUpdated } from '../helper/ModelHelper';
+
+const getModelForm = selectedItem =>
+  isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
 
 const useBasicForm = ({
-  modeForm,
   selectedItem: propSelectedItem,
   elements = [],
   onUpdate = defaultFunc,
   onSave = defaultFunc,
 }) => {
-  let selectedItem = propSelectedItem;
   const polyglot = usePolyglot();
   const basicFormContext = useBasicFormCtx();
   const { formConfig = {} } = basicFormContext;
@@ -39,8 +41,17 @@ const useBasicForm = ({
     onAfterSaved = defaultFunc,
   } = formConfig;
 
-  const { get: getFormElements, setProp: setFormElement } = useGetSetRef({});
+  const [modeForm, setModeForm] = useState(getModelForm(propSelectedItem));
+  const {
+    get: getFormElements,
+    setProp: setFormElement,
+    clearProps: clearFormElements,
+  } = useGetSetRef({});
   const { get: getValues, set: setValues, setProp: setValue } = useGetSetRef({});
+
+  if (Object.keys(getFormElements()).length) {
+    clearFormElements();
+  }
 
   const getFormElement = propName => getFormElements()[propName];
   const addFormElementRef = (formElementRef = {}) => {
@@ -51,7 +62,7 @@ const useBasicForm = ({
   };
 
   const reset = () => {
-    selectedItem = reduceSelectedItem(basicFormContext.getFormView(), propSelectedItem);
+    const selectedItem = reduceSelectedItem(basicFormContext.getFormView(), propSelectedItem);
     const initial = cloneDeep(processInitialValues(elements, selectedItem));
     setValues(initial);
     const formElements = getFormElements();
@@ -62,6 +73,9 @@ const useBasicForm = ({
   };
 
   useEffect(() => {
+    if (!(isUpdated(propSelectedItem) && modeForm === ModeFormType.UPDATE)) {
+      setModeForm(getModelForm(propSelectedItem));
+    }
     reset();
   }, [propSelectedItem]);
 
@@ -93,6 +107,7 @@ const useBasicForm = ({
   const processUpdatedItem = () => {
     const values = getValues();
     if (isUpdatedForm(modeForm)) {
+      const selectedItem = reduceSelectedItem(basicFormContext.getFormView(), propSelectedItem);
       const updatedItem = { ...selectedItem, ...values };
       return processUpdatedItemBeforeModified(updatedItem);
     }
@@ -178,6 +193,7 @@ const useBasicForm = ({
     save,
     validateAndGetUpdateItem,
     onChange,
+    modeForm,
   };
 };
 

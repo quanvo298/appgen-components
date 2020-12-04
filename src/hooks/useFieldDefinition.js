@@ -10,9 +10,9 @@ const useFieldDefinition = ({
   type: propType,
   defaultValue: propDefaultValue,
 }) => {
+  const [component, setComponent] = useState(propComponent);
   const [disabled, setDisabled] = useState(propDisabled);
   const [length, setLength] = useState(propLength);
-  const [component, setComponent] = useState(propComponent);
   const [label, setLabel] = useState(propLabel);
   const [name, setName] = useState(propName);
   const [required, setRequired] = useState(propRequired);
@@ -23,11 +23,24 @@ const useFieldDefinition = ({
     setComponent(propComponent);
   }, [propComponent]);
 
+  useEffect(() => {
+    setRequired(propRequired);
+    setLabel(propLabel);
+    setDisabled(propDisabled);
+    setLength(propLength);
+    setName(propName);
+    setType(propType);
+    setDefaultValue(propDefaultValue);
+  }, [propRequired, propLabel, propDisabled, propLength, propName, propType, propDefaultValue]);
+
   const setComponentData = data => {
     if (component) {
       setComponent({ ...component, data });
     }
   };
+
+  const getDefaultValue = () => defaultValue;
+
   const getFieldDefinition = () => ({
     length,
     component,
@@ -77,6 +90,7 @@ const useFieldDefinition = ({
     setComponentData,
     getFieldDefinition,
     setFieldDefinition,
+    getDefaultValue,
   };
 };
 
