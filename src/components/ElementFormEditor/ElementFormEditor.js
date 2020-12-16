@@ -8,6 +8,12 @@ import { isObject } from '../../utils/ObjectUtils';
 import { defaultFunc } from '../../utils/props';
 import { getEditorComponent } from '../../helper/ConfigModuleHelper';
 
+export const ComponentType = {
+  Grid: 'grid',
+  Select: 'select',
+  AutoSelect: 'auto-select',
+};
+
 const processGridComponent = (props, ref) => {
   return <GridEditor {...props} ref={ref} />;
 };
@@ -62,6 +68,7 @@ const processAutoSelectComponent = ({
     component={component}
     multi={type === 'arrayObject'}
     onChange={onInputChange(name)}
+    name={name}
     {...restProps}
   />
 );
@@ -73,12 +80,13 @@ const processEditorComponent = (
 
 const ElementFormEditor = React.forwardRef((props, ref) => {
   const { type: componentType = '' } = props.component || {};
+
   switch (componentType) {
-    case 'grid':
+    case ComponentType.Grid:
       return processGridComponent(props, ref);
-    case 'select':
+    case ComponentType.Select:
       return processSelectComponent(props);
-    case 'auto-select':
+    case ComponentType.AutoSelect:
       return processAutoSelectComponent(props);
     default: {
       const EditorComponent = getEditorComponent(componentType);

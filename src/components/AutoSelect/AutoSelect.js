@@ -49,8 +49,12 @@ const AutoSelect = ({
 }) => {
   const autoSelectRef = useRef(null);
   const options = convertToOptions(component);
-  const defaultValue = getSelectedOption(options, multi, value);
+  let defaultValue = getSelectedOption(options, multi, value);
 
+  if (!defaultValue && value) {
+    options.push(value);
+    defaultValue = getSelectedOption(options, multi, value);
+  }
   const handleChange = (event, itemValue) => {
     let targetValue = null;
     if (itemValue) {
@@ -68,7 +72,7 @@ const AutoSelect = ({
         multiple={multi}
         filterSelectedOptions
         options={options}
-        getOptionLabel={option => option.label}
+        getOptionLabel={option => (option ? option.label : '')}
         fullWidth
         value={defaultValue}
         onChange={handleChange}

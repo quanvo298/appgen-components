@@ -1,5 +1,7 @@
 import { isArray, isObject } from '../utils';
 import { PropertyDataType } from '../utils/constant';
+import { ComponentType } from '../components/ElementFormEditor/ElementFormEditor';
+import { convertToOptionItems } from '../mapping/OptionMapping';
 
 export const convertObjectToElementValue = ({ elementValue }) => {
   if (isArray(elementValue)) {
@@ -19,7 +21,7 @@ export const processDocumentElementValue = ({ elementValue, component = { data: 
   if (!isObject(elementValue)) {
     return component.data.find(comp => comp.value === elementValue);
   }
-  return null;
+  return elementValue;
 };
 
 export const processObjectElementValue = ({ elementValue, component }) => {
@@ -62,4 +64,17 @@ export const convertToElementValue = ({ elementValue, type }) => {
     }
   }
   return elementValue;
+};
+
+export const processComponentData = ({ data = [], type }) => {
+  if (type) {
+    switch (type) {
+      case ComponentType.Select:
+      case ComponentType.AutoSelect:
+        return convertToOptionItems(data);
+      default:
+        break;
+    }
+  }
+  return data;
 };

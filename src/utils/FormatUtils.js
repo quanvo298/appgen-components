@@ -23,16 +23,16 @@ export const formatCellNumberValue = numberValue => {
 
 export const isDatePropertyType = type => type === PropertyDataType.Date;
 
-export const formatCellValueBaseOnType = ({ value, type }) => {
-  if (value) {
+export const formatCellValueBaseOnType = ({ cellValue, type }) => {
+  if (cellValue) {
     switch (type) {
       case PropertyDataType.Date:
-        return formatCellDateValue(value);
+        return formatCellDateValue(cellValue);
       case PropertyDataType.Number:
-        return formatCellNumberValue(value);
+        return formatCellNumberValue(cellValue);
       default:
-        return value;
+        return cellValue;
     }
   }
-  return value;
+  return cellValue;
 };

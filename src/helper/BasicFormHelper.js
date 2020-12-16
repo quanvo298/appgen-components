@@ -23,6 +23,7 @@ export const FUNCTION_INTEGRATION = {
   AfterSaved: 'onAfterSaved',
   DisplayContentListCellValue: 'displayListCellValue',
   ReduceSelectedItem: 'reduceSelectedItem',
+  ConvertComponentData: 'convertComponentData',
 };
 
 export const reduceSelectedItem = (formViewInstance, selectedItem) => {
@@ -152,7 +153,7 @@ export const validateUpdatedItemBeforeSaved = (
   }
 };
 
-const createProperyChangedFunctionName = name => {
+const createPropertyChangedFunctionName = name => {
   return `${name}Changed`;
 };
 
@@ -164,15 +165,15 @@ const createCellDefinitionFunctionName = name => {
   return `${name}CellDefinition`;
 };
 
-export const createProperyValidationFunctionName = name => {
+export const createPropertyValidationFunctionName = name => {
   return `${name}Validation`;
 };
 
 export const handlePropertyChanged = (formViewInstance, name, value, updatedItem, event) => {
-  if (!(name && formViewInstance) || !event) {
+  if (!(name && formViewInstance)) {
     return;
   }
-  const functionName = createProperyChangedFunctionName(name);
+  const functionName = createPropertyChangedFunctionName(name);
   const beforePropertyChanged = formViewInstance[FUNCTION_INTEGRATION.BeforePropertyChanged];
   if (beforePropertyChanged) {
     beforePropertyChanged({ name, value, updatedItem, event });
@@ -180,7 +181,7 @@ export const handlePropertyChanged = (formViewInstance, name, value, updatedItem
 
   const propertyChangedFunction = formViewInstance[functionName];
   if (propertyChangedFunction) {
-    propertyChangedFunction(value, updatedItem, event);
+    propertyChangedFunction({ value, updatedItem })(event);
   }
 
   const afterPropertyChanged = formViewInstance[FUNCTION_INTEGRATION.AfterPropertyChanged];
@@ -263,10 +264,10 @@ export const handleValidatePropertyBeforeSaved = (
 ) => {
   if (element && formViewInstance && validateStrategy) {
     const { name } = element;
-    const functionName = createProperyValidationFunctionName(name);
-    const vaidatePropertyFunction = formViewInstance[functionName];
-    if (vaidatePropertyFunction) {
-      vaidatePropertyFunction(validateStrategy, value, updatedItem);
+    const functionName = createPropertyValidationFunctionName(name);
+    const validatePropertyFunction = formViewInstance[functionName];
+    if (validatePropertyFunction) {
+      validatePropertyFunction(validateStrategy, value, updatedItem);
     }
   }
 };

@@ -3,6 +3,7 @@ import useBasicFormConfig from '../../hooks/useBasicFormConfig';
 import withPolyglot from '../../utils/withPolyglot';
 import { defaultFunc } from '../../utils/props';
 import BasicFormProvider from './BasicFormProvider';
+import { FUNCTION_INTEGRATION } from '../../helper/BasicFormHelper';
 
 const initialFormWidgetFunctions = {
   getValues: defaultFunc,
@@ -47,7 +48,9 @@ const withBasicForm = formConfig => ComposedComponent => {
     const getFieldValue = propName => getField(propName).getFieldValue();
 
     const setFieldComponentData = (propName, data) => {
-      getField(propName).setFieldComponentData(data);
+      const formView = basicFormContext.getFormView() || {};
+      const convertComponentData = formView[FUNCTION_INTEGRATION.ConvertComponentData];
+      getField(propName).setFieldComponentData(data, convertComponentData);
     };
 
     const getFieldComponent = propName => getField(propName).getFieldComponent();
@@ -57,10 +60,8 @@ const withBasicForm = formConfig => ComposedComponent => {
       getFieldValue,
       setFieldComponentData,
       getFieldComponent,
-      ...{
-        ...initialFormWidgetFunctions,
-        ...basicFormContext.getFormWidget(),
-      },
+      ...initialFormWidgetFunctions,
+      ...basicFormContext.getFormWidget(),
     };
 
     return (

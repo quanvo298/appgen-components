@@ -6,7 +6,11 @@ import { BaiscFormPropertyComponentType } from '../../utils/constant';
 import { FUNCTION_VALIDATE } from '../../helper/BasicFormHelper';
 import { containString } from '../../utils/StringUtils';
 import { assignToRef } from '../../utils/ObjectUtils';
-import { processElementValue, convertToElementValue } from '../../helper/ElementValueHelper';
+import {
+  processElementValue,
+  convertToElementValue,
+  processComponentData,
+} from '../../helper/ElementValueHelper';
 
 const IGNORE_COMPONENT_TYPE = [BaiscFormPropertyComponentType.Grid];
 
@@ -32,7 +36,7 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     if (elementValue == null) {
       return { value: null };
     }
-    const { type, component = { data: [] } } = getFieldDefinition();
+    const { type, component = {} } = getFieldDefinition();
     const convertedValue = convertToElementValue({
       elementValue,
       type,
@@ -91,8 +95,12 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     setError(fieldError);
   };
 
-  const setFieldComponentData = data => {
-    setComponentData(data);
+  const setFieldComponentData = (data, convertComponentData) => {
+    const { component = {} } = getFieldDefinition();
+    const dataConverted = convertComponentData
+      ? convertComponentData({ data, propName })
+      : processComponentData({ ...component, data });
+    setComponentData(dataConverted);
   };
 
   const validate = () => {
@@ -123,7 +131,7 @@ const BasicElementForm = React.forwardRef((props, ref) => {
       variant={variant}
       {...getFieldDefinition()}
       objectValue={objectValue}
-      value={objectValue ? objectValue.value : null}
+      value={objectValue?.value || null}
       error={error}
       ref={editorRef}
       onInputChange={handleInputChange}
