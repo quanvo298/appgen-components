@@ -33,7 +33,6 @@ const useBasicForm = ({
   const { formConfig = {} } = basicFormContext;
   const {
     onPropertyChange = defaultFunc,
-    onAfterPropertiesChanged,
     onValidatePropertyBeforeSaved,
     onValidateUpdatedItemBeforeSaved,
     onBeforeSaved,
@@ -81,10 +80,7 @@ const useBasicForm = ({
 
   const onChange = (name, value) => event => {
     setValue(name, value);
-    onPropertyChange(name, value, getValues())(event);
-    if (onAfterPropertiesChanged) {
-      onAfterPropertiesChanged({ name, value, updateItem: cloneDeep(getValues()) });
-    }
+    onPropertyChange({ name, value, updatedItem: getValues(), event });
   };
 
   const processErrors = errors => {

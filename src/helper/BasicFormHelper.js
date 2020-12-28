@@ -13,7 +13,6 @@ export const PROPERTIES_SYSTEM = {
 };
 
 export const FUNCTION_INTEGRATION = {
-  BeforePropertyChanged: 'beforePropertyChanged',
   AfterPropertyChanged: 'afterPropertyChanged',
   ValidateUpdatedItemBeforeSaved: 'validateUpdatedItemBeforeSaved',
   UpdatedItemBeforeSaved: 'updatedItemBeforeSaved',
@@ -157,6 +156,10 @@ const createPropertyChangedFunctionName = name => {
   return `${name}Changed`;
 };
 
+const createPropertyEventChangedFunctionName = name => {
+  return `${name}EventChanged`;
+};
+
 const createCellChangedFunctionName = name => {
   return `${name}CellChanged`;
 };
@@ -173,15 +176,14 @@ export const handlePropertyChanged = (formViewInstance, name, value, updatedItem
   if (!(name && formViewInstance)) {
     return;
   }
-  const functionName = createPropertyChangedFunctionName(name);
-  const beforePropertyChanged = formViewInstance[FUNCTION_INTEGRATION.BeforePropertyChanged];
-  if (beforePropertyChanged) {
-    beforePropertyChanged({ name, value, updatedItem, event });
-  }
-
-  const propertyChangedFunction = formViewInstance[functionName];
+  const changedFunctionName = createPropertyChangedFunctionName(name);
+  const eventChangedFunctionName = createPropertyEventChangedFunctionName(name);
+  const propertyChangedFunction = formViewInstance[changedFunctionName];
+  const propertyEventChangedFunction = formViewInstance[eventChangedFunctionName];
   if (propertyChangedFunction) {
     propertyChangedFunction({ value, updatedItem })(event);
+  } else if (event && propertyEventChangedFunction) {
+    propertyEventChangedFunction({ value, updatedItem })(event);
   }
 
   const afterPropertyChanged = formViewInstance[FUNCTION_INTEGRATION.AfterPropertyChanged];

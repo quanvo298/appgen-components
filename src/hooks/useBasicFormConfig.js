@@ -23,7 +23,7 @@ const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
     basicFormContext.setFormView(formView);
   };
 
-  const onPropertyChange = (name, value, updatedItem) => event => {
+  const onPropertyChange = ({ name, value, updatedItem, event }) => {
     handlePropertyChanged(getFormView(), name, value, updatedItem, event);
   };
 

@@ -62,11 +62,9 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     return component ? !IGNORE_COMPONENT_TYPE.includes(component.type) : true;
   };
 
-  const processChange = (propElementValue, event, render) => {
+  const processChange = (propElementValue, render) => event => {
     const { regExp } = optProps;
     const elementValue = processFieldValue(propElementValue);
-
-    if (event && event.preventDefault) event.preventDefault();
 
     if (regExp && elementValue && !containString(elementValue, regExp)) {
       return;
@@ -75,20 +73,24 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     if (onInputChange) {
       onInputChange(propName, elementValue)(event);
     }
+
     if (render) {
       setValue(elementValue);
     }
   };
 
   const handleInputChange = (_, valueKey = 'value') => event => {
+    if (event.preventDefault) {
+      event.preventDefault();
+    }
     const { target } = event;
-    processChange(target[valueKey], event, doRender());
+    processChange(target[valueKey], doRender())(event);
   };
 
   const getFieldValue = () => value;
 
   const setFieldValue = fieldValue => {
-    processChange(fieldValue, null, true);
+    processChange(fieldValue, true)();
   };
 
   const setFieldError = fieldError => {

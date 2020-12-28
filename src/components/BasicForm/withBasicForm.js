@@ -17,18 +17,19 @@ const initialFieldFunctions = {
   getFieldComponent: defaultFunc,
 };
 
-const withBasicForm = formConfig => ComposedComponent => {
+const withBasicForm = formConfig => ComposedFormView => {
   const BasicFormComponent = ({ polyglot, ...restProps }) => {
     const { formConfig: basicFormConfig, setFormView, basicFormContext } = useBasicFormConfig({
-      viewName: ComposedComponent.name,
+      viewName: ComposedFormView.name,
       formConfig,
       polyglot,
     });
 
     useEffect(() => {
-      const formView = basicFormContext.getFormView();
-      if (formView?.postRender) {
-        formView.postRender();
+      const formView = basicFormContext.getFormView() || {};
+      const { postRender } = formView;
+      if (postRender) {
+        postRender();
       }
     });
 
@@ -66,12 +67,13 @@ const withBasicForm = formConfig => ComposedComponent => {
 
     return (
       <BasicFormProvider basicFormContext={basicFormContext}>
-        <ComposedComponent
+        <ComposedFormView
           basicFormConfig={basicFormConfig}
           polyglot={polyglot}
           {...restProps}
           {...composedComponentProps}
           getFormWidget={() => basicFormContext.getFormWidget()}
+          getFormContext={() => basicFormContext}
           ref={setFormView}
         />
       </BasicFormProvider>
