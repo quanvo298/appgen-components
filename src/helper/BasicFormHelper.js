@@ -210,12 +210,19 @@ export const handleCellChanged = (
   }
 };
 
-export const handleGetCellDefinition = (formViewInstance, propertyName, cellName, rowIndexed) => {
+export const handleGetCellDefinition = (
+  formViewInstance,
+  propertyName,
+  cellName,
+  cellValue,
+  rowIndexed,
+  rowData
+) => {
   if (formViewInstance && propertyName && cellName) {
     const functionName = createCellDefinitionFunctionName(propertyName);
-    const cellChanged = formViewInstance[functionName];
-    if (cellChanged) {
-      return cellChanged({ propertyName, cellName, rowIndexed });
+    const cellDefinition = formViewInstance[functionName];
+    if (cellDefinition) {
+      return cellDefinition({ propertyName, cellName, cellValue, rowIndexed, rowData });
     }
   }
   return {};

@@ -36,8 +36,8 @@ const TableRow = React.forwardRef((props, ref) => {
     }
   };
 
-  const getCellDefinition = (cellName, index, column) => {
-    return onGetCellDefinition(cellName, index, column);
+  const getCellDefinition = (cellName, cellValue, column) => {
+    return onGetCellDefinition(cellName, cellValue, rowIndex, rowData, column);
   };
 
   const changeCellDefinition = (cellName, newCellDefinition) => {
@@ -62,7 +62,8 @@ const TableRow = React.forwardRef((props, ref) => {
   return (
     <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>
       {columns.map((column, colIndex) => {
-        const overrideColumn = getCellDefinition(column.name, rowIndex, column) || {};
+        const existedCellValue = rowData[column.name] || column.defaultValue;
+        const overrideColumn = getCellDefinition(column.name, existedCellValue, column) || {};
         const cellValue =
           rowData[column.name] || overrideColumn.defaultValue || column.defaultValue;
         const key = colIndex + column.name + (cellValue ? cellValue.toString() : '');
@@ -72,6 +73,7 @@ const TableRow = React.forwardRef((props, ref) => {
             key={key}
             row={rowData}
             column={column}
+            overrideColumn={overrideColumn}
             mode={mode}
             onFormatCellValue={onFormatCellValue}
             cellValue={cellValue}

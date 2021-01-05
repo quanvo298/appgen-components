@@ -20,6 +20,7 @@ const BasicElementForm = React.forwardRef((props, ref) => {
     value: propValue = undefined,
     onInputChange,
     onCellChange,
+    onGetCellDefinition,
     optProps = {},
     variant,
   } = props;
@@ -137,6 +138,7 @@ const BasicElementForm = React.forwardRef((props, ref) => {
       error={error}
       ref={editorRef}
       onInputChange={handleInputChange}
+      onGetCellDefinition={onGetCellDefinition}
       onCellChange={onCellChange}
     />
   );

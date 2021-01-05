@@ -123,11 +123,13 @@ const TableEditable = React.forwardRef((props, ref) => {
     onChange();
   };
 
-  const handleGetCellDefinition = (cellName, rowIndexed) => {
-    onGetCellDefinition({
+  const handleGetCellDefinition = (cellName, cellValue, rowIndexed, rowData) => {
+    return onGetCellDefinition({
       propertyName: componentName,
       cellName,
+      cellValue,
       rowIndexed,
+      rowData,
     });
   };
 

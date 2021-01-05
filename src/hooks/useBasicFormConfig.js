@@ -39,8 +39,15 @@ const useBasicFormConfig = ({ viewName, formConfig, polyglot }) => {
     );
   };
 
-  const onGetCellDefinition = ({ propertyName, cellName, rowIndexed }) => {
-    return handleGetCellDefinition(getFormView(), propertyName, cellName, rowIndexed);
+  const onGetCellDefinition = ({ propertyName, cellName, cellValue, rowIndexed, rowData }) => {
+    return handleGetCellDefinition(
+      getFormView(),
+      propertyName,
+      cellName,
+      cellValue,
+      rowIndexed,
+      rowData
+    );
   };
 
   const onBeforeSaved = updatedItem => handleBeforeSaved(getFormView(), updatedItem);
