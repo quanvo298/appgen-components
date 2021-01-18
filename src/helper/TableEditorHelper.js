@@ -1,4 +1,4 @@
-import { PROPERTIES_SYSTEM, validateElements } from './BasicFormHelper';
+import { PROPERTIES_SYSTEM } from './BasicFormHelper';
 import { formatCellValueBaseOnType } from '../utils/FormatUtils';
 
 export const formatCellValue = ({ cellValue, column }) => {
@@ -22,22 +22,6 @@ export const displayCellValue = (row, column, rowIndex, onFormatCellValue) => {
   }
 
   return formatCellValue({ cellValue, row, column, rowIndex });
-};
-
-export const validate = (gridData, elements) => {
-  let hasError = false;
-  const resultErrors = {};
-  gridData.forEach((rowData, rowIndex) => {
-    const validationResult = validateElements(elements, rowData);
-    const { disabled, errors } = validationResult;
-    if (!hasError) {
-      hasError = disabled;
-    }
-    if (disabled) {
-      resultErrors[rowIndex] = errors;
-    }
-  });
-  return { hasError, errors: resultErrors };
 };
 
 export const processErrors = (rowRefs, errors) => {

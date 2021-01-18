@@ -16,15 +16,15 @@ const TabHeader = ({ tabs, selectedIndexTab, onChange }) => (
 
 const TabContainer = ({ onChange, children, classes, selectedTab: selectedTabName }) => {
   const tabPositions = [];
-  const tabConfig = React.Children.toArray(children).map(child => {
-    const { tabName, tabTitle } = child.props;
+  const tabConfig = React.Children.toArray(children).map(({ props }) => {
+    const { tabName, tabTitle } = props;
     tabPositions.push(tabName);
     return { tabName, tabTitle };
   });
 
   const [selectedTab, setSelectedTab] = useState(selectedTabName || tabPositions[0]);
 
-  const handleSelecteTab = (event, tabIndex) => {
+  const handleSelectedTab = (event, tabIndex) => {
     const tabName = tabPositions[tabIndex];
     if (onChange) {
       onChange(tabName);
@@ -37,7 +37,7 @@ const TabContainer = ({ onChange, children, classes, selectedTab: selectedTabNam
       <AppBar>
         <TabHeader
           selectedIndexTab={tabPositions.indexOf(selectedTab)}
-          onChange={handleSelecteTab}
+          onChange={handleSelectedTab}
           tabs={tabConfig}
         />
       </AppBar>

@@ -2,6 +2,22 @@ import { PropertyDataType } from '../utils/constant';
 import { isBlank, isNotBlank } from '../utils/StringUtils';
 import { isNotEmpty } from '../utils/CollectionUtils';
 
+export const validateField = ({ field, fieldValue }) => {
+  const { required, type } = field;
+  if (required && PropertyDataType.ArrayObject === type) {
+    return isNotEmpty(fieldValue);
+  }
+
+  if (required && !fieldValue) {
+    return false;
+  }
+
+  if (required) {
+    return isNotBlank(fieldValue.toString());
+  }
+  return true;
+};
+
 export const validateElement = (element, newValue) => {
   if (element.required && PropertyDataType.ArrayObject === element.type) {
     return isNotEmpty(newValue);
@@ -17,7 +33,7 @@ export const validateElement = (element, newValue) => {
   return true;
 };
 
-const buildValidatorStrategy = polyglot => {
+const buildValidatorStrategy = ({ polyglot }) => {
   return {
     elementErrors: [],
     globalErrors: [],
@@ -73,4 +89,5 @@ const buildValidatorStrategy = polyglot => {
   };
 };
 
-export const createValidatorStrategy = polyglot => buildValidatorStrategy(polyglot);
+export const createValidatorStrategy = ({ errors, polyglot }) =>
+  buildValidatorStrategy({ errors, polyglot });

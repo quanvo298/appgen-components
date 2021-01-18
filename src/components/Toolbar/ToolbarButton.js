@@ -1,11 +1,10 @@
 import React from 'react';
 import BasicButton from '../Button/BasicButton';
 
-const ToolbarButton = ({ toolbarButtons }) =>
-  toolbarButtons &&
-  toolbarButtons.map((toolbarButton, index) => (
-    <BasicButton key={index} {...toolbarButton}>
-      {toolbarButton.label}
+const ToolbarButton = ({ toolbarButtons, buttons = [] }) =>
+  (toolbarButtons || buttons).map((button, index) => (
+    <BasicButton key={index} {...button}>
+      {button.label}
     </BasicButton>
   ));
 

@@ -1,39 +1,25 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import MUIAutocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { defaultFunc } from '../../utils/props';
 import Row from '../Container/Row';
 import Wrapper from '../Container/Wrapper';
 import MaterialIcon from '../Icon/MaterialIcon';
-import { isObject } from '../../utils';
 
-const getSelectedOption = (options, multi, itemValue) => {
-  const autoSelectValue = itemValue && isObject(itemValue) ? itemValue.value : itemValue;
-
-  if (options && autoSelectValue && multi) {
-    return options.filter(({ value }) => autoSelectValue.includes(value));
+const getSelectedOption = (itemValue, options = [], multi) => {
+  if (options.length && itemValue && multi) {
+    return options.filter(({ value }) => itemValue.includes(value));
   }
 
-  if (options && autoSelectValue) {
-    return options.find(({ value }) => autoSelectValue === value) || null;
+  if (options.length && itemValue) {
+    return options.find(({ value }) => itemValue === value) || null;
   }
 
   return multi ? [] : null;
 };
 
-const convertToOptions = (component = {}) => {
-  const { data = [] } = component;
-  return data.reduce((jsonArray, element) => {
-    jsonArray.push({
-      value: element[component.valueAtt || 'value'],
-      label: element[component.labelAtt || 'label'],
-    });
-    return jsonArray;
-  }, []);
-};
-
 const AutoSelect = ({
-  component,
+  options,
   multi,
   value,
   onChange = defaultFunc,
@@ -47,25 +33,6 @@ const AutoSelect = ({
   showIcon = false,
   iconName = 'Add',
 }) => {
-  const autoSelectRef = useRef(null);
-  const options = convertToOptions(component);
-  let defaultValue = getSelectedOption(options, multi, value);
-
-  if (!defaultValue && value) {
-    options.push(value);
-    defaultValue = getSelectedOption(options, multi, value);
-  }
-  const handleChange = (event, itemValue) => {
-    let targetValue = null;
-    if (itemValue) {
-      targetValue = multi ? itemValue.map(item => item.value) : itemValue.value;
-    }
-    const target = {
-      target: { value: targetValue, selectItem: itemValue },
-    };
-    onChange(target);
-  };
-
   return (
     <Row width={1}>
       <MUIAutocomplete
@@ -74,8 +41,8 @@ const AutoSelect = ({
         options={options}
         getOptionLabel={option => (option ? option.label : '')}
         fullWidth
-        value={defaultValue}
-        onChange={handleChange}
+        value={getSelectedOption(value, options, multi)}
+        onChange={onChange}
         renderInput={params => (
           <TextField
             {...params}
@@ -86,7 +53,6 @@ const AutoSelect = ({
             {...(Boolean(variant) && { variant })}
           />
         )}
-        ref={autoSelectRef}
         name={name}
         label={label}
         disabled={disabled}

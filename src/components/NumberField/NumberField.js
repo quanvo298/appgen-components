@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { PropertyDataType } from '../../utils/constant';
 import { formatCellNumberValue } from '../../utils/FormatUtils';
+import { defaultFunc } from '../../utils/props';
 
 const NumberField = ({
   name,
@@ -10,7 +11,7 @@ const NumberField = ({
   disabled,
   inputProps = {},
   elementProps = {},
-  onInputChange,
+  onChange = defaultFunc,
   onKeyPress,
   label,
   variant = 'outlined',
@@ -49,7 +50,7 @@ const NumberField = ({
         shrink: Boolean(textValue) || isEditing,
         ...elementProps,
       }}
-      onChange={onInputChange && onInputChange(name)}
+      onChange={onChange}
       onKeyPress={onKeyPress && onKeyPress(name)}
       type={type}
       disabled={disabled}

@@ -4,6 +4,10 @@ export const isNotBlank = str => !isBlank(str);
 
 export const removeAllWhiteSpace = str => str.replace(/\s/g, '');
 
+export const upperFirstChar = strValue => {
+  return strValue.charAt(0).toUpperCase() + strValue.slice(1);
+};
+
 export const containString = (stringValue, regExp) => {
   if (regExp instanceof RegExp) {
     const condition = new RegExp(regExp, 'g');

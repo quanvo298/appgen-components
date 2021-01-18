@@ -31,6 +31,23 @@ export const PropertyDataType = {
   Document: 'document',
 };
 
+export const FieldType = {
+  Text: 'text',
+  LongText: 'longText',
+  Boolean: 'boolean',
+  Number: 'number',
+  Date: 'date',
+  DateTime: 'datetime-local',
+  Object: 'object',
+  ArrayObject: 'arrayObject',
+};
+
+export const FieldComponentType = {
+  Grid: 'grid',
+  Select: 'select',
+  AutoSelect: 'auto-select',
+};
+
 export const SearchOperation = {
   Equal: 'equal',
   NotEqual: 'not equal',

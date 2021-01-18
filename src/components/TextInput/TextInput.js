@@ -1,15 +1,6 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
 import { defaultFunc } from '../../utils/props';
-import { isDatePropertyType } from '../../utils/FormatUtils';
-import { formatToNativeDateFormComponent } from '../../utils/DateUtils';
-
-const getValueBaseonType = (cellValue, type) => {
-  if (cellValue && isDatePropertyType(type)) {
-    return formatToNativeDateFormComponent(new Date(cellValue));
-  }
-  return cellValue || '';
-};
 
 const TextInput = ({
   name,
@@ -23,9 +14,10 @@ const TextInput = ({
   variant = 'outlined',
   inputProps = {},
   labelProps = {},
-  onInputChange = defaultFunc,
+  onChange = defaultFunc,
 }) => (
   <TextField
+    name={name}
     label={label}
     fullWidth
     required={required}
@@ -34,9 +26,9 @@ const TextInput = ({
     InputLabelProps={{
       ...labelProps,
     }}
-    onChange={onInputChange(name)}
+    onChange={onChange}
     InputProps={{ ...inputProps }}
-    value={getValueBaseonType(value, type)}
+    value={value || ''}
     type={type}
     {...(Boolean(variant) && { variant })}
   />

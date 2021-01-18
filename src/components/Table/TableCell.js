@@ -3,30 +3,32 @@ import TableCell from '@material-ui/core/TableCell';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { displayCellValue } from '../../helper/TableEditorHelper';
-import BasicElementForm from '../BasicForm/BasicElementForm';
 import { TABLE_MODE } from '../../utils/constant';
+import FieldForm from '../Form/FieldForm';
 
 export const CellValue = ({
   row,
   column = {},
-  overrideColumn = {},
   mode,
-  forwardRef,
   onFormatCellValue,
   cellValue,
-  onInputChange,
+  onCellChange,
   rowIndex,
+  error,
 }) => {
+  const cellChange = (cellName, value) => event => {
+    onCellChange({ cellName, cellValue: value, rowIndex, event });
+  };
+
   return TABLE_MODE.Edit === mode ? (
     <TableCell>
-      <BasicElementForm
+      <FieldForm
         {...column}
-        {...overrideColumn}
-        onInputChange={onInputChange}
         variant={null}
         label=""
-        value={cellValue}
-        ref={forwardRef}
+        value={{ value: cellValue }}
+        error={error}
+        onFieldChange={cellChange}
       />
     </TableCell>
   ) : (

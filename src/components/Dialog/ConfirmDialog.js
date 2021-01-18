@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -6,6 +6,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Slide from '@material-ui/core/Slide';
 import BasicButton from '../Button/BasicButton';
 import { usePolyglot } from '../../utils/LocaleProvider';
+import { useDialogCtx } from '../../hocs/DialogProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,36 +22,28 @@ const ButtonsBox = ({ handleAgree, handleDisagree }) => {
   );
 };
 
-class ConfirmDialog extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      openDialog: false,
-    };
-  }
+const ConfirmDialog = props => {
+  const { onConfirm, content, id } = props;
+  const { close } = useDialogCtx();
 
-  show = () => {
-    this.setState({ openDialog: true });
+  const handleAgree = () => {
+    close(id);
+    onConfirm();
   };
 
-  close = () => {
-    this.setState({ openDialog: false });
+  const handleClose = () => {
+    close(id);
   };
-
-  render() {
-    const { onConfirm, content } = this.props;
-    const { openDialog } = this.state;
-    return (
-      <Dialog open={openDialog} TransitionComponent={Transition} keepMounted onClose={this.close}>
-        <DialogContent>
-          <DialogContentText>{content}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <ButtonsBox handleAgree={onConfirm} handleDisagree={this.close} />
-        </DialogActions>
-      </Dialog>
-    );
-  }
-}
+  return (
+    <Dialog open TransitionComponent={Transition} keepMounted onClose={handleClose}>
+      <DialogContent>
+        <DialogContentText>{content}</DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <ButtonsBox handleAgree={handleAgree} handleDisagree={handleClose} />
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default ConfirmDialog;

@@ -29,25 +29,26 @@ const DialogTitle = withFormDialogStyles(props => {
 
 const FormDialog = ({
   children,
-  open,
   onClose = defaultFunc,
   title = ' ',
   fullWidth = true,
   maxWidth = 'md',
-}) => (
-  <Dialog
-    fullWidth={fullWidth}
-    maxWidth={maxWidth}
-    open={open}
-    TransitionComponent={Transition}
-    keepMounted={false}
-    onClose={onClose}
-  >
-    <DialogTitle id="customized-dialog-title" onClose={onClose}>
-      {title}
-    </DialogTitle>
-    <DialogContent dividers>{children}</DialogContent>
-  </Dialog>
-);
+}) => {
+  return (
+    <Dialog
+      fullWidth={fullWidth}
+      maxWidth={maxWidth}
+      open
+      TransitionComponent={Transition}
+      keepMounted={false}
+      onClose={onClose}
+    >
+      <DialogTitle id="customized-dialog-title" onClose={onClose}>
+        {title}
+      </DialogTitle>
+      <DialogContent dividers>{children}</DialogContent>
+    </Dialog>
+  );
+};
 
 export default FormDialog;

@@ -2,93 +2,37 @@ import React from 'react';
 import MUITableRow from '@material-ui/core/TableRow';
 import { CellValue, EditIconCell, DeleteIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
-import useGetSetRef from '../../hooks/useGetSetRef';
-import { defaultFunc } from '../../utils/props';
-import { assignToRef } from '../../utils';
+import { useGridCtx } from './hooks/GridProvider';
+import useGridRow from './hooks/useGridRow';
 
-const TableRow = React.forwardRef((props, ref) => {
-  const {
-    classes,
-    mode,
-    columns,
-    disabledDeleted,
-    rowData,
-    rowIndex,
-    onFormatCellValue,
-    onSelectedRow = defaultFunc,
-    onDeleteRow = defaultFunc,
-    onGetCellDefinition = defaultFunc,
-    onChange = defaultFunc,
-  } = props;
-  const { getProp: getCellRef, setProp: setCellRef } = useGetSetRef({});
-  // const [rowData, _] = useState(propRowData);
-  // const [rowIndex, setRowIndex] = useState(propRowIndex);
-
-  const setError = cellName => {
-    const cellRef = getCellRef(cellName);
-    cellRef.setFieldError(true);
-  };
-
-  const addElementFormRef = elementFormRef => {
-    if (elementFormRef) {
-      const { name } = elementFormRef;
-      setCellRef(name, elementFormRef);
-    }
-  };
-
-  const getCellDefinition = (cellName, cellValue, column) => {
-    return onGetCellDefinition(cellName, cellValue, rowIndex, rowData, column);
-  };
-
-  const changeCellDefinition = (cellName, newCellDefinition) => {
-    const currentCellDefinition = columns.find(({ name }) => name === cellName);
-
-    if (currentCellDefinition) {
-      const changedCellDefinition = { ...currentCellDefinition, ...newCellDefinition, label: '' };
-      getCellRef(cellName).changeDefinition(changedCellDefinition);
-    }
-  };
-
-  const handleInputChange = (cellName, value, index, column) => () => {
-    rowData[cellName] = value;
-    onChange(cellName, value, index, column);
-  };
-
-  assignToRef(ref, {
-    changeCellDefinition,
-    setError,
-  });
+const TableRow = ({ classes, disabledDeleted, rowIndex, rowData, mode, errors = {} }) => {
+  const { getEvents } = useGridCtx();
+  const { onDeleteRow, onCellChange, onSelectedRow } = getEvents();
+  const { getColumns } = useGridRow({ rowData, rowIndex });
+  const columns = getColumns() || [];
 
   return (
     <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>
-      {columns.map((column, colIndex) => {
-        const existedCellValue = rowData[column.name] || column.defaultValue;
-        const overrideColumn = getCellDefinition(column.name, existedCellValue, column) || {};
-        const cellValue =
-          rowData[column.name] || overrideColumn.defaultValue || column.defaultValue;
-        const key = colIndex + column.name + (cellValue ? cellValue.toString() : '');
+      {columns.map(column => {
+        const { name: columnName } = column;
+        const key = columnName;
+        const cellValue = rowData[columnName];
         return (
           <CellValue
             rowIndex={rowIndex}
             key={key}
             row={rowData}
             column={column}
-            overrideColumn={overrideColumn}
             mode={mode}
-            onFormatCellValue={onFormatCellValue}
             cellValue={cellValue}
-            forwardRef={cellRef => {
-              addElementFormRef(cellRef, rowIndex);
-            }}
-            onInputChange={(name, value) => handleInputChange(name, value, rowIndex, column)}
+            error={errors[columnName]}
+            onCellChange={onCellChange}
           />
         );
       })}
       <EditIconCell mode={mode} onClick={() => onSelectedRow(rowData, rowIndex)} />
-      {!disabledDeleted && (
-        <DeleteIconCell mode={mode} onClick={() => onDeleteRow(rowData, rowIndex)} />
-      )}
+      {!disabledDeleted && <DeleteIconCell mode={mode} onClick={() => onDeleteRow(rowIndex)} />}
     </MUITableRow>
   );
-});
+};
 export default TableRow;
