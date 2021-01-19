@@ -24,7 +24,6 @@ export const containString = (stringValue, regExp) => {
   if (regExp) {
     const condition = new RegExp(regExp, 'g');
     const result = condition.test(stringValue);
-    console.log('containString', condition, regExp, stringValue, result);
     return result;
   }
   return true;
