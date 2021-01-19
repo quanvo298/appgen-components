@@ -1,13 +1,13 @@
 import { PROPERTIES_SYSTEM } from './BasicFormHelper';
 import { formatCellValueBaseOnType } from '../utils/FormatUtils';
+import { isObject } from '../utils';
 
 export const formatCellValue = ({ cellValue, column }) => {
   const { name: columnName } = column;
-  if (cellValue instanceof Object) {
-    const { component } = column;
-    return component && component.labelAtt
-      ? cellValue[component.labelAtt]
-      : cellValue[PROPERTIES_SYSTEM.Label];
+  if (isObject(cellValue)) {
+    const { component = {} } = column;
+    const { labelAttr } = component;
+    return labelAttr ? cellValue[labelAttr] : cellValue[PROPERTIES_SYSTEM.Label];
   }
 
   return formatCellValueBaseOnType({ cellName: columnName, cellValue, type: column.type });

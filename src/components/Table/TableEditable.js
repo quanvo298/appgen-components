@@ -107,7 +107,7 @@ const TableComponent = props => {
 };
 
 const TableEditable = props => {
-  const { columns, gridData, mode, onSelectedRow } = props;
+  const { columns, gridData, mode, onSelectedRow, onFormatCellValue } = props;
   const existedGridContext = useGridCtx();
   if (existedGridContext) {
     return <TableComponent {...props} />;
@@ -118,6 +118,7 @@ const TableEditable = props => {
     mode,
     events: {
       onSelectedRow,
+      onFormatCellValue,
     },
   });
   return (

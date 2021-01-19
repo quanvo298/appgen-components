@@ -9,6 +9,7 @@ const FormContext = ({ formConfig: propConfig, initialValues }) => {
       reduceSelectedItem: null,
       reduceModifiedItem: null,
       reduceFormConfig: null,
+      reduceContentListConfig: null,
       validateBeforeSave: defaultFunc(),
     },
     formEvents: {
