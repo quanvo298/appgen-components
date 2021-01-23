@@ -10,6 +10,7 @@ import BasicFieldEditor from './BasicFieldEditor';
 import GridContext from '../Table/hooks/GridContext';
 import GridProvider from '../Table/hooks/GridProvider';
 import GridComponent from '../GridEditor/GridComponent';
+import { formatValueBaseOnType } from '../../helper/FormHelper';
 
 const processGridComponent = props => {
   const { component = {}, name, value } = props;
@@ -48,8 +49,8 @@ const processSelectComponent = ({
   const handleChange = event => {
     event.preventDefault();
     event.stopPropagation();
-    const { target } = event;
-    onChange({ value: target.value, event });
+    const { value: targetValue } = event.target;
+    onChange({ value: formatValueBaseOnType({ value: targetValue, type }), event });
   };
 
   return (

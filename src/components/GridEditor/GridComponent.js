@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormCtx } from '../Form/hooks/FormProvider';
+import { useForm } from '../Form/hocs/FormProvider';
 import { useGridCtx } from '../Table/hooks/GridProvider';
 import { GridEvents } from '../Table/TableEditable';
 import {
@@ -12,7 +12,7 @@ import GridEditor from './GridEditor';
 
 const GridComponent = props => {
   const { name, onChange } = props;
-  const { getFormEvents, onEventEmitters, getFormIntegrations } = useFormCtx();
+  const { getFormEvents, onEventEmitters, getFormIntegrations } = useForm({});
   const { emitEvent, addIntegrations } = useGridCtx();
 
   const handleChange = event => {

@@ -1,44 +1,46 @@
 import { useState } from 'react';
-
 import cloneDeep from 'lodash/cloneDeep';
-import { ModeFormType, NotificationKind } from '../../../utils/constant';
 import { isUpdated } from '../../../helper/ModelHelper';
-import { useFormCtx } from './FormProvider';
-import {
-  reduceSelectedItem,
-  processInitialValues,
-  validateFields,
-  reduceModifiedItem,
-  validateBeforeSave,
-  isUpdatedForm,
-  isNewForm,
-} from '../../../helper/FormHelper';
-import { createValidatorStrategy } from '../../../helper/Validator';
-import { usePolyglot } from '../../../utils';
-import PubSub, { SUBSCRIPTION } from '../../../utils/PubSub';
+import { ModeFormType, NotificationKind } from '../../../utils/constant';
 import { defaultFunc } from '../../../utils/props';
+import { usePolyglot } from '../../../utils';
+import {
+  createFieldChanged,
+  createFieldEventChanged,
+  FIELD_CHANGED,
+  fieldChanged,
+  isNewForm,
+  isUpdatedForm,
+  processInitialValues,
+  reduceModifiedItem,
+  reduceSelectedItem,
+  validateBeforeSave,
+  validateFields,
+} from '../../../helper/FormHelper';
+import PubSub, { SUBSCRIPTION } from '../../../utils/PubSub';
+import { createValidatorStrategy } from '../../../helper/Validator';
+import { useForm } from '../../index';
 
 const getModelForm = selectedItem =>
   isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
 
-const useForm = ({ selectedItem, onUpdate = defaultFunc, onSave = defaultFunc }) => {
+const useFormWidget = ({
+  formConfig,
+  selectedItem = null,
+  onUpdate = defaultFunc,
+  onSave = defaultFunc,
+}) => {
   const {
     getFormConfig,
-    setFormConfig,
     getFormIntegrations,
     setFormValues,
     getFormValues,
     getFieldErrors,
     setFieldErrors,
+    getFormEvents,
+    getInitialValues,
     emitEvent,
-    onFieldChange: fieldChange,
-  } = useFormCtx();
-
-  const { reduceFormConfig } = getFormIntegrations();
-  if (reduceFormConfig != null) {
-    const formConfig = reduceFormConfig(getFormConfig());
-    setFormConfig(formConfig);
-  }
+  } = useForm({ formConfig });
 
   const modeForm = getModelForm(selectedItem);
   const [, resetFormValues] = useState(null);
@@ -49,6 +51,14 @@ const useForm = ({ selectedItem, onUpdate = defaultFunc, onSave = defaultFunc })
     if (formValues) {
       return formValues;
     }
+
+    const initialValuesDefault = getInitialValues();
+    if (initialValuesDefault && modeForm === ModeFormType.NEW) {
+      const initial = cloneDeep(initialValuesDefault);
+      setFormValues(initial);
+      return initial;
+    }
+
     const { fields } = getFormConfig();
     const { reduceSelectedItem: callbackReduceSelectedItem } = getFormIntegrations();
     const item = reduceSelectedItem({ selectedItem })(callbackReduceSelectedItem);
@@ -65,7 +75,15 @@ const useForm = ({ selectedItem, onUpdate = defaultFunc, onSave = defaultFunc })
   };
 
   const onFieldChange = (name, value) => event => {
-    fieldChange({ name, value, event });
+    setFormValues({ ...getFormValues(), [name]: value });
+    const formEvents = getFormEvents();
+    const fieldEventChangedName = createFieldEventChanged(name);
+    const fieldChangedName = createFieldChanged(name);
+    fieldChanged({ fieldName: name, value, event })(
+      formEvents[fieldEventChangedName],
+      formEvents[fieldChangedName],
+      formEvents[FIELD_CHANGED]
+    );
   };
 
   const showErrorMessage = validateStrategy => {
@@ -82,6 +100,7 @@ const useForm = ({ selectedItem, onUpdate = defaultFunc, onSave = defaultFunc })
     const { disabled, errors } = validationResult;
     const validateStrategy = createValidatorStrategy({ errors, polyglot });
 
+    console.log('validateFields:', validationResult, formValues);
     if (disabled) {
       setFieldErrors(errors);
       resetFormValues({ ...formValues });
@@ -111,18 +130,15 @@ const useForm = ({ selectedItem, onUpdate = defaultFunc, onSave = defaultFunc })
     return modifiedItem;
   };
 
-  const saveOrUpdate = modifiedItem => {
+  const save = () => {
+    const modifiedItem = attemptToValidateAndGetModifiedItem();
+    if (!modifiedItem) {
+      return;
+    }
     if (isUpdatedForm(modeForm)) {
       onUpdate(modifiedItem);
     } else if (isNewForm(modeForm)) {
       onSave(modifiedItem);
-    }
-  };
-
-  const save = () => {
-    const updatedItem = attemptToValidateAndGetModifiedItem();
-    if (updatedItem) {
-      saveOrUpdate(updatedItem);
     }
   };
 
@@ -135,7 +151,8 @@ const useForm = ({ selectedItem, onUpdate = defaultFunc, onSave = defaultFunc })
     save,
     reset: resetForm,
     onFieldChange,
+    getFormConfig,
   };
 };
 
-export default useForm;
+export default useFormWidget;

@@ -130,19 +130,17 @@ const NotificationStyles = theme => ({
   },
 });
 
-const DragableStyles = () => ({
-  dragable: {
-    padding: '25px 10px 5px',
+const DraggableStyles = () => ({
+  draggable: {
+    margin: '4px',
     background: '#eaeff1',
     minHeight: '30px',
-    width: '100%',
     '&:hover': {
       display: 'block',
-      padding: 2,
-      'border-style': 'dotted',
+      border: '1px dashed gray',
     },
   },
-  flatDragable: {
+  flatDraggable: {
     background: '#eaeff1',
     padding: 1,
   },
@@ -251,7 +249,7 @@ export const withButtonStyles = component => withStyles(ButtonStyles)(component)
 
 export const withNotificationStyles = component => withStyles(NotificationStyles)(component);
 
-export const withDragableStyles = component => withStyles(DragableStyles)(component);
+export const withDraggableStyles = component => withStyles(DraggableStyles)(component);
 
 export const useTableStyles = makeStyles(TableEditorStyles);
 

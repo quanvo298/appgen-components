@@ -3,6 +3,13 @@ import { getCurrentLocale } from './LocaleProvider';
 import { PropertyDataType } from './constant';
 import { isNumber, isString } from './ObjectUtils';
 
+export const formatNumberValue = numberValue => {
+  if (numberValue) {
+    return new Intl.NumberFormat(getCurrentLocale(), {}).format(numberValue);
+  }
+  return numberValue;
+};
+
 export const formatCellDateValue = date => {
   if (date && isNumber(date)) {
     return formatDateShort(new Date(date));
@@ -15,10 +22,7 @@ export const formatCellDateValue = date => {
 };
 
 export const formatCellNumberValue = numberValue => {
-  if (numberValue) {
-    return new Intl.NumberFormat(getCurrentLocale(), {}).format(numberValue);
-  }
-  return numberValue;
+  return formatNumberValue(numberValue);
 };
 
 export const isDatePropertyType = type => type === PropertyDataType.Date;

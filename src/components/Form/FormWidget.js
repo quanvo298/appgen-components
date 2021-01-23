@@ -2,7 +2,7 @@ import React from 'react';
 import { withBasicFormStyles } from '../../utils/withBasicStyles';
 import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
 import { getEntityId } from '../../helper/ModelHelper';
-import useForm from './hooks/useForm';
+import useFormWidget from './hooks/useFormWidget';
 import { isUpdatedForm } from '../../helper/BasicFormHelper';
 import ButtonBox from './ButtonBox';
 import FormBox from './Layout/FormBox';
@@ -10,7 +10,7 @@ import FormLayout from './Layout/FormLayout';
 import { useDialogCtx } from '../../hocs/DialogProvider';
 
 const FormWidget = ({
-  formConfig,
+  formConfig: propFormConfig,
   selectedItem,
   classes,
   showTitle = true,
@@ -22,6 +22,23 @@ const FormWidget = ({
   onUpdate,
 }) => {
   const {
+    modeForm,
+    reset,
+    save,
+    onFieldChange,
+    getFormValues,
+    getFieldErrors,
+    getFormConfig,
+  } = useFormWidget({
+    formConfig: propFormConfig,
+    selectedItem,
+    onUpdate,
+    onSave,
+  });
+
+  const formConfig = getFormConfig();
+
+  const {
     title,
     layout,
     formName,
@@ -30,12 +47,6 @@ const FormWidget = ({
     disableDelete,
     disableReset,
   } = formConfig;
-
-  const { reset, modeForm, onFieldChange, getFormValues, save, getFieldErrors } = useForm({
-    selectedItem,
-    onUpdate,
-    onSave,
-  });
 
   const { openDialog } = useDialogCtx();
 

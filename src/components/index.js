@@ -1,5 +1,5 @@
-import { withForm } from './Form/hooks';
-import { useFormCtx } from './Form/hooks/FormProvider';
+import { withForm } from './Form/hocs';
+import { useForm } from './Form/hocs/FormProvider';
 
 import FormWidget from './Form/FormWidget';
 import BasicPageLayout from './Form/Layout/BasicPageLayout';
@@ -43,7 +43,7 @@ import TabContainer from './Tabs/TabContainer';
 
 export {
   withForm,
-  useFormCtx,
+  useForm,
   FormWidget,
   BasicPageLayout,
   AppBar,

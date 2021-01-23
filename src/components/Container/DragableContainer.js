@@ -1,6 +1,6 @@
 import React from 'react';
 import Wrapper from './Wrapper';
-import { withDragableStyles } from '../../utils/withBasicStyles';
+import { withDraggableStyles } from '../../utils/withBasicStyles';
 
 const DragableContainer = ({
   classes,
@@ -45,4 +45,4 @@ const DragableContainer = ({
   );
 };
 
-export default withDragableStyles(DragableContainer);
+export default withDraggableStyles(DragableContainer);

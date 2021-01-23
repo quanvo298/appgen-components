@@ -4,6 +4,7 @@ import TextInput from '../TextInput/TextInput';
 import NumberField from '../NumberField/NumberField';
 import DateTimeInput from '../DateTimeInput/DateTimeInput';
 import { FieldType } from '../../utils/constant';
+import { formatValueBaseOnType } from '../../helper/FormHelper';
 
 const FieldEditorByType = {
   [FieldType.Boolean]: Checkbox,
@@ -15,15 +16,17 @@ const FieldEditorByType = {
 };
 
 export default props => {
+  const propType = props.type || FieldType.Text;
+  const BasicFieldEditor = FieldEditorByType[propType.toLowerCase()] || TextInput;
+
   const handleChange = event => {
     if (props.onChange) {
       event.preventDefault();
       event.stopPropagation();
-      const { target } = event;
-      props.onChange({ value: target.value, event });
+      const { value } = event.target;
+      props.onChange({ value: formatValueBaseOnType({ value, type: propType }), event });
     }
   };
-  const propType = props.type || FieldType.Text;
-  const BasicFieldEditor = FieldEditorByType[propType];
+
   return <BasicFieldEditor {...props} onChange={handleChange} />;
 };

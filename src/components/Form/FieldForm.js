@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import useFieldDefinition from '../../hooks/useFieldDefinition';
+import useFieldDefinition from './hooks/useFieldDefinition';
 import FieldEditor from './FieldEditor';
 import { containString } from '../../utils';
 import { defaultFunc } from '../../utils/props';
+import { useForm } from './hocs/FormProvider';
 
 const FieldForm = ({
   name: propName,
@@ -19,7 +20,8 @@ const FieldForm = ({
   error: propError,
   onFieldChange = () => defaultFunc,
 }) => {
-  const { getFieldDefinition } = useFieldDefinition({
+  const { addFieldIntegrations } = useForm();
+  const { getFieldDefinition, setFieldDefinition } = useFieldDefinition({
     name: propName,
     disabled,
     length,
@@ -30,12 +32,12 @@ const FieldForm = ({
     defaultValue,
   });
 
-  const [fieldValue, setFieldValue] = useState(propValue);
+  const [fieldValue, updateFieldValue] = useState(propValue);
   const [error, setError] = useState(propError);
 
   useEffect(() => {
     if (propValue.value !== fieldValue.value) {
-      setFieldValue(propValue);
+      updateFieldValue(propValue);
     }
   }, [propValue]);
 
@@ -54,15 +56,21 @@ const FieldForm = ({
     if (regExp && newValue && !containString(newValue, regExp)) {
       return;
     }
-    onFieldChange(propName, newValue)(event);
     const newFieldValue = shouldRender(event) ? {} : fieldValue;
     newFieldValue.value = newValue;
-    setFieldValue(newFieldValue);
+    updateFieldValue(newFieldValue);
+    onFieldChange(propName, newValue)(event);
   };
 
   const handleChange = ({ value, event }) => {
     processChange(value)(event);
   };
+
+  const setFieldValue = value => {
+    processChange(value)();
+  };
+
+  addFieldIntegrations(propName, { setFieldValue, setFieldDefinition });
 
   return (
     <FieldEditor

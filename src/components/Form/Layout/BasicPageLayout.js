@@ -2,14 +2,15 @@ import React from 'react';
 import Row from '../../Container/Row';
 import Wrapper from '../../Container/Wrapper';
 import ContentList from '../../ContentList/ContentList';
-import { FormWidget, useFormCtx } from '../../index';
+import { useForm } from '../hocs/FormProvider';
+import FormWidget from '../FormWidget';
 
 const BasicPageLayout = ({
   formConfig,
   contentListConfig: propContentListConfig,
   ...restProps
 }) => {
-  const { getFormIntegrations } = useFormCtx();
+  const { getFormIntegrations } = useForm();
 
   const { reduceContentListConfig } = getFormIntegrations();
   const contentListConfig =

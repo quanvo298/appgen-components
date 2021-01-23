@@ -1,4 +1,4 @@
-import { ModeFormType } from '../utils/constant';
+import { FieldType, ModeFormType } from '../utils/constant';
 import { getEntityId, isUpdated } from './ModelHelper';
 import { validateField } from './Validator';
 import { upperFirstChar } from '../utils';
@@ -6,6 +6,30 @@ import { upperFirstChar } from '../utils';
 export const isUpdatedForm = modeForm => modeForm === ModeFormType.UPDATE;
 
 export const isNewForm = modeForm => !modeForm || modeForm === ModeFormType.NEW;
+
+export const FIELD_CHANGED = `fieldChanged`;
+
+export const formatValueBaseOnType = ({ value, type }) => {
+  if (value) {
+    switch (type) {
+      case FieldType.Boolean:
+        return !!value;
+      case FieldType.Number:
+        return Number(value);
+      default:
+        return value;
+    }
+  }
+  return value;
+};
+
+export const createFieldEventChanged = name => {
+  return `field${upperFirstChar(name)}EventChanged`;
+};
+
+export const createFieldChanged = name => {
+  return `field${upperFirstChar(name)}Changed`;
+};
 
 export const createFieldCellChangedEvent = name => {
   return `field${upperFirstChar(name)}CellChanged`;
@@ -69,6 +93,26 @@ export const fieldCellChanged = ({ fieldName, cellName, cellValue, rowIndex }) =
     return;
   }
   callback({ cellName, cellValue, rowIndex });
+};
+
+export const fieldChanged = ({ fieldName, value, event }) => (
+  fieldNameEventChanged,
+  fieldNameChanged,
+  genericFieldChanged
+) => {
+  if (!((fieldNameEventChanged || fieldNameChanged || fieldChanged) && fieldName)) {
+    return;
+  }
+
+  if (fieldNameEventChanged && event) {
+    fieldNameEventChanged({ value })(event);
+  } else if (fieldNameChanged) {
+    fieldNameChanged({ value, event });
+  }
+
+  if (genericFieldChanged) {
+    genericFieldChanged({ fieldName, value, event });
+  }
 };
 
 export const validateFields = ({ fields, formValues = {}, emitEvent }) => {

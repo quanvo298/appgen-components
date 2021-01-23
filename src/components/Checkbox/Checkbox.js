@@ -12,7 +12,7 @@ const Checkbox = ({ name, value, label, error, disabled, onChange = defaultFunc 
   };
   return (
     <FormControlLabel
-      control={<MCheckbox name={name} checked={Boolean(value)} onChange={handleChange} />}
+      control={<MCheckbox name={name} checked={!!value} onChange={handleChange} />}
       label={label}
       error={error || undefined}
       disabled={disabled}
