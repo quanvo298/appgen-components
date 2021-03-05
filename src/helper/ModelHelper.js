@@ -16,8 +16,7 @@ export const getEntityId = entity =>
   entity && (entity[ENTITY_PROPERTIES_SYSTEM.ID] || entity[ENTITY_PROPERTIES_SYSTEM.UNDER_ID]);
 
 export const getItemById = (itemId, itemList = []) =>
-  itemId &&
-  itemList.find(item => item.id === itemId || item[ENTITY_PROPERTIES_SYSTEM.UNDER_ID] === itemId);
+  itemId && itemList.find(item => getEntityId(item) === itemId);
 
 export const checkValueBaseOnCriteria = (criteria, item, key) => {
   const criteriaValue = criteria[key];

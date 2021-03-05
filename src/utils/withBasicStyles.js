@@ -134,7 +134,7 @@ const DraggableStyles = () => ({
   draggable: {
     margin: '4px',
     background: '#eaeff1',
-    minHeight: '30px',
+    minHeight: '1px',
     '&:hover': {
       display: 'block',
       border: '1px dashed gray',

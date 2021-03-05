@@ -43,6 +43,9 @@ const useFormWidget = ({
   } = useForm({ formConfig });
 
   const modeForm = getModelForm(selectedItem);
+
+  console.log('useForm:', isUpdatedForm(modeForm), selectedItem);
+
   const [, resetFormValues] = useState(null);
   const polyglot = usePolyglot();
 
@@ -100,7 +103,6 @@ const useFormWidget = ({
     const { disabled, errors } = validationResult;
     const validateStrategy = createValidatorStrategy({ errors, polyglot });
 
-    console.log('validateFields:', validationResult, formValues);
     if (disabled) {
       setFieldErrors(errors);
       resetFormValues({ ...formValues });

@@ -9,7 +9,6 @@ const Container = styled(Box)`
 
 Container.defaultProps = {
   mx: 'auto',
-  maxWidth: '100%',
   px: [3, 0],
   width: ['750px', '970px', '1170px'],
 };
