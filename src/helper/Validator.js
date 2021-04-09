@@ -89,5 +89,4 @@ const buildValidatorStrategy = ({ polyglot }) => {
   };
 };
 
-export const createValidatorStrategy = ({ errors, polyglot }) =>
-  buildValidatorStrategy({ errors, polyglot });
+export const createValidatorStrategy = ({ polyglot }) => buildValidatorStrategy({ polyglot });

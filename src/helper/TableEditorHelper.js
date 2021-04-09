@@ -1,4 +1,4 @@
-import { PROPERTIES_SYSTEM } from './BasicFormHelper';
+import { PROPERTIES_SYSTEM } from './FormHelper';
 import { formatCellValueBaseOnType } from '../utils/FormatUtils';
 import { isObject } from '../utils';
 

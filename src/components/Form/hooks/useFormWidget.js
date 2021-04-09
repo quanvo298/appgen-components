@@ -12,7 +12,6 @@ import {
   isNewForm,
   isUpdatedForm,
   processInitialValues,
-  reduceModifiedItem,
   reduceSelectedItem,
   validateBeforeSave,
   validateFields,
@@ -35,6 +34,7 @@ const useFormWidget = ({
     getFormIntegrations,
     setFormValues,
     getFormValues,
+    getModifiedItem,
     getFieldErrors,
     setFieldErrors,
     getFormEvents,
@@ -43,8 +43,6 @@ const useFormWidget = ({
   } = useForm({ formConfig });
 
   const modeForm = getModelForm(selectedItem);
-
-  console.log('useForm:', isUpdatedForm(modeForm), selectedItem);
 
   const [, resetFormValues] = useState(null);
   const polyglot = usePolyglot();
@@ -99,9 +97,9 @@ const useFormWidget = ({
   const attemptToValidateAndGetModifiedItem = () => {
     const { fields } = getFormConfig();
     const formValues = getFormValues();
-    const validationResult = validateFields({ fields, formValues, emitEvent });
+    const validateStrategy = createValidatorStrategy({ polyglot });
+    const validationResult = validateFields({ fields, validateStrategy, formValues, emitEvent });
     const { disabled, errors } = validationResult;
-    const validateStrategy = createValidatorStrategy({ errors, polyglot });
 
     if (disabled) {
       setFieldErrors(errors);
@@ -112,19 +110,14 @@ const useFormWidget = ({
       return false;
     }
 
-    const {
-      reduceModifiedItem: callbackReduceSelectedItem,
-      validateBeforeSave: callbackValidateBeforeSave,
-    } = getFormIntegrations();
-    const modifiedItem = reduceModifiedItem({ modifiedItem: formValues })(
-      callbackReduceSelectedItem
-    );
+    const modifiedItem = getModifiedItem();
 
+    const { validateBeforeSave: callbackValidateBeforeSave } = getFormIntegrations();
     validateBeforeSave({ modifiedItem, validateStrategy, validationResult })(
       callbackValidateBeforeSave
     );
 
-    if (validationResult.disabled && validateStrategy.hasErrors()) {
+    if (validateStrategy.hasErrors()) {
       showErrorMessage(validateStrategy);
       return false;
     }

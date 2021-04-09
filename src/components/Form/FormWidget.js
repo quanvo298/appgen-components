@@ -3,7 +3,7 @@ import { withBasicFormStyles } from '../../utils/withBasicStyles';
 import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
 import { getEntityId } from '../../helper/ModelHelper';
 import useFormWidget from './hooks/useFormWidget';
-import { isUpdatedForm } from '../../helper/BasicFormHelper';
+import { isUpdatedForm } from '../../helper/FormHelper';
 import ButtonBox from './ButtonBox';
 import FormBox from './Layout/FormBox';
 import FormLayout from './Layout/FormLayout';

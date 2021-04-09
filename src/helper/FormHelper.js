@@ -3,6 +3,11 @@ import { getEntityId, isUpdated } from './ModelHelper';
 import { validateField } from './Validator';
 import { upperFirstChar } from '../utils';
 
+export const PROPERTIES_SYSTEM = {
+  Label: 'label',
+  Name: 'name',
+};
+
 export const isUpdatedForm = modeForm => modeForm === ModeFormType.UPDATE;
 
 export const isNewForm = modeForm => !modeForm || modeForm === ModeFormType.NEW;
@@ -106,8 +111,11 @@ export const fieldChanged = ({ fieldName, value, event }) => (
 
   if (fieldNameEventChanged && event) {
     fieldNameEventChanged({ value })(event);
-  } else if (fieldNameChanged) {
+    return;
+  }
+  if (fieldNameChanged) {
     fieldNameChanged({ value, event });
+    return;
   }
 
   if (genericFieldChanged) {
@@ -115,23 +123,28 @@ export const fieldChanged = ({ fieldName, value, event }) => (
   }
 };
 
-export const validateFields = ({ fields, formValues = {}, emitEvent }) => {
+export const validateFields = ({ fields, formValues = {}, validateStrategy, emitEvent }) => {
   return Object.keys(fields).reduce(
     (result, fieldName) => {
       const { errors } = result;
       const field = fields[fieldName];
       const fieldValue = formValues[fieldName];
-      if (emitEvent) {
-        const valid = emitEvent(createFieldEventEmitter(fieldName, 'validate'));
+
+      if (!validateField({ field, fieldValue })) {
+        errors[fieldName] = true;
+        result.disabled = true;
+      }
+
+      if (!errors[fieldName] && emitEvent) {
+        const valid = emitEvent(createFieldEventEmitter(fieldName, 'validate'), {
+          fieldValue,
+          formValues,
+          validateStrategy,
+        });
         if (valid === false) {
           errors[fieldName] = true;
           result.disabled = true;
         }
-      }
-
-      if (!errors[fieldName] && !validateField({ field, fieldValue })) {
-        errors[fieldName] = true;
-        result.disabled = true;
       }
       return result;
     },

@@ -7,7 +7,7 @@ import { isNotEmpty } from '../../utils/CollectionUtils';
 const MIN_WIDTH = 120;
 const ICON_WIDTH = 16;
 
-const Head = ({ columns, classes, mode }) => (
+const Head = ({ columns = [], classes, mode }) => (
   <TableHead>
     <TableRow className={mode === 'view' ? classes.trEditor : ''}>
       {columns.map((column, index) => (

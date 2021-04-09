@@ -4,7 +4,7 @@ export const ENTITY_PROPERTIES_SYSTEM = {
   ID: 'id',
   UNDER_ID: '_id',
   ENTITY: 'Entity',
-  CHOICELIST: 'ChoiceList',
+  CHOICE_LIST: 'ChoiceList',
 };
 
 export const isUpdated = item =>
