@@ -20,7 +20,7 @@ export const useForm = (arg1, arg2 = {}) => {
   const supportFormName = isString(arg1);
   const props = supportFormName ? arg2 : arg1 || {};
 
-  const { get, getForm, addForm, setCurrentFormName } = formContext;
+  const { get, getForm, addForm, setCurrentFormName, clear } = formContext;
   const foundContext = supportFormName ? getForm(arg1) : get();
   if (supportFormName) {
     setCurrentFormName(arg1);
@@ -33,6 +33,7 @@ export const useForm = (arg1, arg2 = {}) => {
     addFormEvents,
     setInitialValues,
     setFormValues,
+    onEventEmitters,
   } = foundContext;
 
   // eslint-disable-next-line no-prototype-builtins
@@ -45,6 +46,12 @@ export const useForm = (arg1, arg2 = {}) => {
   if (props.hasOwnProperty('formEvents')) {
     const { formEvents } = props;
     addFormEvents(formEvents);
+  }
+
+  // eslint-disable-next-line no-prototype-builtins
+  if (props.hasOwnProperty('eventEmitters')) {
+    const { eventEmitters } = props;
+    onEventEmitters(eventEmitters);
   }
 
   // eslint-disable-next-line no-prototype-builtins
@@ -72,11 +79,12 @@ export const useForm = (arg1, arg2 = {}) => {
   };
 
   return {
+    clear,
+    getForm,
     addForm,
     initialized: true,
     ...foundContext,
     setFieldValue,
     setFieldDefs,
-    addFormIntegrations,
   };
 };

@@ -1,5 +1,6 @@
 import { defaultFunc } from '../../../utils/props';
 import { cloneObjectDeep } from '../../../utils';
+import { reduceModifiedItem } from '../../../helper/FormHelper';
 
 const FormNameDefault = `fnDefault_${new Date().getTime()}`;
 
@@ -18,7 +19,8 @@ const FormCtxPropertiesDefault = {
     reduceModifiedItem: null,
     reduceFormConfig: null,
     reduceContentListConfig: null,
-    validateBeforeSave: defaultFunc(),
+    validateBeforeSave: defaultFunc,
+    getModifiedItem: null,
   },
   formEvents: {},
   eventEmitters: {},
@@ -100,11 +102,21 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
     return null;
   };
 
+  const getModifiedItem = () => {
+    const { reduceModifiedItem: callbackReduceSelectedItem } = getFormIntegrations();
+    const formValues = getFormValues();
+    const modifiedItem = reduceModifiedItem({ modifiedItem: formValues })(
+      callbackReduceSelectedItem
+    );
+    return modifiedItem;
+  };
+
   return {
     setFormConfig,
     getFormConfig,
     setFormValues,
     getFormValues,
+    getModifiedItem,
     setInitialValues,
     getInitialValues,
     getFieldErrors,
@@ -146,10 +158,18 @@ const FormContext = (name, props) => {
 
   const get = () => getForm(lastFormName);
 
+  const clear = () => {
+    Object.keys(formGroups).forEach(formName => {
+      delete formGroups[formName];
+    });
+    formGroups[FormNameDefault] = new FormCtxInstance(props);
+  };
+
   return {
     addForm,
     getForm,
     get,
+    clear,
     setCurrentFormName,
   };
 };

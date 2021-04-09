@@ -4,14 +4,14 @@ import FormProvider, { useForm } from './FormProvider';
 import useFormConfig from '../hooks/useFormConfig';
 
 const withForm = propFormConfig => ComposedFormView => {
-  const FormComponent = ({ polyglot, formName, ...restProps }) => {
-    const { getFormConfig } = useForm();
-    const formConfig = getFormConfig();
+  const FormComponent = ({ polyglot, formName, formConfig, ...restProps }) => {
+    const formInst = useForm(formName);
     const { contentList: contentListConfig } = formConfig;
 
     return (
       <ComposedFormView
         {...restProps}
+        form={formInst}
         formName={formName}
         formConfig={formConfig}
         contentListConfig={contentListConfig}
@@ -30,11 +30,11 @@ const withForm = propFormConfig => ComposedFormView => {
 
     if (initialized) {
       addForm(formName, { formConfig });
-      return <FormComponent formName={formName} {...props} />;
+      return <FormComponent formName={formName} formConfig={formConfig} {...props} />;
     }
     return (
       <FormProvider formConfig={formConfig} formName={formName}>
-        <FormComponent formName={formName} {...props} />
+        <FormComponent formName={formName} formConfig={formConfig} {...props} />
       </FormProvider>
     );
   };
