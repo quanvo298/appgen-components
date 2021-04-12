@@ -23,7 +23,9 @@ const FormCtxPropertiesDefault = {
     getModifiedItem: null,
   },
   formEvents: {},
-  eventEmitters: {},
+  eventEmitters: {
+    validateAndGetModifiedItem: defaultFunc,
+  },
 };
 
 const copyToObject = (integrations = {}, events = {}) => {

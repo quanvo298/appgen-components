@@ -120,13 +120,13 @@ const processEditorComponent = (
   { onChange = defaultFunc, name, ...restProps }
 ) => <EditorComponent onChange={onChange} {...restProps} />;
 
-const FieldEditor = React.forwardRef((props, ref) => {
+const FieldEditor = props => {
   const { component } = props;
   const { type: componentType = '' } = component != null ? component : {};
 
   switch (componentType) {
     case FieldComponentType.Grid:
-      return processGridComponent(props, ref);
+      return processGridComponent(props);
     case FieldComponentType.Select:
       return processSelectComponent(props);
     case FieldComponentType.AutoSelect:
@@ -139,5 +139,6 @@ const FieldEditor = React.forwardRef((props, ref) => {
       return <BasicFieldEditor {...props} />;
     }
   }
-});
+};
+
 export default FieldEditor;

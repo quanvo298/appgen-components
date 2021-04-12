@@ -6,7 +6,7 @@ import { OutlinedInput, FilledInput, Input } from '@material-ui/core';
 import TableEditable from '../Table/TableEditable';
 import { TABLE_MODE } from '../../utils/constant';
 
-export const TableEditableComponent = React.forwardRef(function TableEditableComponent(props) {
+export const TableEditableComponent = function TableEditableComponent(props) {
   const {
     children,
     component,
@@ -35,7 +35,7 @@ export const TableEditableComponent = React.forwardRef(function TableEditableCom
       error={error}
     />
   );
-});
+};
 
 export const GridEditorComponent = React.forwardRef((props, ref) => {
   const {
@@ -92,7 +92,7 @@ export const GridEditorComponent = React.forwardRef((props, ref) => {
   });
 });
 
-const GridEditor = React.forwardRef(props => {
+const GridEditor = props => {
   const { label, variant = 'outlined', error, required, ...restProps } = props;
   return (
     <FormControl fullWidth variant={variant} required error={error}>
@@ -106,6 +106,6 @@ const GridEditor = React.forwardRef(props => {
       />
     </FormControl>
   );
-});
+};
 
 export default GridEditor;

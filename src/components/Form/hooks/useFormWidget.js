@@ -40,6 +40,7 @@ const useFormWidget = ({
     getFormEvents,
     getInitialValues,
     emitEvent,
+    onEventEmitters,
   } = useForm({ formConfig });
 
   const modeForm = getModelForm(selectedItem);
@@ -138,6 +139,8 @@ const useFormWidget = ({
   };
 
   initializeFormValues();
+
+  onEventEmitters({ validateAndGetModifiedItem: attemptToValidateAndGetModifiedItem });
 
   return {
     modeForm,
