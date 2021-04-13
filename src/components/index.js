@@ -1,8 +1,9 @@
 import { withForm } from './Form/hocs';
 import { useForm } from './Form/hocs/FormProvider';
-
 import FormWidget from './Form/FormWidget';
 import BasicPageLayout from './Form/Layout/BasicPageLayout';
+import FieldForm from './Form/FieldForm';
+
 import AppBar from './AppBar/AppBar';
 import Header from './AppBar/Header';
 import AutoSelect from './AutoSelect/AutoSelect';
@@ -37,6 +38,7 @@ import TabContainer from './Tabs/TabContainer';
 export {
   withForm,
   useForm,
+  FieldForm,
   FormWidget,
   BasicPageLayout,
   AppBar,
