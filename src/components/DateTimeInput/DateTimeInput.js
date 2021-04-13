@@ -16,7 +16,11 @@ const DateTimeInput = React.forwardRef((props, ref) => {
   } = props;
 
   const handleChange = dateValue => {
-    onChange({ target: { value: dateValue } });
+    onChange({
+      target: { value: dateValue },
+      preventDefault: defaultFunc,
+      stopPropagation: defaultFunc,
+    });
   };
 
   return (

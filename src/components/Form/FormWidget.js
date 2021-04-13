@@ -40,7 +40,7 @@ const FormWidget = ({
 
   const {
     title,
-    layout,
+    formLayout,
     formName,
     fields = {},
     disableSave,
@@ -117,7 +117,7 @@ const FormWidget = ({
       >
         <FormLayout
           classes={classes}
-          layout={layout}
+          layout={formLayout}
           fields={fields}
           formValues={getFormValues()}
           fieldErrors={getFieldErrors()}
