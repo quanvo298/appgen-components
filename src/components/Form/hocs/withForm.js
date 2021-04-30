@@ -1,5 +1,5 @@
 import React from 'react';
-import withPolyglot from '../../../utils/withPolyglot';
+import withPolyglot from '../../../hocs/withPolyglot';
 import FormProvider, { useForm } from './FormProvider';
 import useFormConfig from '../hooks/useFormConfig';
 

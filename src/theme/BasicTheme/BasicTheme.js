@@ -1,5 +1,5 @@
 import React from 'react';
-import { withLayoutStyles } from '../../utils/withBasicStyles';
+import { withLayoutStyles } from '../../hocs/withBasicStyles';
 import Wrapper from '../../components/Container/Wrapper';
 import Header from '../../components/AppBar/Header';
 import NavBar from './NavBar';
@@ -24,5 +24,6 @@ const BasicThemeWidget = ({ classes, navigation, children, polyglot }) => (
 );
 
 const BasicTheme = withLayoutStyles(BasicThemeWidget);
+BasicTheme.displayName = 'BasicTheme';
 
 export default BasicTheme;

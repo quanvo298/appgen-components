@@ -19,7 +19,7 @@ const getSelectedOption = (itemValue, options = [], multi) => {
 };
 
 const AutoSelect = ({
-  options,
+  options = [],
   multi,
   value,
   onChange = defaultFunc,

@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { AppBar } from '..';
-import { withTabStyles } from '../../utils/withBasicStyles';
+import { withTabStyles } from '../../hocs/withBasicStyles';
 
 const Show = ({ selectedTab, name, children }) => selectedTab === name && children;
 

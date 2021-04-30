@@ -2,7 +2,7 @@ import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useTableStyles } from '../../utils/withBasicStyles';
+import { useTableStyles } from '../../hocs/withBasicStyles';
 import { usePolyglot } from '../../utils/LocaleProvider';
 import Wrapper from '../Container/Wrapper';
 import BasicButton from '../Button/BasicButton';
@@ -18,6 +18,7 @@ export const GridEvents = {
   AddNewRow: 'AddNewRow',
   CellChange: 'CellChange',
   DeleteRow: 'DeleteRow',
+  RenderedRow: 'RenderedRow',
 };
 const ButtonBox = ({ disabledNew, onAddNewRow }) => {
   const polyglot = usePolyglot();

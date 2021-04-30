@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MUITableRow from '@material-ui/core/TableRow';
 import { CellValue, EditIconCell, DeleteIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
@@ -7,9 +7,21 @@ import useGridRow from './hooks/useGridRow';
 
 const TableRow = ({ classes, disabledDeleted, rowIndex, rowData, mode, errors = {} }) => {
   const { getEvents } = useGridCtx();
-  const { onDeleteRow, onCellChange, onSelectedRow, onFormatCellValue } = getEvents();
+  const {
+    onDeleteRow,
+    onCellChange,
+    onSelectedRow,
+    onFormatCellValue,
+    onRenderedRow,
+  } = getEvents();
   const { getColumns } = useGridRow({ rowData, rowIndex });
   const columns = getColumns() || [];
+
+  useEffect(() => {
+    if (onRenderedRow) {
+      onRenderedRow({ rowData, rowIndex });
+    }
+  }, [onRenderedRow]);
 
   return (
     <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>

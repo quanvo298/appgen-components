@@ -24,7 +24,7 @@ const getModelForm = selectedItem =>
   isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
 
 const useFormWidget = ({
-  formConfig,
+  formName,
   selectedItem = null,
   onUpdate = defaultFunc,
   onSave = defaultFunc,
@@ -41,7 +41,7 @@ const useFormWidget = ({
     getInitialValues,
     emitEvent,
     onEventEmitters,
-  } = useForm({ formConfig });
+  } = useForm(formName, { fireFormConfigReduce: true });
 
   const modeForm = getModelForm(selectedItem);
 

@@ -1,5 +1,5 @@
 import { isArray, isObject } from '../utils';
-import { PropertyDataType } from '../utils/constant';
+import { FieldType } from '../utils/constant';
 import { ComponentType } from '../components/ElementFormEditor/ElementFormEditor';
 import { convertToOptionItems } from '../mapping/OptionMapping';
 
@@ -43,9 +43,9 @@ export const processObjectElementValue = ({ elementValue, component }) => {
 export const processElementValue = ({ elementValue, type, component = { data: [] } }) => {
   if (type) {
     switch (type) {
-      case PropertyDataType.Document:
-        return processDocumentElementValue({ elementValue, component });
-      case PropertyDataType.Object:
+      /* case FieldType.Document:
+        return processDocumentElementValue({ elementValue, component }); */
+      case FieldType.Object:
         return processObjectElementValue({ elementValue, component });
       default:
         return elementValue;
@@ -57,7 +57,7 @@ export const processElementValue = ({ elementValue, type, component = { data: []
 export const convertToElementValue = ({ elementValue, type }) => {
   if (elementValue && type) {
     switch (type) {
-      case PropertyDataType.Object:
+      case FieldType.Object:
         return convertObjectToElementValue({ elementValue });
       default:
         return elementValue;

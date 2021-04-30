@@ -42,10 +42,6 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
     values: initialValues,
   };
 
-  const setFormConfig = newFormConfig => {
-    properties.formConfig = newFormConfig;
-  };
-
   const getFormConfig = () => properties.formConfig;
 
   const setFormValues = formValues => {
@@ -78,6 +74,27 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
 
   const addFormIntegrations = (events = {}) => {
     copyToObject(properties.formIntegrations, events);
+  };
+
+  const updateFieldFormConfig = (fieldName, fieldDefs) => {
+    const { fields } = properties.formConfig;
+    if (fields && fields[fieldName] && fieldDefs) {
+      fields[fieldName] = {
+        ...fields[fieldName],
+        ...fieldDefs,
+      };
+    }
+  };
+
+  const fireFormConfigReduce = () => {
+    const { reduceFormConfig } = getFormIntegrations();
+    if (reduceFormConfig) {
+      const { formConfig } = properties;
+      const newFormConfig = reduceFormConfig(formConfig);
+      if (newFormConfig) {
+        properties.formConfig = newFormConfig;
+      }
+    }
   };
 
   const getFieldIntegrations = fieldName => {
@@ -114,8 +131,9 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
   };
 
   return {
-    setFormConfig,
     getFormConfig,
+    updateFieldFormConfig,
+    fireFormConfigReduce,
     setFormValues,
     getFormValues,
     getModifiedItem,

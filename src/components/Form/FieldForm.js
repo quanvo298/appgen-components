@@ -70,13 +70,17 @@ const FieldForm = ({
     processChange(value)();
   };
 
-  addFieldIntegrations(propName, { setFieldValue, setFieldDefinition });
+  const getFieldValue = () => {
+    return fieldValue.value;
+  };
+
+  addFieldIntegrations(propName, { setFieldValue, setFieldDefinition, getFieldValue });
 
   return (
     <FieldEditor
       variant={variant}
       {...getFieldDefinition()}
-      value={fieldValue.value}
+      value={fieldValue.value || defaultValue}
       error={error}
       onChange={handleChange}
     />

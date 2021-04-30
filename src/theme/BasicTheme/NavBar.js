@@ -10,16 +10,16 @@ import {
   ListItemCategoryHeader,
   ListItemWidget,
 } from '../../components/ListItemWidget/ListItemWidget';
-import { withNavigatorStyles } from '../../utils/withBasicStyles';
+import { withNavigatorStyles } from '../../hocs/withBasicStyles';
 import { isNotEmpty } from '../../utils/CollectionUtils';
 
 const ListItemCategoryWrapper = ({ title, icon, href }) => {
-  const hanldeClick = event => {
+  const handleClick = event => {
     event.stopPropagation();
     event.preventDefault();
     if (href) navigate(href);
   };
-  return <ListItemCategory iconComponent={icon} onClick={hanldeClick} title={title} />;
+  return <ListItemCategory iconComponent={icon} onClick={handleClick} title={title} />;
 };
 
 const ListItemCategoryHeaderWrapper = ({
@@ -30,14 +30,14 @@ const ListItemCategoryHeaderWrapper = ({
   onExpand,
   expandStatus,
 }) => {
-  const hanldeClick = event => {
+  const handleClick = event => {
     event.stopPropagation();
     event.preventDefault();
     if (href) navigate(href);
   };
 
   return (
-    <ListItemCategoryHeader iconComponent={icon} onClick={hanldeClick} title={title}>
+    <ListItemCategoryHeader iconComponent={icon} onClick={handleClick} title={title}>
       {supportExpand && expandStatus && <ExpandLess onClick={onExpand} />}
       {supportExpand && !expandStatus && <ExpandMore onClick={onExpand} />}
     </ListItemCategoryHeader>
@@ -45,12 +45,12 @@ const ListItemCategoryHeaderWrapper = ({
 };
 
 const ListItemWrapper = ({ title, icon, href }) => {
-  const hanldeClick = event => {
+  const handleClick = event => {
     event.stopPropagation();
     event.preventDefault();
     if (href) navigate(href);
   };
-  return <ListItemWidget iconComponent={icon} onClick={hanldeClick} title={title} />;
+  return <ListItemWidget iconComponent={icon} onClick={handleClick} title={title} />;
 };
 
 class NavBar extends Component {

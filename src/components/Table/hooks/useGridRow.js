@@ -21,12 +21,11 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
     if (reduceCellDefs != null) {
       const newCellDefs = reduceCellDefs({ rowData: propRowData, rowIndex });
       if (newCellDefs != null) {
-        const { cellsDef } = newCellDefs;
         setCustomRowColumns(
           rowIndex,
-          Object.keys(cellsDef).map(columnsName => ({
+          Object.keys(newCellDefs).map(columnsName => ({
             name: columnsName,
-            ...cellsDef[columnsName],
+            ...newCellDefs[columnsName],
           }))
         );
       }

@@ -17,20 +17,6 @@ export const NotificationKind = {
   Danger: 'danger',
 };
 
-export const BaiscFormPropertyComponentType = {
-  Grid: 'grid',
-  AutoSuggest: 'auto-suggest',
-};
-
-export const PropertyDataType = {
-  Boolean: 'boolean',
-  Number: 'number',
-  Date: 'date',
-  ArrayObject: 'arrayObject',
-  Object: 'object',
-  Document: 'document',
-};
-
 export const FieldType = {
   Text: 'text',
   LongText: 'longText',
@@ -48,8 +34,9 @@ export const FieldComponentType = {
   AutoSelect: 'auto-select',
 };
 
-export const SearchOperation = {
+export const SearchOperator = {
   Equal: 'equal',
+  EqualsIgnoreCase: 'equalsIgnoreCase',
   NotEqual: 'not equal',
 };
 

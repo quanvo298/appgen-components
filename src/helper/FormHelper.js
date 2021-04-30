@@ -18,7 +18,7 @@ export const formatValueBaseOnType = ({ value, type }) => {
   if (value) {
     switch (type) {
       case FieldType.Boolean:
-        return !!value;
+        return Boolean(value);
       case FieldType.Number:
         return Number(value);
       default:

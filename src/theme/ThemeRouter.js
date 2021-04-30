@@ -1,14 +1,10 @@
 import React from 'react';
-import withPolyglot from '../utils/withPolyglot';
+import withPolyglot from '../hocs/withPolyglot';
+import { getProps } from '../helper/ThemeModuleHelper';
 
-const ThemeRouter = ({
-  page: PageWrapper,
-  theme: ThemeWrapper,
-  themeProps,
-  polyglot,
-  ...restProps
-}) => {
+const ThemeRouter = ({ page: PageWrapper, theme: ThemeWrapper, polyglot, ...restProps }) => {
   if (ThemeWrapper) {
+    const themeProps = getProps({ path: restProps.path, themeName: ThemeWrapper.displayName });
     return (
       <ThemeWrapper {...themeProps} polyglot={polyglot}>
         <PageWrapper {...restProps} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { PropertyDataType } from '../../utils/constant';
+import { FieldType } from '../../utils/constant';
 import { formatCellNumberValue } from '../../utils/FormatUtils';
 import { defaultFunc } from '../../utils/props';
 
@@ -24,7 +24,7 @@ const NumberField = ({
     setEditing(newEditing);
   };
 
-  const type = isEditing ? PropertyDataType.Number : PropertyDataType.Text;
+  const type = isEditing ? FieldType.Number : FieldType.Text;
 
   let textValue = value;
   if (textValue) {

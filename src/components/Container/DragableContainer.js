@@ -1,6 +1,6 @@
 import React from 'react';
 import Wrapper from './Wrapper';
-import { withDraggableStyles } from '../../utils/withBasicStyles';
+import { withDraggableStyles } from '../../hocs/withBasicStyles';
 
 const DragableContainer = ({
   classes,

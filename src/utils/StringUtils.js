@@ -4,6 +4,9 @@ export const isNotBlank = str => !isBlank(str);
 
 export const removeAllWhiteSpace = str => str.replace(/\s/g, '');
 
+export const equalsIgnoreCase = (str1, str2) =>
+  str1 != null && str2 != null ? str1.toLowerCase() === str2.toLowerCase() : str1 === str2;
+
 export const upperFirstChar = strValue => {
   return strValue.charAt(0).toUpperCase() + strValue.slice(1);
 };

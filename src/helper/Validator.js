@@ -1,10 +1,10 @@
-import { PropertyDataType } from '../utils/constant';
+import { FieldType } from '../utils/constant';
 import { isBlank, isNotBlank } from '../utils/StringUtils';
 import { isNotEmpty } from '../utils/CollectionUtils';
 
 export const validateField = ({ field, fieldValue }) => {
   const { required, type } = field;
-  if (required && PropertyDataType.ArrayObject === type) {
+  if (required && FieldType.ArrayObject === type) {
     return isNotEmpty(fieldValue);
   }
 
@@ -19,7 +19,7 @@ export const validateField = ({ field, fieldValue }) => {
 };
 
 export const validateElement = (element, newValue) => {
-  if (element.required && PropertyDataType.ArrayObject === element.type) {
+  if (element.required && FieldType.ArrayObject === element.type) {
     return isNotEmpty(newValue);
   }
 

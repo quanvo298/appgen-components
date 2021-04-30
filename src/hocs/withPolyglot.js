@@ -1,5 +1,5 @@
 import React, { Component, forwardRef } from 'react';
-import { LocaleProviderCtx } from './LocaleProvider';
+import { LocaleProviderCtx } from '../utils/LocaleProvider';
 
 const withPolyglot = WrappedComponent => {
   class Wrapped extends Component {

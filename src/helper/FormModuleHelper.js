@@ -1,35 +1,25 @@
-import { formModules } from '../utils/loadModules';
-import { convertToMapByName } from '../utils/CollectionUtils';
+import { getFormModules } from '../utils/loadModules';
 
-export const Prefix = 'form.override';
+export const Prefix = 'form';
 
 export const createFormModuleName = componentName =>
   `./${componentName}/${componentName}.${Prefix}.js`;
 
-export const getFormModule = componentName => formModules[createFormModuleName(componentName)];
-
-export const processToMergeFormConfigElements = (
-  originalElements = [],
-  additionalElements = []
-) => {
-  if (additionalElements.length) {
-    const additionalElementNames = convertToMapByName(additionalElements);
-    return [
-      ...originalElements.filter(({ name }) => !additionalElementNames[name]),
-      ...additionalElements,
-    ];
-  }
-  return originalElements;
+export const getFormModule = componentName => {
+  return getFormModules()[createFormModuleName(componentName)];
 };
 
 export const processToMergeFormConfig = (originalFormConfig, additionalFormConfig) => {
   if (additionalFormConfig) {
-    const { elements: additionalElements } = additionalFormConfig;
-    const { elements: originalElements } = originalFormConfig;
+    const { fields: overrideFields } = additionalFormConfig;
+    const { fields: originalFields } = originalFormConfig;
     const wrapper = {
       ...originalFormConfig,
       ...additionalFormConfig,
-      elements: processToMergeFormConfigElements(originalElements, additionalElements),
+      fields: {
+        ...originalFields,
+        ...overrideFields,
+      },
     };
     return wrapper;
   }
@@ -40,8 +30,9 @@ export const mergeFormConfig = ({ componentName, formConfig, polyglot }) => {
   const config = formConfig(polyglot);
   if (componentName) {
     const formModule = getFormModule(componentName);
-    if (formModule && formModule.formConfig) {
-      const additionalFormConfig = formModule.formConfig({
+    const { formConfig: overrideFormConfig } = formModule || {};
+    if (overrideFormConfig) {
+      const additionalFormConfig = overrideFormConfig({
         originalFormConfig: config,
         polyglot,
       });

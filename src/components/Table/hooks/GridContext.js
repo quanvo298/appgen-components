@@ -4,6 +4,7 @@ const DefaultEvents = {
   onDeleteRow: defaultFunc,
   onCellChange: defaultFunc,
   onSelectedRow: defaultFunc,
+  onRenderedRow: defaultFunc,
 };
 
 const GridContext = ({

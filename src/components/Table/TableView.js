@@ -3,7 +3,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import { useTableStyles } from '../../utils/withBasicStyles';
+import { useTableStyles } from '../../hocs/withBasicStyles';
 import Wrapper from '../Container/Wrapper';
 import { displayCellValue } from '../../helper/TableEditorHelper';
 import Head from './Head';

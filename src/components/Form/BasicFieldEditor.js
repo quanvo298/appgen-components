@@ -22,7 +22,7 @@ export default props => {
   const handleChange = event => {
     if (props.onChange) {
       event.preventDefault();
-      event.stopPropagation();
+      // event.stopPropagation();
       const { value } = event.target;
       props.onChange({ value: formatValueBaseOnType({ value, type: propType }), event });
     }

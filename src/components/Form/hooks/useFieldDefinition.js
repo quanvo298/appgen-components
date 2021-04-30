@@ -77,6 +77,7 @@ const useFieldDefinition = ({
           setDefaultValue(definition[key]);
           break;
         case 'disabled':
+        case 'readonly':
           setDisabled(definition[key]);
           break;
         default:

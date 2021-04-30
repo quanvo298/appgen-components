@@ -1,6 +1,6 @@
 import React from 'react';
-import PubSub from './PubSub';
-import { isNotBlank } from './StringUtils';
+import PubSub from '../utils/PubSub';
+import { isNotBlank } from '../utils/StringUtils';
 
 const withSubscription = subcriptionName => WrappedComponent => {
   return class extends React.Component {

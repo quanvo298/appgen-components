@@ -1,5 +1,11 @@
+import { cloneObjectDeep } from './ObjectUtils';
+
 const formModules = {};
-const configModule = {};
+const configModule = {
+  editors: null,
+  types: null,
+  themes: null,
+};
 
 export const loadFormModules = requireContext => {
   requireContext.keys().forEach(key => {
@@ -8,7 +14,13 @@ export const loadFormModules = requireContext => {
 };
 
 export const loadConfigModule = config => {
-  configModule.config = config;
+  const { editors, types, themes } = config;
+  configModule.editors = editors;
+  configModule.types = types;
+  configModule.themes = themes;
 };
 
-export { formModules, configModule };
+const getFormModules = () => cloneObjectDeep(formModules);
+const getConfigModule = () => cloneObjectDeep(configModule);
+
+export { getFormModules, getConfigModule };

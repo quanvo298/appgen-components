@@ -1,6 +1,6 @@
 import { formatDateShort, parseDate } from './DateUtils';
 import { getCurrentLocale } from './LocaleProvider';
-import { PropertyDataType } from './constant';
+import { FieldType } from './constant';
 import { isNumber, isString } from './ObjectUtils';
 
 export const formatNumberValue = numberValue => {
@@ -25,14 +25,14 @@ export const formatCellNumberValue = numberValue => {
   return formatNumberValue(numberValue);
 };
 
-export const isDatePropertyType = type => type === PropertyDataType.Date;
+export const isDatePropertyType = type => type === FieldType.Date;
 
 export const formatCellValueBaseOnType = ({ cellValue, type }) => {
   if (cellValue) {
     switch (type) {
-      case PropertyDataType.Date:
+      case FieldType.Date:
         return formatCellDateValue(cellValue);
-      case PropertyDataType.Number:
+      case FieldType.Number:
         return formatCellNumberValue(cellValue);
       default:
         return cellValue;

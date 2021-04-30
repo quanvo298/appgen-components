@@ -1,6 +1,9 @@
-import { configModule } from '../utils/loadModules';
+import { getConfigModule } from '../utils/loadModules';
 
-export const getEditorsConfig = () => (configModule.config && configModule.config.editors) || {};
+export const getEditorsConfig = () => {
+  const { editors } = getConfigModule();
+  return editors || {};
+};
 
 export const getEditorComponent = componentType => {
   const editorExtend = getEditorsConfig()[componentType];

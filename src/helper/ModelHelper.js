@@ -1,4 +1,5 @@
-import { SearchOperation } from '../utils/constant';
+import { SearchOperator } from '../utils/constant';
+import { equalsIgnoreCase } from '../utils';
 
 export const ENTITY_PROPERTIES_SYSTEM = {
   ID: 'id',
@@ -21,14 +22,16 @@ export const getItemById = (itemId, itemList = []) =>
 export const checkValueBaseOnCriteria = (criteria, item, key) => {
   const criteriaValue = criteria[key];
   if (criteriaValue instanceof Object) {
-    const { value, operation } = criteriaValue;
-    const correctOperation =
-      operation && Object.values(SearchOperation).includes(operation)
-        ? operation
-        : SearchOperation.Equal;
-    switch (correctOperation) {
-      case SearchOperation.NotEqual:
+    const { value, operator } = criteriaValue;
+    const correctOperator =
+      operator && Object.values(SearchOperator).includes(operator)
+        ? operator
+        : SearchOperator.Equal;
+    switch (correctOperator) {
+      case SearchOperator.NotEqual:
         return item[key] !== value;
+      case SearchOperator.EqualsIgnoreCase:
+        return value != null && key != null ? equalsIgnoreCase(value, item[key]) : true;
       default:
         return item[key] === value;
     }

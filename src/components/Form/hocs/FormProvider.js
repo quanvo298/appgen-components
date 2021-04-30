@@ -26,8 +26,8 @@ export const useForm = (arg1, arg2 = {}) => {
     setCurrentFormName(arg1);
   }
   const {
-    setFormConfig,
-    getFormIntegrations,
+    fireFormConfigReduce,
+    updateFieldFormConfig,
     addFormIntegrations,
     getFieldIntegrations,
     addFormEvents,
@@ -55,17 +55,18 @@ export const useForm = (arg1, arg2 = {}) => {
   }
 
   // eslint-disable-next-line no-prototype-builtins
-  if (props.hasOwnProperty('formConfig')) {
-    const { formConfig } = props;
-    const { reduceFormConfig } = getFormIntegrations();
-    setFormConfig(reduceFormConfig ? reduceFormConfig(formConfig) : formConfig);
-  }
-
-  // eslint-disable-next-line no-prototype-builtins
   if (props.hasOwnProperty('values')) {
     const { values } = props;
     setInitialValues(values);
     setFormValues(values);
+  }
+
+  // eslint-disable-next-line no-prototype-builtins
+  if (props.hasOwnProperty('fireFormConfigReduce')) {
+    const { fireFormConfigReduce: propFireFormConfigReduce } = props;
+    if (propFireFormConfigReduce) {
+      fireFormConfigReduce();
+    }
   }
 
   const setFieldValue = (name, value) => {
@@ -73,9 +74,15 @@ export const useForm = (arg1, arg2 = {}) => {
     propSetFieldValue(value);
   };
 
+  const getFieldValue = name => {
+    const { getFieldValue: propGetFieldValue } = getFieldIntegrations(name);
+    return propGetFieldValue(name);
+  };
+
   const setFieldDefs = (name, defs = {}) => {
     const { setFieldDefinition } = getFieldIntegrations(name);
     setFieldDefinition(defs);
+    updateFieldFormConfig(name, defs);
   };
 
   return {
@@ -85,6 +92,7 @@ export const useForm = (arg1, arg2 = {}) => {
     initialized: true,
     ...foundContext,
     setFieldValue,
+    getFieldValue,
     setFieldDefs,
   };
 };

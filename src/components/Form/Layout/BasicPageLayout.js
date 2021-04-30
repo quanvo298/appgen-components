@@ -6,6 +6,7 @@ import { useForm } from '../hocs/FormProvider';
 import FormWidget from '../FormWidget';
 
 const BasicPageLayout = ({
+  formName,
   formConfig,
   contentListConfig: propContentListConfig,
   ...restProps
@@ -18,11 +19,12 @@ const BasicPageLayout = ({
       ? reduceContentListConfig(propContentListConfig)
       : propContentListConfig;
 
+  const supportFormWidget = Boolean(formName) || Boolean(formConfig);
   return (
     <Wrapper>
-      {formConfig && <FormWidget formConfig={formConfig} {...restProps} />}
+      {supportFormWidget && <FormWidget formName={formName} {...restProps} />}
       {contentListConfig && (
-        <Row pt={3}>
+        <Row pt={supportFormWidget ? 3 : 0}>
           <ContentList {...contentListConfig} />
         </Row>
       )}
