@@ -11,8 +11,6 @@ export const ENTITY_PROPERTIES_SYSTEM = {
 export const isUpdated = item =>
   item && (item[ENTITY_PROPERTIES_SYSTEM.ID] || item[ENTITY_PROPERTIES_SYSTEM.UNDER_ID]);
 
-export const isNew = item => !isUpdated(item);
-
 export const getEntityId = entity =>
   entity && (entity[ENTITY_PROPERTIES_SYSTEM.ID] || entity[ENTITY_PROPERTIES_SYSTEM.UNDER_ID]);
 

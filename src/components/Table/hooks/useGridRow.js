@@ -6,28 +6,30 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
   const [customColumns, renderRow] = useState(null);
   const {
     getColumns: getColumnsFromCtx,
-    getCustomRowColumn,
+    getCustomRowColumns,
+    getCustomRowConfig,
     addGridRow,
     getIntegrations,
-    setCustomRowColumns,
+    setCustomRow,
   } = useGridCtx();
 
   const refreshRow = () => {
-    renderRow(getCustomRowColumn(rowIndex));
+    renderRow(getCustomRowColumns(rowIndex));
   };
 
   useEffect(() => {
-    const { reduceCellDefs } = getIntegrations();
-    if (reduceCellDefs != null) {
-      const newCellDefs = reduceCellDefs({ rowData: propRowData, rowIndex });
-      if (newCellDefs != null) {
-        setCustomRowColumns(
-          rowIndex,
-          Object.keys(newCellDefs).map(columnsName => ({
+    const { reduceRowDef } = getIntegrations();
+    if (reduceRowDef != null) {
+      const newRowDef = reduceRowDef({ rowData: propRowData, rowIndex });
+      const { cells, ...restProps } = newRowDef || {};
+      if (cells != null) {
+        setCustomRow(rowIndex, {
+          cells: Object.keys(cells).map(columnsName => ({
             name: columnsName,
-            ...newCellDefs[columnsName],
-          }))
-        );
+            ...cells[columnsName],
+          })),
+          ...restProps,
+        });
       }
     }
     refreshRow();
@@ -43,6 +45,14 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
       });
     }
     return columns;
+  };
+
+  const getRowConfig = (defaultConfig = {}) => {
+    const rowConfig = getCustomRowConfig(rowIndex);
+    return {
+      ...defaultConfig,
+      ...rowConfig,
+    };
   };
 
   const validate = rowData => {
@@ -63,6 +73,7 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
   const rowResult = {
     refreshRow,
     getColumns,
+    getRowConfig,
     validate,
   };
 

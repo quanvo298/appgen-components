@@ -8,14 +8,6 @@ export const isString = str => typeof str === 'string';
 
 export const isArray = str => str instanceof Array;
 
-export const isObject = str => typeof str === 'object' && !isArray(str);
+export const isObject = str => Boolean(str) && typeof str === 'object' && !isArray(str);
 
 export const isFunc = str => typeof str === 'function';
-
-export const assignToRef = (ref, item) => {
-  if (ref && Object.getOwnPropertyNames(ref).includes('current')) {
-    ref.current = item;
-  } else if (ref && isFunc(ref)) {
-    ref(item);
-  }
-};

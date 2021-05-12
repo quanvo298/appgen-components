@@ -12,7 +12,8 @@ const useGrid = ({ mode, error }) => {
     getRowsNo,
     getColumns,
     getGridRow,
-    setCustomRowColumns,
+    setCustomRow,
+    getCustomRowConfig,
   } = useGridCtx();
   const [stateGrid, refreshGrid] = useState([]);
   const { get: getErrors, set: setErrors } = useGetSetRef([...Array(getRowsNo())]);
@@ -60,10 +61,13 @@ const useGrid = ({ mode, error }) => {
 
   const setRowColumnDefs = ({ rowIndex, columns }) => {
     if (getRowsNo() > rowIndex) {
-      setCustomRowColumns(
-        rowIndex,
-        Object.keys(columns).map(columnsName => ({ name: columnsName, ...columns[columnsName] }))
-      );
+      setCustomRow(rowIndex, {
+        ...getCustomRowConfig(),
+        cells: Object.keys(columns).map(columnsName => ({
+          name: columnsName,
+          ...columns[columnsName],
+        })),
+      });
       const { refreshRow } = getGridRow(rowIndex);
       refreshRow();
     }

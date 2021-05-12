@@ -22,7 +22,7 @@ const GridContext = ({
     mode: propMode,
     gridData: initialGridData,
     gridRows: [],
-    customRowColumns: [...new Array(initialGridData.length)],
+    customRows: [...new Array(initialGridData.length)],
     events: { ...DefaultEvents, ...propEvents },
     eventEmitters: propEventEmitters,
     integrations: {
@@ -113,14 +113,21 @@ const GridContext = ({
     }
   };
 
-  const setCustomRowColumns = (rowIndex, customColumns) => {
-    if (customColumns != null) {
-      const { customRowColumns } = properties;
-      customRowColumns[rowIndex] = customColumns;
+  const setCustomRow = (rowIndex, customRow) => {
+    if (customRow != null) {
+      const { customRows } = properties;
+      customRows[rowIndex] = customRow;
     }
   };
 
-  const getCustomRowColumn = rowIndex => properties.customRowColumns[rowIndex];
+  const getCustomRowColumns = rowIndex => {
+    const customRow = properties.customRows[rowIndex];
+    return customRow ? customRow.cells : [];
+  };
+
+  const getCustomRowConfig = rowIndex => {
+    return properties.customRows[rowIndex];
+  };
 
   const setProperties = (newProperties = {}) => {
     Object.keys(newProperties).forEach(key => {
@@ -148,8 +155,9 @@ const GridContext = ({
     getGridRow,
     addGridRow,
     clearGridRows,
-    setCustomRowColumns,
-    getCustomRowColumn,
+    setCustomRow,
+    getCustomRowColumns,
+    getCustomRowConfig,
     setProperties,
     getEvents,
     addGridEvents,

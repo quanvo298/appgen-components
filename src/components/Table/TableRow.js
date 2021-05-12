@@ -5,7 +5,14 @@ import { TABLE_MODE } from '../../utils/constant';
 import { useGridCtx } from './hooks/GridProvider';
 import useGridRow from './hooks/useGridRow';
 
-const TableRow = ({ classes, disabledDeleted, rowIndex, rowData, mode, errors = {} }) => {
+const TableRow = ({
+  classes,
+  disabledDeleted: propDisabledDeleted,
+  rowIndex,
+  rowData,
+  mode,
+  errors = {},
+}) => {
   const { getEvents } = useGridCtx();
   const {
     onDeleteRow,
@@ -14,7 +21,7 @@ const TableRow = ({ classes, disabledDeleted, rowIndex, rowData, mode, errors = 
     onFormatCellValue,
     onRenderedRow,
   } = getEvents();
-  const { getColumns } = useGridRow({ rowData, rowIndex });
+  const { getColumns, getRowConfig } = useGridRow({ rowData, rowIndex });
   const columns = getColumns() || [];
 
   useEffect(() => {
@@ -22,6 +29,8 @@ const TableRow = ({ classes, disabledDeleted, rowIndex, rowData, mode, errors = 
       onRenderedRow({ rowData, rowIndex });
     }
   }, [onRenderedRow]);
+
+  const { disabledDeleted } = getRowConfig({ disabledDeleted: propDisabledDeleted });
 
   return (
     <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>

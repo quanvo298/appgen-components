@@ -1,117 +1,29 @@
 import React from 'react';
-import Select from '../Select/Select';
-import AutoSelect from '../AutoSelect/AutoSelect';
-import { TrueOrFalseOptions } from '../config';
-import { isObject } from '../../utils/ObjectUtils';
+import AutoSelectEditor from '../AutoSelect/AutoSelectEditor';
 import { defaultFunc } from '../../utils/props';
 import { getEditorComponent } from '../../helper/ConfigModuleHelper';
 import { FieldComponentType, FieldType } from '../../utils/constant';
 import BasicFieldEditor from './BasicFieldEditor';
 import GridContext from '../Table/hooks/GridContext';
 import GridProvider from '../Table/hooks/GridProvider';
-import GridComponent from '../GridEditor/GridComponent';
-import { formatValueBaseOnType } from '../../helper/FormHelper';
+import GridEditor from '../GridEditor/GridEditor';
+import MapEditor from '../MapEditor/MapEditor';
+import SelectEditor from '../Select/SelectEditor';
+import { cloneObjectDeep } from '../../utils';
 
 const processGridComponent = props => {
   const { component = {}, name, value } = props;
 
   const gridContext = new GridContext({
     columns: component.columns,
-    gridData: value,
+    gridData: value != null ? cloneObjectDeep(value) : value,
     name,
   });
 
   return (
     <GridProvider context={gridContext}>
-      <GridComponent {...props} />
+      <GridEditor {...props} />
     </GridProvider>
-  );
-};
-
-const processSelectComponent = ({
-  type,
-  component,
-  error,
-  label,
-  name,
-  value,
-  onChange = defaultFunc,
-  variant = 'outlined',
-  ...restProps
-}) => {
-  const { valueAttr = 'value', optionEmpty: propOptionEmpty, data: propComponentData } = component;
-  const componentData = type === FieldType.Boolean ? TrueOrFalseOptions : propComponentData;
-  const optionEmpty = type === FieldType.Boolean ? true : propOptionEmpty;
-
-  const propValue = value != null && isObject(value) ? value[valueAttr] : value;
-  const selectedValue = propValue == null && optionEmpty ? '' : propValue;
-
-  const handleChange = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    const { value: targetValue } = event.target;
-    onChange({ value: formatValueBaseOnType({ value: targetValue, type }), event });
-  };
-
-  return (
-    <Select
-      fullWidth
-      error={error}
-      label={label}
-      variant={variant}
-      value={selectedValue}
-      onChange={handleChange}
-      optionEmpty={optionEmpty}
-      options={componentData}
-      {...restProps}
-    />
-  );
-};
-
-const processAutoSelectComponent = ({
-  value,
-  error,
-  label,
-  component,
-  type,
-  onChange = defaultFunc,
-  name,
-  ...restProps
-}) => {
-  const { valueAttr, labelAttr = 'label', data: propComponentData = [] } = component;
-  const propOptions =
-    valueAttr != null
-      ? propComponentData.reduce((jsonArray, element) => {
-          jsonArray.push({
-            value: element[valueAttr || 'value'],
-            label: element[labelAttr],
-          });
-          return jsonArray;
-        }, [])
-      : propComponentData;
-
-  const options = propOptions != null ? propOptions : [];
-  const multi = type === FieldType.ArrayObject;
-
-  const handleChange = (event, itemValue) => {
-    let targetValue = null;
-    if (itemValue) {
-      targetValue = multi ? itemValue.map(item => item.value) : itemValue.value;
-    }
-    onChange({ value: targetValue, selectedItem: itemValue, event });
-  };
-
-  return (
-    <AutoSelect
-      error={error}
-      value={value}
-      label={label}
-      multi={multi}
-      onChange={handleChange}
-      name={name}
-      options={options}
-      {...restProps}
-    />
   );
 };
 
@@ -121,16 +33,19 @@ const processEditorComponent = (
 ) => <EditorComponent onChange={onChange} {...restProps} />;
 
 const FieldEditor = props => {
-  const { component } = props;
+  const { component, multiple: propMultiple, type } = props;
   const { type: componentType = '' } = component != null ? component : {};
+  const multiple = type === FieldType.ArrayObject ? true : propMultiple;
 
   switch (componentType) {
     case FieldComponentType.Grid:
       return processGridComponent(props);
+    case FieldComponentType.Map:
+      return <MapEditor {...props} />;
     case FieldComponentType.Select:
-      return processSelectComponent(props);
+      return <SelectEditor {...props} />;
     case FieldComponentType.AutoSelect:
-      return processAutoSelectComponent(props);
+      return <AutoSelectEditor {...props} multiple={multiple} />;
     default: {
       const EditorComponent = getEditorComponent(componentType);
       if (EditorComponent) {

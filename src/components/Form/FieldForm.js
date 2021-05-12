@@ -74,7 +74,11 @@ const FieldForm = ({
     return fieldValue.value;
   };
 
-  addFieldIntegrations(propName, { setFieldValue, setFieldDefinition, getFieldValue });
+  addFieldIntegrations(propName, {
+    setFieldValue,
+    setFieldDefinition,
+    getFieldValue,
+  });
 
   return (
     <FieldEditor

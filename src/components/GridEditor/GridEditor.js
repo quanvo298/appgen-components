@@ -1,111 +1,57 @@
 import React from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import { mergeClasses } from '@material-ui/styles';
-import { OutlinedInput, FilledInput, Input } from '@material-ui/core';
-import TableEditable from '../Table/TableEditable';
-import { TABLE_MODE } from '../../utils/constant';
-
-export const TableEditableComponent = function TableEditableComponent(props) {
-  const {
-    children,
-    component,
-    name,
-    value,
-    label,
-    forwardRef,
-    inputRef,
-    onChange,
-    required,
-    error,
-    ...inputProps
-  } = props;
-
-  return (
-    <TableEditable
-      {...component}
-      mode={TABLE_MODE.Edit}
-      gridData={value}
-      componentName={name}
-      disabledDeleted={component.disabledDeleted}
-      disabledNew={component.disabledNew}
-      inputProps={inputProps}
-      required={required}
-      onChange={onChange}
-      error={error}
-    />
-  );
-};
-
-export const GridEditorComponent = React.forwardRef((props, ref) => {
-  const {
-    classes,
-    component,
-    name,
-    value,
-    label,
-    error,
-    disabled,
-    required,
-    variant = 'outlined',
-    inputProps,
-    labelProps,
-    onChange,
-    labelWidth = 0,
-  } = props;
-  const InputComponent = {
-    standard: <Input />,
-    outlined: <OutlinedInput label={label} labelWidth={labelWidth} />,
-    filled: <FilledInput />,
-  }[variant];
-
-  const inputComponent = TableEditableComponent;
-
-  return React.cloneElement(InputComponent, {
-    inputComponent,
-    inputProps: {
-      variant,
-      type: undefined, // We render a select. We can ignore the type provided by the `Input`.
-      component,
-      name,
-      value,
-      onChange,
-      required,
-      error,
-      placeholder: label,
-      defaultValue: label,
-      ...inputProps,
-      ...labelProps,
-      classes: inputProps
-        ? mergeClasses({
-            baseClasses: classes,
-            newClasses: inputProps.classes,
-          })
-        : classes,
-    },
-    notched: true,
-    ref,
-    variant,
-    error,
-    disabled,
-    required,
-  });
-});
+import { useForm } from '../Form/hocs/FormProvider';
+import { useGridCtx } from '../Table/hooks/GridProvider';
+import { GridEvents } from '../Table/TableEditable';
+import {
+  createFieldCellChangedEvent,
+  createFieldGridRowDefIntegration,
+  createFieldEventEmitter,
+  fieldCellChanged,
+} from '../../helper/FormHelper';
+import Grid from './Grid';
 
 const GridEditor = props => {
-  const { label, variant = 'outlined', error, required, ...restProps } = props;
-  return (
-    <FormControl fullWidth variant={variant} required error={error}>
-      {label && <InputLabel shrink>{label}</InputLabel>}
-      <GridEditorComponent
-        variant={variant}
-        label={label}
-        required={required}
-        {...restProps}
-        error={error}
-      />
-    </FormControl>
-  );
+  const { name, onChange } = props;
+  const { getFormEvents, onEventEmitters, getFormIntegrations } = useForm({});
+  const { emitEvent, addIntegrations } = useGridCtx();
+
+  const handleChange = event => {
+    if (event) {
+      const { target = {} } = event;
+      const { payload = {}, value } = target;
+      const { sourceEvent, body = {} } = payload;
+      if (sourceEvent === GridEvents.CellChange) {
+        const { cellName, cellValue, rowIndex } = body;
+        const functionName = createFieldCellChangedEvent(name);
+        const callback = getFormEvents()[functionName];
+        fieldCellChanged({ fieldName: name, cellName, cellValue, rowIndex })(callback);
+      }
+      onChange({ value, event });
+      return;
+    }
+    onChange({ value: null, event });
+  };
+
+  const reduceRowDef = ({ rowData, rowIndex }) => {
+    const rowDefFunctionName = createFieldGridRowDefIntegration(name);
+    const reduceRowDefFunction = getFormIntegrations()[rowDefFunctionName];
+    if (reduceRowDefFunction != null) {
+      return reduceRowDefFunction({ rowData, rowIndex });
+    }
+    return null;
+  };
+
+  onEventEmitters({
+    [createFieldEventEmitter(name, 'updateCellsDef')]: payload =>
+      emitEvent('updateCellsDef', payload),
+    [createFieldEventEmitter(name, 'validate')]: () => emitEvent('validate'),
+  });
+
+  addIntegrations({
+    reduceRowDef,
+  });
+
+  return <Grid {...props} onChange={handleChange} />;
 };
 
 export default GridEditor;

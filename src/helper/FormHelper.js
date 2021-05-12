@@ -1,4 +1,4 @@
-import { FieldType, ModeFormType } from '../utils/constant';
+import { ModeFormType, UUID } from '../utils/constant';
 import { getEntityId, isUpdated } from './ModelHelper';
 import { validateField } from './Validator';
 import { upperFirstChar } from '../utils';
@@ -13,20 +13,6 @@ export const isUpdatedForm = modeForm => modeForm === ModeFormType.UPDATE;
 export const isNewForm = modeForm => !modeForm || modeForm === ModeFormType.NEW;
 
 export const FIELD_CHANGED = `fieldChanged`;
-
-export const formatValueBaseOnType = ({ value, type }) => {
-  if (value) {
-    switch (type) {
-      case FieldType.Boolean:
-        return Boolean(value);
-      case FieldType.Number:
-        return Number(value);
-      default:
-        return value;
-    }
-  }
-  return value;
-};
 
 export const createFieldEventChanged = name => {
   return `field${upperFirstChar(name)}EventChanged`;
@@ -44,8 +30,8 @@ export const createFieldEventEmitter = (name, eventName) => {
   return `field${upperFirstChar(name)}${upperFirstChar(eventName)}`;
 };
 
-export const createFieldCellDefinitionIntegration = name => {
-  return `reduceField${upperFirstChar(name)}CellDefinition`;
+export const createFieldGridRowDefIntegration = name => {
+  return `reduceField${upperFirstChar(name)}GridRowDef`;
 };
 
 export const processInitialValues = ({ fields = {}, item = null }) => {
@@ -65,7 +51,7 @@ export const processInitialRowValue = ({ columns = [] }) => {
     result[name] = column.defaultValue || null;
     return result;
   }, {});
-  values.id = new Date().getTime();
+  values[UUID] = new Date().getTime();
   return values;
 };
 

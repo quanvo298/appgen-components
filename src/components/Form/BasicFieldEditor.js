@@ -4,7 +4,7 @@ import TextInput from '../TextInput/TextInput';
 import NumberField from '../NumberField/NumberField';
 import DateTimeInput from '../DateTimeInput/DateTimeInput';
 import { FieldType } from '../../utils/constant';
-import { formatValueBaseOnType } from '../../helper/FormHelper';
+import { formatFieldValueBaseOnType } from '../../utils/FormatUtils';
 
 const FieldEditorByType = {
   [FieldType.Boolean]: Checkbox,
@@ -21,10 +21,8 @@ export default props => {
 
   const handleChange = event => {
     if (props.onChange) {
-      event.preventDefault();
-      // event.stopPropagation();
       const { value } = event.target;
-      props.onChange({ value: formatValueBaseOnType({ value, type: propType }), event });
+      props.onChange({ value: formatFieldValueBaseOnType({ value, type: propType }), event });
     }
   };
 

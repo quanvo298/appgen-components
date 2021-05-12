@@ -20,6 +20,7 @@ const FormWidget = ({
   onDelete,
   onAddNew,
   onUpdate,
+  onAfterSaved,
 }) => {
   const {
     modeForm,
@@ -34,6 +35,7 @@ const FormWidget = ({
     selectedItem,
     onUpdate,
     onSave,
+    onAfterSaved,
   });
 
   const formConfig = getFormConfig();

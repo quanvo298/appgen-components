@@ -1,7 +1,7 @@
-import React, { useState, Fragment, useRef } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import FormDialog from '../Dialog/FormDialog';
-import AutoSelect from './AutoSelect';
 import { defaultFunc } from '../../utils/props';
+import AutoSelectEditor from './AutoSelectEditor';
 
 const AutoSelectFormDialog = ({
   component: propComponent = {},
@@ -16,9 +16,12 @@ const AutoSelectFormDialog = ({
   variant = 'outlined',
   convertItemToOption,
 }) => {
-  const componentRef = useRef(propComponent);
   const [openDialog, setOpenDialog] = useState(false);
   const [value, setValue] = useState(propValue);
+
+  useEffect(() => {
+    setValue(propValue);
+  }, [propValue]);
 
   const handleAddIconClick = () => {
     setOpenDialog(true);
@@ -29,20 +32,13 @@ const AutoSelectFormDialog = ({
   };
 
   const handleAfterSaved = dataSaved => {
-    if (dataSaved) {
-      const { data = [] } = componentRef.current;
+    if (dataSaved && propComponent) {
+      const { data = [] } = propComponent;
       const option = convertItemToOption ? convertItemToOption(dataSaved) : dataSaved;
       data.push(option);
-      componentRef.current = { ...componentRef.current, data };
       setValue(option.value);
     }
     setOpenDialog(false);
-  };
-
-  const handleChange = event => {
-    const { value: eventValue } = event.target;
-    setValue(eventValue);
-    onChange(event);
   };
 
   const { formDialog: FormDialogComponent, formDialogTitle } = propComponent.config;
@@ -50,11 +46,11 @@ const AutoSelectFormDialog = ({
 
   return (
     <Fragment>
-      <AutoSelect
-        component={componentRef.current}
+      <AutoSelectEditor
+        component={propComponent}
         multi={multi}
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         name={name}
         label={label}
         error={error}
@@ -66,7 +62,7 @@ const AutoSelectFormDialog = ({
       />
       {displayFormDialog && (
         <FormDialog title={formDialogTitle} open={openDialog} onClose={handleCloseModal}>
-          <FormDialogComponent onAfterFormSaved={handleAfterSaved} />
+          <FormDialogComponent onAfterSaved={handleAfterSaved} />
         </FormDialog>
       )}
     </Fragment>

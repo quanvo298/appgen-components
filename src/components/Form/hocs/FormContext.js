@@ -1,6 +1,5 @@
 import { defaultFunc } from '../../../utils/props';
 import { cloneObjectDeep } from '../../../utils';
-import { reduceModifiedItem } from '../../../helper/FormHelper';
 
 const FormNameDefault = `fnDefault_${new Date().getTime()}`;
 
@@ -20,7 +19,8 @@ const FormCtxPropertiesDefault = {
     reduceFormConfig: null,
     reduceContentListConfig: null,
     validateBeforeSave: defaultFunc,
-    getModifiedItem: null,
+    getModifiedItem: defaultFunc,
+    getFormValues: defaultFunc,
   },
   formEvents: {},
   eventEmitters: {
@@ -43,11 +43,6 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
   };
 
   const getFormConfig = () => properties.formConfig;
-
-  const setFormValues = formValues => {
-    properties.values = formValues;
-  };
-  const getFormValues = () => properties.values;
 
   const setInitialValues = formValues => {
     properties.initialValues = formValues;
@@ -121,22 +116,12 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
     return null;
   };
 
-  const getModifiedItem = () => {
-    const { reduceModifiedItem: callbackReduceSelectedItem } = getFormIntegrations();
-    const formValues = getFormValues();
-    const modifiedItem = reduceModifiedItem({ modifiedItem: formValues })(
-      callbackReduceSelectedItem
-    );
-    return modifiedItem;
-  };
-
   return {
+    getFormValues: () => getFormIntegrations().getFormValues(),
+    getModifiedItem: () => getFormIntegrations().getModifiedItem(),
     getFormConfig,
     updateFieldFormConfig,
     fireFormConfigReduce,
-    setFormValues,
-    getFormValues,
-    getModifiedItem,
     setInitialValues,
     getInitialValues,
     getFieldErrors,
@@ -164,6 +149,7 @@ const FormContext = (name, props) => {
     const processedFormName = processFormName(formName);
     delete formGroups[processedFormName];
     lastFormName = processedFormName;
+    // if (!formGroups[processedFormName]) {
     formGroups[lastFormName] = new FormCtxInstance(formProps);
   };
 

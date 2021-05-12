@@ -13,6 +13,8 @@ import useGrid from './hooks/useGrid';
 import GridContext from './hooks/GridContext';
 import GridProvider, { useGridCtx } from './hooks/GridProvider';
 import { defaultFunc } from '../../utils/props';
+import { UUID } from '../../utils/constant';
+import { getEntityId } from '../../helper/ModelHelper';
 
 export const GridEvents = {
   AddNewRow: 'AddNewRow',
@@ -79,7 +81,6 @@ const TableComponent = props => {
   const gridData = getGridData();
   const errors = getErrors();
   clearGridRows();
-
   return (
     <PerfectScrollbar>
       <Wrapper>
@@ -87,17 +88,20 @@ const TableComponent = props => {
           <Head columns={columns} classes={classes} mode={mode} />
           {isNotEmpty(gridData) && (
             <TableBody>
-              {gridData.map((row, rowIndex) => (
-                <TableRow
-                  key={rowIndex}
-                  rowIndex={rowIndex}
-                  rowData={row}
-                  classes={classes}
-                  mode={mode}
-                  disabledDeleted={disabledDeleted}
-                  errors={errors[rowIndex]}
-                />
-              ))}
+              {gridData.map((row, rowIndex) => {
+                const key = getEntityId(row) || row[UUID];
+                return (
+                  <TableRow
+                    key={key || rowIndex}
+                    rowIndex={rowIndex}
+                    rowData={row}
+                    classes={classes}
+                    mode={mode}
+                    disabledDeleted={disabledDeleted}
+                    errors={errors[rowIndex]}
+                  />
+                );
+              })}
             </TableBody>
           )}
         </Table>

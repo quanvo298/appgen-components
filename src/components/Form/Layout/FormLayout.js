@@ -6,13 +6,13 @@ import Row from '../../Container/Row';
 const BasicLayout = ({ fields, formValues = {}, fieldErrors = {}, onFieldChange }) =>
   Object.keys(fields).map(fieldName => {
     const field = fields[fieldName];
-
+    const value = { value: formValues != null ? formValues[fieldName] : null };
     return (
       <Row mx={2} my={3} key={fieldName}>
         <FieldForm
           {...field}
           name={fieldName}
-          value={{ value: formValues[fieldName] }}
+          value={value}
           error={fieldErrors[fieldName]}
           onFieldChange={onFieldChange}
         />
@@ -21,12 +21,14 @@ const BasicLayout = ({ fields, formValues = {}, fieldErrors = {}, onFieldChange 
   });
 
 const FormLayout = props => {
-  const { layout: CustomLayout } = props;
+  const { layout: CustomLayout, fields, formValues } = props;
 
   const Layout = CustomLayout || BasicLayout;
   return (
     <Wrapper>
-      <Layout {...props} />
+      {fields != null && (
+        <Layout {...props} formValues={formValues != null ? formValues : undefined} />
+      )}
     </Wrapper>
   );
 };

@@ -6,8 +6,8 @@ import Row from '../Container/Row';
 import Wrapper from '../Container/Wrapper';
 import MaterialIcon from '../Icon/MaterialIcon';
 
-const getSelectedOption = (itemValue, options = [], multi) => {
-  if (options.length && itemValue && multi) {
+const getSelectedOption = (itemValue, options = [], multiple) => {
+  if (options.length && itemValue && multiple) {
     return options.filter(({ value }) => itemValue.includes(value));
   }
 
@@ -15,12 +15,12 @@ const getSelectedOption = (itemValue, options = [], multi) => {
     return options.find(({ value }) => itemValue === value) || null;
   }
 
-  return multi ? [] : null;
+  return multiple ? [] : null;
 };
 
 const AutoSelect = ({
   options = [],
-  multi,
+  multiple,
   value,
   onChange = defaultFunc,
   name,
@@ -36,12 +36,12 @@ const AutoSelect = ({
   return (
     <Row width={1}>
       <MUIAutocomplete
-        multiple={multi}
+        multiple={multiple}
         filterSelectedOptions
         options={options}
         getOptionLabel={option => (option ? option.label : '')}
         fullWidth
-        value={getSelectedOption(value, options, multi)}
+        value={getSelectedOption(value, options, multiple)}
         onChange={onChange}
         renderInput={params => (
           <TextField

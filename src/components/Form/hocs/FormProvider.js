@@ -13,6 +13,7 @@ export default FormProvider;
 
 export const useForm = (arg1, arg2 = {}) => {
   const formContext = useContext(FormCtx);
+
   if (formContext == null) {
     return { initialized: false };
   }
@@ -32,7 +33,6 @@ export const useForm = (arg1, arg2 = {}) => {
     getFieldIntegrations,
     addFormEvents,
     setInitialValues,
-    setFormValues,
     onEventEmitters,
   } = foundContext;
 
@@ -58,7 +58,6 @@ export const useForm = (arg1, arg2 = {}) => {
   if (props.hasOwnProperty('values')) {
     const { values } = props;
     setInitialValues(values);
-    setFormValues(values);
   }
 
   // eslint-disable-next-line no-prototype-builtins

@@ -1,6 +1,21 @@
 import { PROPERTIES_SYSTEM } from './FormHelper';
-import { formatCellValueBaseOnType } from '../utils/FormatUtils';
-import { isObject } from '../utils';
+import { isArray, isObject } from '../utils';
+import { FieldType } from '../utils/constant';
+import { formatDateValue, formatNumberValue } from '../utils/FormatUtils';
+
+const formatCellValueBaseOnBasicType = ({ cellValue, type }) => {
+  if (cellValue != null) {
+    switch (type) {
+      case FieldType.Date:
+        return formatDateValue(cellValue);
+      case FieldType.Number:
+        return formatNumberValue(cellValue);
+      default:
+        return cellValue;
+    }
+  }
+  return cellValue;
+};
 
 export const formatCellValue = ({ cellValue, column }) => {
   const { name: columnName } = column;
@@ -10,7 +25,21 @@ export const formatCellValue = ({ cellValue, column }) => {
     return labelAttr ? cellValue[labelAttr] : cellValue[PROPERTIES_SYSTEM.Label];
   }
 
-  return formatCellValueBaseOnType({ cellName: columnName, cellValue, type: column.type });
+  if (isArray(cellValue)) {
+    return cellValue
+      .map(item => {
+        if (isObject(item)) {
+          const { component = {} } = column;
+          const { labelAttr } = component;
+          return labelAttr ? item[labelAttr] : item[PROPERTIES_SYSTEM.Label];
+        }
+        return item;
+      })
+      .filter(item => Boolean(item))
+      .join(', ');
+  }
+
+  return formatCellValueBaseOnBasicType({ cellName: columnName, cellValue, type: column.type });
 };
 
 export const displayCellValue = (row, column, rowIndex, onFormatCellValue) => {
@@ -22,18 +51,4 @@ export const displayCellValue = (row, column, rowIndex, onFormatCellValue) => {
   }
 
   return formatCellValue({ cellValue, row, column, rowIndex });
-};
-
-export const processErrors = (rowRefs, errors) => {
-  Object.keys(errors).forEach(rowIndex => {
-    const error = errors[rowIndex];
-    const rowRef = rowRefs[rowIndex];
-    if (rowRef) {
-      Object.keys(error).forEach(elementName => {
-        if (error[elementName]) {
-          rowRef.setError(elementName);
-        }
-      });
-    }
-  });
 };

@@ -1,3 +1,5 @@
+export const UUID = '_uuid';
+
 export const TABLE_MODE = {
   View: 'view',
   Edit: 'edit',
@@ -30,6 +32,7 @@ export const FieldType = {
 
 export const FieldComponentType = {
   Grid: 'grid',
+  Map: 'map',
   Select: 'select',
   AutoSelect: 'auto-select',
 };
