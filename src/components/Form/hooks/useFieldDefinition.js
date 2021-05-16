@@ -9,6 +9,7 @@ const useFieldDefinition = ({
   required: propRequired,
   type: propType,
   defaultValue: propDefaultValue,
+  multiple: propMultiple,
 }) => {
   const [component, setComponent] = useState(propComponent);
   const [disabled, setDisabled] = useState(propDisabled);
@@ -17,6 +18,7 @@ const useFieldDefinition = ({
   const [name, setName] = useState(propName);
   const [required, setRequired] = useState(propRequired);
   const [type, setType] = useState(propType);
+  const [multiple, setMultiple] = useState(propMultiple);
   const [defaultValue, setDefaultValue] = useState(propDefaultValue);
 
   useEffect(() => {
@@ -31,7 +33,17 @@ const useFieldDefinition = ({
     setName(propName);
     setType(propType);
     setDefaultValue(propDefaultValue);
-  }, [propRequired, propLabel, propDisabled, propLength, propName, propType, propDefaultValue]);
+    setMultiple(propMultiple);
+  }, [
+    propRequired,
+    propLabel,
+    propDisabled,
+    propLength,
+    propName,
+    propType,
+    propDefaultValue,
+    propMultiple,
+  ]);
 
   const setComponentData = data => {
     if (component) {
@@ -50,6 +62,7 @@ const useFieldDefinition = ({
     type,
     defaultValue,
     disabled,
+    multiple,
   });
 
   const setFieldDefinition = (definition = {}) => {
@@ -79,6 +92,9 @@ const useFieldDefinition = ({
         case 'disabled':
         case 'readonly':
           setDisabled(definition[key]);
+          break;
+        case 'multiple':
+          setMultiple(definition[key]);
           break;
         default:
           break;

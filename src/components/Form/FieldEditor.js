@@ -34,6 +34,7 @@ const processEditorComponent = (
 
 const FieldEditor = props => {
   const { component, multiple: propMultiple, type } = props;
+
   const { type: componentType = '' } = component != null ? component : {};
   const multiple = type === FieldType.ArrayObject ? true : propMultiple;
 

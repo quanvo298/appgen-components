@@ -10,6 +10,7 @@ const DateTimeInput = React.forwardRef((props, ref) => {
     value,
     error,
     disabled,
+    required,
     onChange = defaultFunc,
     variant = 'outlined',
     ref: propRef,
@@ -26,6 +27,7 @@ const DateTimeInput = React.forwardRef((props, ref) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
+        required={required}
         name={name}
         disableToolbar
         variant="inline"

@@ -21,10 +21,21 @@ export const formatDateValue = date => {
   return date;
 };
 
+const convertToObject = (dataItem, additionalAttrs = []) => {
+  return additionalAttrs.reduce((result, attr) => {
+    result[attr] = dataItem[attr];
+    return result;
+  }, {});
+};
+
 export const formatFieldValueBaseOnType = ({ value, type, multiple, component }) => {
   if (value != null) {
-    const { data: propComponentData = [], valueAttr = 'value', labelAttr = 'label' } =
-      component || {};
+    const {
+      data: propComponentData = [],
+      valueAttr = 'value',
+      labelAttr = 'label',
+      additionalAttrs = [],
+    } = component || {};
     let found;
     switch (type) {
       case FieldType.Boolean:
@@ -41,13 +52,10 @@ export const formatFieldValueBaseOnType = ({ value, type, multiple, component })
               }
               return false;
             })
-            .map(dataItem => ({
-              [valueAttr]: dataItem[valueAttr],
-              [labelAttr]: dataItem[labelAttr],
-            }));
+            .map(dataItem => convertToObject(dataItem, [valueAttr, labelAttr, ...additionalAttrs]));
         }
         found = propComponentData.find(dataItem => dataItem && dataItem[valueAttr] === value);
-        return found ? { [valueAttr]: found[valueAttr], [labelAttr]: found[labelAttr] } : null;
+        return found ? convertToObject(found, [valueAttr, labelAttr, ...additionalAttrs]) : null;
 
       default:
         return value;

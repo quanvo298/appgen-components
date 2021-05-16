@@ -39,7 +39,7 @@ const AutoSelect = ({
         multiple={multiple}
         filterSelectedOptions
         options={options}
-        getOptionLabel={option => (option ? option.label : '')}
+        getOptionLabel={option => (option ? option.label : '') || ''}
         fullWidth
         value={getSelectedOption(value, options, multiple)}
         onChange={onChange}

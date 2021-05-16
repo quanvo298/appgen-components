@@ -4,8 +4,8 @@ import { isString } from '../../../utils';
 
 const FormCtx = createContext(null);
 
-const FormProvider = ({ formName, formConfig, children }) => {
-  const formContext = new FormContext(formName, { formConfig });
+const FormProvider = ({ formName, formConfig, fileViewName, children }) => {
+  const formContext = new FormContext(formName, { formConfig, fileViewName });
   return <FormCtx.Provider value={formContext}>{children}</FormCtx.Provider>;
 };
 
@@ -55,12 +55,6 @@ export const useForm = (arg1, arg2 = {}) => {
   }
 
   // eslint-disable-next-line no-prototype-builtins
-  if (props.hasOwnProperty('values')) {
-    const { values } = props;
-    setInitialValues(values);
-  }
-
-  // eslint-disable-next-line no-prototype-builtins
   if (props.hasOwnProperty('fireFormConfigReduce')) {
     const { fireFormConfigReduce: propFireFormConfigReduce } = props;
     if (propFireFormConfigReduce) {
@@ -83,6 +77,12 @@ export const useForm = (arg1, arg2 = {}) => {
     setFieldDefinition(defs);
     updateFieldFormConfig(name, defs);
   };
+
+  // eslint-disable-next-line no-prototype-builtins
+  if (props.hasOwnProperty('values')) {
+    const { values } = props;
+    setInitialValues(values);
+  }
 
   return {
     clear,

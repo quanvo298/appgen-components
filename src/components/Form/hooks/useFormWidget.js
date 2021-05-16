@@ -11,7 +11,6 @@ import {
   fieldChanged,
   isNewForm,
   isUpdatedForm,
-  processInitialValues,
   reduceModifiedItem,
   reduceSelectedItem,
   validateBeforeSave,
@@ -25,7 +24,7 @@ import useGetSetRef from '../../../hooks/useGetSetRef';
 const getModelForm = selectedItem =>
   isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
 
-const initializeFormValues = ({ initialValues, formConfig, selectedItem, formIntegrations }) => {
+const initializeFormValues = ({ initialValues, selectedItem, formIntegrations }) => {
   const modeForm = getModelForm(selectedItem);
   if (!initialValues && modeForm === ModeFormType.NEW) {
     return null;
@@ -36,11 +35,9 @@ const initializeFormValues = ({ initialValues, formConfig, selectedItem, formInt
     return initial;
   }
 
-  const { fields } = formConfig;
   const { reduceSelectedItem: callbackReduceSelectedItem } = formIntegrations;
   const item = reduceSelectedItem({ selectedItem })(callbackReduceSelectedItem);
-  const initial = cloneDeep(processInitialValues({ fields, item }));
-  return initial;
+  return item;
 };
 
 const useFormWidget = ({
@@ -63,15 +60,14 @@ const useFormWidget = ({
   } = useForm(formName, { fireFormConfigReduce: true });
 
   const modeForm = getModelForm(selectedItem);
-  const { set: setFormValues, get: getFormValues } = useGetSetRef(
-    initializeFormValues({
-      initialValues: getInitialValues(),
-      formIntegrations: getFormIntegrations(),
-      selectedItem,
-      formConfig: getFormConfig(),
-    })
-  );
+  const initialValues = initializeFormValues({
+    initialValues: getInitialValues(),
+    formIntegrations: getFormIntegrations(),
+    selectedItem,
+    formConfig: getFormConfig(),
+  });
 
+  const { set: setFormValues, get: getFormValues } = useGetSetRef(initialValues);
   const [, resetFormValues] = useState(null);
 
   const polyglot = usePolyglot();

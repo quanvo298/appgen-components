@@ -27,6 +27,7 @@ const useFormConfig = ({
   return {
     formName,
     formConfig,
+    componentName,
   };
 };
 

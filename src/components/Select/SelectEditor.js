@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { defaultFunc } from '../../utils/props';
 import { FieldType } from '../../utils/constant';
 import { TrueOrFalseOptions } from '../config';
 import { isObject } from '../../utils';
 import { formatFieldValueBaseOnType } from '../../utils/FormatUtils';
 import Select from './Select';
+import { convertToOptions } from '../../utils/convert';
 
 const SelectEditor = ({
   type,
@@ -17,10 +18,32 @@ const SelectEditor = ({
   variant = 'outlined',
   ...restProps
 }) => {
-  const { valueAttr = 'value', optionEmpty: propOptionEmpty, data: propComponentData } = component;
-  const componentData = type === FieldType.Boolean ? TrueOrFalseOptions : propComponentData;
-  const optionEmpty = type === FieldType.Boolean ? true : propOptionEmpty;
+  const {
+    valueAttr: propValueAttr,
+    labelAttr: propLabelAttr,
+    optionEmpty: propOptionEmpty,
+    data: propComponentData,
+    additionalAttrs,
+  } = component;
+  const valueAttr = propValueAttr || 'value';
+  const labelAttr = propLabelAttr || 'label';
+  let componentData = type === FieldType.Boolean ? TrueOrFalseOptions : propComponentData;
+  if (type !== FieldType.Boolean) {
+    componentData =
+      propValueAttr || propLabelAttr
+        ? useMemo(
+            () =>
+              convertToOptions({
+                list: propComponentData,
+                value: valueAttr,
+                label: labelAttr,
+              }),
+            [propComponentData]
+          )
+        : propComponentData;
+  }
 
+  const optionEmpty = type === FieldType.Boolean ? true : propOptionEmpty;
   const propValue = value != null && isObject(value) ? value[valueAttr] : value;
   const selectedValue = propValue == null && optionEmpty ? '' : propValue;
 
@@ -28,13 +51,13 @@ const SelectEditor = ({
     event.preventDefault();
     event.stopPropagation();
     const { value: targetValue } = event.target;
-
+    const selected = formatFieldValueBaseOnType({
+      value: targetValue,
+      type,
+      component: { data: propComponentData, valueAttr, labelAttr, additionalAttrs },
+    });
     onChange({
-      value: formatFieldValueBaseOnType({
-        value: targetValue,
-        type,
-        component: { data: propComponentData, valueAttr },
-      }),
+      value: selected,
       event,
     });
   };

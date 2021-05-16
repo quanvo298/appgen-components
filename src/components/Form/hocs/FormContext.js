@@ -1,5 +1,6 @@
 import { defaultFunc } from '../../../utils/props';
 import { cloneObjectDeep } from '../../../utils';
+import { processInitialValues } from '../../../helper/FormHelper';
 
 const FormNameDefault = `fnDefault_${new Date().getTime()}`;
 
@@ -8,9 +9,9 @@ const FieldIntegrationsDefault = {
   setFieldDefinition: defaultFunc,
 };
 const FormCtxPropertiesDefault = {
+  fileViewName: null,
   formConfig: null,
   initialValues: null,
-  values: null,
   fieldErrors: {},
   fieldIntegrations: {},
   formIntegrations: {
@@ -22,6 +23,7 @@ const FormCtxPropertiesDefault = {
     getModifiedItem: defaultFunc,
     getFormValues: defaultFunc,
   },
+  customFormIntegration: null,
   formEvents: {},
   eventEmitters: {
     validateAndGetModifiedItem: defaultFunc,
@@ -34,12 +36,12 @@ const copyToObject = (integrations = {}, events = {}) => {
   });
 };
 
-const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
+const FormCtxInstance = ({ formConfig: propConfig, fileViewName, initialValues }) => {
   const properties = {
     ...cloneObjectDeep(FormCtxPropertiesDefault),
     formConfig: propConfig,
     initialValues,
-    values: initialValues,
+    fileViewName,
   };
 
   const getFormConfig = () => properties.formConfig;
@@ -48,7 +50,16 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
     properties.initialValues = formValues;
   };
 
-  const getInitialValues = () => properties.initialValues;
+  const getInitialValues = () => {
+    const { initialValues: propInitialValues } = properties;
+    const { fields } = getFormConfig() || {};
+    if (!propInitialValues && fields) {
+      const newInitialValues = processInitialValues({ fields });
+      setInitialValues(newInitialValues);
+      return newInitialValues;
+    }
+    return propInitialValues;
+  };
 
   const getFormEvents = () => properties.formEvents;
 
@@ -81,11 +92,24 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
     }
   };
 
+  const setCustomFormIntegration = formIntegration => {
+    properties.customFormIntegration = formIntegration;
+  };
+
+  const getCustomFormIntegration = () => properties.customFormIntegration;
+
   const fireFormConfigReduce = () => {
     const { reduceFormConfig } = getFormIntegrations();
+    const { reduceFormConfig: customReduceFormConfig } = getCustomFormIntegration() || {};
     if (reduceFormConfig) {
-      const { formConfig } = properties;
-      const newFormConfig = reduceFormConfig(formConfig);
+      const newFormConfig = reduceFormConfig(properties.formConfig);
+      if (newFormConfig) {
+        properties.formConfig = newFormConfig;
+      }
+    }
+
+    if (customReduceFormConfig) {
+      const newFormConfig = customReduceFormConfig(properties.formConfig);
       if (newFormConfig) {
         properties.formConfig = newFormConfig;
       }
@@ -122,6 +146,7 @@ const FormCtxInstance = ({ formConfig: propConfig, initialValues }) => {
     getFormConfig,
     updateFieldFormConfig,
     fireFormConfigReduce,
+    setCustomFormIntegration,
     setInitialValues,
     getInitialValues,
     getFieldErrors,
@@ -149,7 +174,6 @@ const FormContext = (name, props) => {
     const processedFormName = processFormName(formName);
     delete formGroups[processedFormName];
     lastFormName = processedFormName;
-    // if (!formGroups[processedFormName]) {
     formGroups[lastFormName] = new FormCtxInstance(formProps);
   };
 

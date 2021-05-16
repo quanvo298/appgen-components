@@ -42,14 +42,13 @@ export const mergeFormConfig = ({ componentName, formConfig, polyglot }) => {
   return config;
 };
 
-export const mergeFormIntegration = ({ viewName, formView }) => {
+export const getCustomFormIntegration = ({ formView, formViewProps }) => {
   if (formView) {
-    const componentName = viewName;
-    const formModule = getFormModule(componentName);
+    const formModule = getFormModule(formView);
     const { integration } = formModule || {};
     if (integration) {
-      const formIntegration = integration(formView);
-      Object.assign(formView, formIntegration);
+      return integration(formViewProps);
     }
   }
+  return null;
 };

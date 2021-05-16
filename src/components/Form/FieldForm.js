@@ -17,6 +17,7 @@ const FieldForm = ({
   required,
   type,
   defaultValue,
+  multiple,
   error: propError,
   onFieldChange = () => defaultFunc,
 }) => {
@@ -30,6 +31,7 @@ const FieldForm = ({
     required,
     type,
     defaultValue,
+    multiple,
   });
 
   const [fieldValue, updateFieldValue] = useState(propValue);
