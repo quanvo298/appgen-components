@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { validateFields } from '../../../helper/FormHelper';
 import { useGridCtx } from './GridProvider';
 
-const useGridRow = ({ rowData: propRowData, rowIndex }) => {
-  const [customColumns, renderRow] = useState(null);
+const useGridRow = ({ rowData, rowIndex }) => {
+  const [customColumns, renderRow] = useState([]);
   const {
     getColumns: getColumnsFromCtx,
     getCustomRowColumns,
@@ -11,16 +11,19 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
     addGridRow,
     getIntegrations,
     setCustomRow,
+    getGridRowData,
+    setGridRowData,
+    getGridRow,
   } = useGridCtx();
 
   const refreshRow = () => {
-    renderRow(getCustomRowColumns(rowIndex));
+    renderRow([...getCustomRowColumns(rowIndex)]);
   };
 
   useEffect(() => {
     const { reduceRowDef } = getIntegrations();
     if (reduceRowDef != null) {
-      const newRowDef = reduceRowDef({ rowData: propRowData, rowIndex });
+      const newRowDef = reduceRowDef({ rowData, rowIndex });
       const { cells, ...restProps } = newRowDef || {};
       if (cells != null) {
         setCustomRow(rowIndex, {
@@ -33,7 +36,7 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
       }
     }
     refreshRow();
-  }, [propRowData]);
+  }, [rowData]);
 
   const getColumns = () => {
     const columns = getColumnsFromCtx();
@@ -55,7 +58,7 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
     };
   };
 
-  const validate = rowData => {
+  const validate = formValues => {
     const columns = getColumns() || [];
 
     const validationResult = validateFields({
@@ -64,10 +67,25 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
         result[name] = column;
         return result;
       }, {}),
-      formValues: rowData,
+      formValues,
     });
 
     return validationResult;
+  };
+
+  const movePosition = ({ newRowIndex }) => {
+    const newData = getGridRowData(newRowIndex);
+    setGridRowData(rowIndex, newData);
+    setGridRowData(newRowIndex, rowData);
+    getGridRow(newRowIndex).refreshRow();
+    refreshRow();
+  };
+  const moveUp = () => {
+    movePosition({ newRowIndex: rowIndex - 1 });
+  };
+
+  const moveDown = () => {
+    movePosition({ newRowIndex: rowIndex + 1 });
   };
 
   const rowResult = {
@@ -75,6 +93,8 @@ const useGridRow = ({ rowData: propRowData, rowIndex }) => {
     getColumns,
     getRowConfig,
     validate,
+    moveUp,
+    moveDown,
   };
 
   addGridRow(rowIndex, rowResult);

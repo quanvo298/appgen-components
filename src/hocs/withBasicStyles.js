@@ -157,7 +157,7 @@ const TableEditorStyles = () => ({
   trEditor: {
     '@global': {
       'td:last-child': {
-        'padding-right': '0px',
+        'padding-right': '4px',
       },
       'td:last-child svg': {
         display: 'none',
@@ -168,6 +168,16 @@ const TableEditorStyles = () => ({
         'td:last-child svg': {
           display: 'block',
         },
+      },
+    },
+  },
+  trDefault: {
+    '@global': {
+      'td:first-child': {
+        width: '40px',
+      },
+      'td:first-child svg': {
+        cursor: 'pointer',
       },
     },
   },

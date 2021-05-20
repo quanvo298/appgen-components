@@ -15,6 +15,7 @@ const processGridComponent = props => {
   const { component = {}, name, value } = props;
 
   const gridContext = new GridContext({
+    ordered: component.ordered,
     columns: component.columns,
     gridData: value != null ? cloneObjectDeep(value) : value,
     name,

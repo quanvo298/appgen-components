@@ -40,7 +40,13 @@ const TableComponent = props => {
   const classes = useTableStyles();
   const { error, mode, disabledDeleted, disabledNew, columns, onChange = defaultFunc } = props;
 
-  const { addGridEvents, onEventEmitters, getGridData, clearGridRows } = useGridCtx();
+  const {
+    addGridEvents,
+    onEventEmitters,
+    getGridData,
+    clearGridRows,
+    supportOrdered,
+  } = useGridCtx();
 
   const { addRow, deleteRow, setCellValue, validate, getErrors, setRowColumnDefs } = useGrid({
     mode,
@@ -60,6 +66,7 @@ const TableComponent = props => {
 
   const onDeleteRow = rowIndex => {
     deleteRow(rowIndex);
+    processChange({ sourceEvent: GridEvents.DeleteRow });
   };
 
   const onCellChange = ({ cellName, cellValue, rowIndex, event }) => {
@@ -85,7 +92,7 @@ const TableComponent = props => {
     <PerfectScrollbar>
       <Wrapper>
         <Table className={classes.table}>
-          <Head columns={columns} classes={classes} mode={mode} />
+          <Head columns={columns} classes={classes} mode={mode} ordered={supportOrdered()} />
           {isNotEmpty(gridData) && (
             <TableBody>
               {gridData.map((row, rowIndex) => {
@@ -94,7 +101,6 @@ const TableComponent = props => {
                   <TableRow
                     key={key || rowIndex}
                     rowIndex={rowIndex}
-                    rowData={row}
                     classes={classes}
                     mode={mode}
                     disabledDeleted={disabledDeleted}
@@ -112,12 +118,13 @@ const TableComponent = props => {
 };
 
 const TableEditable = props => {
-  const { columns, gridData, mode, onSelectedRow, onFormatCellValue } = props;
+  const { columns, gridData, mode, onSelectedRow, onFormatCellValue, ordered } = props;
   const existedGridContext = useGridCtx();
   if (existedGridContext) {
     return <TableComponent {...props} />;
   }
   const gridContext = new GridContext({
+    ordered,
     columns,
     gridData,
     mode,

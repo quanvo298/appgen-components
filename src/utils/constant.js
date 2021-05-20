@@ -1,5 +1,4 @@
 export const UUID = '_uuid';
-
 export const TABLE_MODE = {
   View: 'view',
   Edit: 'edit',

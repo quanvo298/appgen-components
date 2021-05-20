@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import MUITableRow from '@material-ui/core/TableRow';
-import { CellValue, EditIconCell, DeleteIconCell } from './TableCell';
+import { CellValue, EditIconCell, DeleteIconCell, ArrowMoveIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
 import { useGridCtx } from './hooks/GridProvider';
 import useGridRow from './hooks/useGridRow';
@@ -9,11 +9,16 @@ const TableRow = ({
   classes,
   disabledDeleted: propDisabledDeleted,
   rowIndex,
-  rowData,
   mode,
   errors = {},
 }) => {
-  const { getEvents } = useGridCtx();
+  const {
+    getEvents,
+    supportOrdered,
+    getRowsNo,
+    getGridRowData,
+    getOrderedColumnName,
+  } = useGridCtx();
   const {
     onDeleteRow,
     onCellChange,
@@ -21,7 +26,11 @@ const TableRow = ({
     onFormatCellValue,
     onRenderedRow,
   } = getEvents();
-  const { getColumns, getRowConfig } = useGridRow({ rowData, rowIndex });
+  const rowData = getGridRowData(rowIndex);
+  const { getColumns, getRowConfig, moveUp, moveDown } = useGridRow({
+    rowData,
+    rowIndex,
+  });
   const columns = getColumns() || [];
 
   useEffect(() => {
@@ -30,10 +39,29 @@ const TableRow = ({
     }
   }, [onRenderedRow]);
 
+  const handleMoveUp = () => {
+    moveUp();
+    onCellChange({ cellName: getOrderedColumnName(), rowIndex, cellValue: rowIndex });
+  };
+
+  const handleMoveDown = () => {
+    moveDown();
+    onCellChange({ cellName: getOrderedColumnName(), rowIndex, cellValue: rowIndex });
+  };
+
   const { disabledDeleted } = getRowConfig({ disabledDeleted: propDisabledDeleted });
+  const ordered = supportOrdered();
 
   return (
-    <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : ''} hover>
+    <MUITableRow className={TABLE_MODE.View === mode ? classes.trEditor : classes.trDefault} hover>
+      {ordered && (
+        <ArrowMoveIconCell
+          moveUp={handleMoveUp}
+          moveDown={handleMoveDown}
+          firstRow={rowIndex === 0}
+          lastRow={rowIndex === getRowsNo() - 1}
+        />
+      )}
       {columns.map(column => {
         const { name: columnName } = column;
         const key = columnName;

@@ -81,3 +81,14 @@ export function deleteItemFromList(idValue, list, idProp) {
     }
   }
 }
+
+export const sortItemsByName = ({ items = [], fieldName }) => {
+  return items.sort((itemA, itemB) => {
+    const fieldA = itemA && itemA[fieldName] ? itemA[fieldName] : 0;
+    const fieldB = itemB && itemB[fieldName] ? itemB[fieldName] : 0;
+    if (fieldA === fieldB) {
+      return 0;
+    }
+    return fieldA > fieldB ? 1 : -1;
+  });
+};

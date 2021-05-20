@@ -1,4 +1,6 @@
 import { defaultFunc } from '../../../utils/props';
+import { isNotEmpty } from '../../../utils';
+import { sortItemsByName } from '../../../helper/ModelHelper';
 
 const DefaultEvents = {
   onDeleteRow: defaultFunc,
@@ -7,6 +9,8 @@ const DefaultEvents = {
   onRenderedRow: defaultFunc,
 };
 
+export const OrderedColumnNameDefault = '_rowNo';
+
 const GridContext = ({
   name: componentName,
   columns: propColumns,
@@ -14,17 +18,23 @@ const GridContext = ({
   mode: propMode,
   events: propEvents = {},
   eventEmitters: propEventEmitters = {},
+  ordered: { support, columnName } = { support: false, columnName: OrderedColumnNameDefault },
 }) => {
   const initialGridData = propGridData != null ? propGridData : [];
+  const columns =
+    propColumns != null && support
+      ? sortItemsByName({ items: propColumns, fieldName: columnName })
+      : propColumns;
 
   const properties = {
-    columns: propColumns,
+    columns,
     mode: propMode,
     gridData: initialGridData,
     gridRows: [],
     customRows: [...new Array(initialGridData.length)],
     events: { ...DefaultEvents, ...propEvents },
     eventEmitters: propEventEmitters,
+    ordered: { support, columnName },
     integrations: {
       reduceCellDefs: defaultFunc(),
     },
@@ -68,7 +78,26 @@ const GridContext = ({
     }
   };
 
-  const getGridData = () => properties.gridData;
+  const supportOrdered = () => {
+    const { ordered: propOrder = {} } = properties;
+    return Boolean(propOrder.support);
+  };
+
+  const getOrderedColumnName = () => {
+    const { ordered: propOrder = {} } = properties;
+    return propOrder.columnName || OrderedColumnNameDefault;
+  };
+
+  const getGridData = () => {
+    const { gridData } = properties;
+    if (supportOrdered() && isNotEmpty(gridData)) {
+      const orderedColumnName = getOrderedColumnName();
+      gridData.forEach((item, index) => {
+        item[orderedColumnName] = index;
+      });
+    }
+    return gridData;
+  };
   const setGridData = data => {
     properties.gridData = data;
   };
@@ -86,6 +115,18 @@ const GridContext = ({
   const getColumns = () => properties.columns;
   const getGridRow = rowIndex => {
     return properties.gridRows[rowIndex];
+  };
+
+  const getGridRowData = rowIndex => {
+    const { gridData } = properties;
+    return gridData && gridData.length > rowIndex ? gridData[rowIndex] : null;
+  };
+
+  const setGridRowData = (rowIndex, rowData) => {
+    const { gridData } = properties;
+    if (gridData && gridData.length) {
+      gridData[rowIndex] = rowData;
+    }
   };
 
   const deleteGridRow = rowIndex => {
@@ -108,7 +149,6 @@ const GridContext = ({
     if (gridRows.length < rowIndex) {
       gridRows.push(gridRow);
     } else {
-      delete gridRows[rowIndex];
       gridRows[rowIndex] = gridRow;
     }
   };
@@ -148,12 +188,16 @@ const GridContext = ({
     componentName,
     getColumns,
     getMode,
+    supportOrdered,
+    getOrderedColumnName,
     getRowsNo,
     getGridData,
     addGridRowData,
     deleteGridRow,
     getGridRow,
     addGridRow,
+    getGridRowData,
+    setGridRowData,
     clearGridRows,
     setCustomRow,
     getCustomRowColumns,

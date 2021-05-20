@@ -2,9 +2,12 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowDropUp from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import { displayCellValue } from '../../helper/TableEditorHelper';
 import { TABLE_MODE } from '../../utils/constant';
 import FieldForm from '../Form/FieldForm';
+import { Row, Wrapper } from '../index';
 
 export const CellValue = ({
   row,
@@ -45,6 +48,15 @@ export const EditIconCell = ({ mode, onClick }) =>
 export const DeleteIconCell = ({ onClick }) => (
   <TableCell width={24}>
     <DeleteIcon onClick={onClick} size={24} />
+  </TableCell>
+);
+
+export const ArrowMoveIconCell = ({ firstRow, lastRow, moveUp, moveDown }) => (
+  <TableCell padding="none">
+    <Row>
+      {!firstRow ? <ArrowDropUp onClick={moveUp} /> : <Wrapper width={24} />}
+      {!lastRow && <ArrowDropDown onClick={moveDown} />}
+    </Row>
   </TableCell>
 );
 
