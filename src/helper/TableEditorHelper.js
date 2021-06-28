@@ -10,6 +10,8 @@ const formatCellValueBaseOnBasicType = ({ cellValue, type }) => {
         return formatDateValue(cellValue);
       case FieldType.Number:
         return formatNumberValue(cellValue);
+      case FieldType.Boolean:
+        return cellValue ? 'true' : '';
       default:
         return cellValue;
     }
