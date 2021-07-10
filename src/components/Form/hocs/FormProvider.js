@@ -67,6 +67,11 @@ export const useForm = (arg1, arg2 = {}) => {
     propSetFieldValue(value);
   };
 
+  const setFieldComponentData = (name, value) => {
+    const { setFieldComponentData: propSetFieldComponentData } = getFieldIntegrations(name);
+    propSetFieldComponentData(value);
+  };
+
   const getFieldValue = name => {
     const { getFieldValue: propGetFieldValue } = getFieldIntegrations(name);
     return propGetFieldValue(name);
@@ -93,5 +98,6 @@ export const useForm = (arg1, arg2 = {}) => {
     setFieldValue,
     getFieldValue,
     setFieldDefs,
+    setFieldComponentData,
   };
 };

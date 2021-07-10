@@ -7,6 +7,7 @@ const FormNameDefault = `fnDefault_${new Date().getTime()}`;
 const FieldIntegrationsDefault = {
   setFieldValue: defaultFunc,
   setFieldDefinition: defaultFunc,
+  setFieldComponentData: defaultFunc,
 };
 const FormCtxPropertiesDefault = {
   fileViewName: null,

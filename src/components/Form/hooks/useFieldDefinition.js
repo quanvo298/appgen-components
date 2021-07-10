@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const useFieldDefinition = ({
   disabled: propDisabled,
@@ -104,7 +104,7 @@ const useFieldDefinition = ({
 
   return {
     getFieldComponent: () => component,
-    setComponentData,
+    setFieldComponentData: setComponentData,
     getFieldDefinition,
     setFieldDefinition,
     getDefaultValue,

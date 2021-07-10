@@ -3,8 +3,8 @@ import { defaultFunc } from '../../utils/props';
 import AutoSelect from './AutoSelect';
 import { convertToOptions } from '../../utils/convert';
 import {
-  formatFieldValueBaseOnType,
   convertToEditorValueBaseOnType,
+  formatFieldValueBaseOnType,
 } from '../../utils/FormatUtils';
 
 const AutoSelectEditor = ({
@@ -43,6 +43,7 @@ const AutoSelectEditor = ({
   const handleChange = (event, selectedItem) => {
     let targetValue = null;
     if (selectedItem) {
+      console.log('selectedItem', selectedItem);
       targetValue = formatFieldValueBaseOnType({
         value: multiple ? selectedItem.map(item => item.value) : selectedItem.value,
         type,
@@ -53,6 +54,7 @@ const AutoSelectEditor = ({
           labelAttr,
         },
       });
+      console.log('targetValue', targetValue);
     }
 
     onChange({ value: targetValue, selectedItem, event });

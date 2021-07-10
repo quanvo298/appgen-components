@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useFieldDefinition from './hooks/useFieldDefinition';
 import FieldEditor from './FieldEditor';
 import { containString } from '../../utils';
@@ -22,7 +22,7 @@ const FieldForm = ({
   onFieldChange = () => defaultFunc,
 }) => {
   const { addFieldIntegrations } = useForm();
-  const { getFieldDefinition, setFieldDefinition } = useFieldDefinition({
+  const { getFieldDefinition, setFieldDefinition, setFieldComponentData } = useFieldDefinition({
     name: propName,
     disabled,
     length,
@@ -80,6 +80,7 @@ const FieldForm = ({
     setFieldValue,
     setFieldDefinition,
     getFieldValue,
+    setFieldComponentData,
   });
 
   return (
