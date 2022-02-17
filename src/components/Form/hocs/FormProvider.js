@@ -84,9 +84,9 @@ export const useForm = (arg1, arg2 = {}) => {
   };
 
   // eslint-disable-next-line no-prototype-builtins
-  if (props.hasOwnProperty('values')) {
-    const { values } = props;
-    setInitialValues(values);
+  if (props.hasOwnProperty('initialValues')) {
+    const { initialValues } = props;
+    setInitialValues(initialValues);
   }
 
   return {

@@ -8,11 +8,10 @@ export const ENTITY_PROPERTIES_SYSTEM = {
   CHOICE_LIST: 'ChoiceList',
 };
 
-export const isUpdated = item =>
-  item && (item[ENTITY_PROPERTIES_SYSTEM.ID] || item[ENTITY_PROPERTIES_SYSTEM.UNDER_ID]);
-
 export const getEntityId = entity =>
   entity && (entity[ENTITY_PROPERTIES_SYSTEM.ID] || entity[ENTITY_PROPERTIES_SYSTEM.UNDER_ID]);
+
+export const isUpdated = item => getEntityId(item) > 0;
 
 export const getItemById = (itemId, itemList = []) =>
   itemId && itemList.find(item => getEntityId(item) === itemId);

@@ -1,5 +1,5 @@
 import { ModeFormType, UUID } from '../utils/constant';
-import { getEntityId, isUpdated } from './ModelHelper';
+import { getEntityId } from './ModelHelper';
 import { validateField } from './Validator';
 import { upperFirstChar } from '../utils';
 
@@ -9,8 +9,6 @@ export const PROPERTIES_SYSTEM = {
 };
 
 export const isUpdatedForm = modeForm => modeForm === ModeFormType.UPDATE;
-
-export const isNewForm = modeForm => !modeForm || modeForm === ModeFormType.NEW;
 
 export const FIELD_CHANGED = `fieldChanged`;
 
@@ -56,7 +54,7 @@ export const processInitialRowValue = ({ columns = [] }) => {
 };
 
 export const reduceSelectedItem = ({ selectedItem }) => callback => {
-  if (!callback || !(selectedItem && isUpdated(selectedItem))) {
+  if (!callback) {
     return selectedItem;
   }
 

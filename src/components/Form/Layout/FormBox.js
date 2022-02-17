@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
-import { Card, CardHeader, CardContent, CardActions, Divider } from '@material-ui/core';
+import { Card, CardActions, CardContent, CardHeader, Divider } from '@material-ui/core';
 import { withBasicFormStyles } from '../../../hocs/withBasicStyles';
 
 const FormBox = ({

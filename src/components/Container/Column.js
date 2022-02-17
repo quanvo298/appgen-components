@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from 'rebass';
 import styled from 'styled-components';
-import { justifyContent, display } from 'styled-system';
+import { display, justifyContent } from 'styled-system';
 
 const ColumnStyle = styled(Box)`
   ${justifyContent}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import MUITableRow from '@material-ui/core/TableRow';
-import { CellValue, EditIconCell, DeleteIconCell, ArrowMoveIconCell } from './TableCell';
+import { ArrowMoveIconCell, CellValue, DeleteIconCell, EditIconCell } from './TableCell';
 import { TABLE_MODE } from '../../utils/constant';
 import { useGridCtx } from './hooks/GridProvider';
 import useGridRow from './hooks/useGridRow';

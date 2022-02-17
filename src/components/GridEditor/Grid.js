@@ -2,7 +2,7 @@ import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import { mergeClasses } from '@material-ui/styles';
-import { OutlinedInput, FilledInput, Input } from '@material-ui/core';
+import { FilledInput, Input, OutlinedInput } from '@material-ui/core';
 import TableEditable from '../Table/TableEditable';
 import { TABLE_MODE } from '../../utils/constant';
 

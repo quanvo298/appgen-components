@@ -23,9 +23,9 @@ import ElementFormEditor from './ElementFormEditor/ElementFormEditor';
 import { H1, H2, H3, H4, H5, H6, H7 } from './Heading/Heading';
 import {
   ListItemCategory,
-  ListItemWidget,
-  ListItemCategoryHeaderDetail,
   ListItemCategoryHeader,
+  ListItemCategoryHeaderDetail,
+  ListItemWidget,
 } from './ListItemWidget/ListItemWidget';
 import Head from './Table/Head';
 import TableEditable from './Table/TableEditable';

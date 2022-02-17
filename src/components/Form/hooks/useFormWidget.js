@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import { isUpdated } from '../../../helper/ModelHelper';
-import { ModeFormType, NotificationKind } from '../../../utils/constant';
+import { NotificationKind } from '../../../utils/constant';
 import { defaultFunc } from '../../../utils/props';
 import { usePolyglot } from '../../../utils';
 import {
@@ -9,10 +8,7 @@ import {
   createFieldEventChanged,
   FIELD_CHANGED,
   fieldChanged,
-  isNewForm,
-  isUpdatedForm,
   reduceModifiedItem,
-  reduceSelectedItem,
   validateBeforeSave,
   validateFields,
 } from '../../../helper/FormHelper';
@@ -21,32 +17,9 @@ import { createValidatorStrategy } from '../../../helper/Validator';
 import { useForm } from '../../index';
 import useGetSetRef from '../../../hooks/useGetSetRef';
 
-const getModelForm = selectedItem =>
-  isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
+const useFormWidget = ({ formName, onAction = defaultFunc, onAfterSaved }) => {
+  const polyglot = usePolyglot();
 
-const initializeFormValues = ({ initialValues, selectedItem, formIntegrations }) => {
-  const modeForm = getModelForm(selectedItem);
-  if (!initialValues && modeForm === ModeFormType.NEW) {
-    return null;
-  }
-
-  if (initialValues && modeForm === ModeFormType.NEW) {
-    const initial = cloneDeep(initialValues);
-    return initial;
-  }
-
-  const { reduceSelectedItem: callbackReduceSelectedItem } = formIntegrations;
-  const item = reduceSelectedItem({ selectedItem })(callbackReduceSelectedItem);
-  return item;
-};
-
-const useFormWidget = ({
-  formName,
-  selectedItem = null,
-  onUpdate = defaultFunc,
-  onSave = defaultFunc,
-  onAfterSaved,
-}) => {
   const {
     getFormConfig,
     addFormIntegrations,
@@ -59,30 +32,19 @@ const useFormWidget = ({
     onEventEmitters,
   } = useForm(formName, { fireFormConfigReduce: true });
 
-  const modeForm = getModelForm(selectedItem);
-  const initialValues = initializeFormValues({
-    initialValues: getInitialValues(),
-    formIntegrations: getFormIntegrations(),
-    selectedItem,
-    formConfig: getFormConfig(),
-  });
+  const initialValues = cloneDeep(getInitialValues() || {});
 
-  const { set: setFormValues, get: getFormValues } = useGetSetRef(initialValues);
+  const { set: setValues, get: getFormValues } = useGetSetRef(initialValues);
   const [, resetFormValues] = useState(null);
 
-  const polyglot = usePolyglot();
+  const setFormValues = values => {
+    setValues(values);
+    resetFormValues({ ...(values || {}) });
+  };
 
   const resetForm = () => {
-    const newFormValues = initializeFormValues({
-      initialValues: getInitialValues(),
-      formIntegrations: getFormIntegrations(),
-      selectedItem,
-      formConfig: getFormConfig(),
-    });
-
-    setFormValues(newFormValues);
+    setFormValues(initialValues);
     setFieldErrors({});
-    resetFormValues({ ...newFormValues });
   };
 
   const onFieldChange = (name, value) => event => {
@@ -150,29 +112,21 @@ const useFormWidget = ({
       return;
     }
     const payload = onAfterSaved ? { body: modifiedItem, callback: onAfterSaved } : modifiedItem;
-
-    if (isUpdatedForm(modeForm)) {
-      onUpdate(payload);
-    } else if (isNewForm(modeForm)) {
-      onSave(payload);
-    }
+    onAction(payload);
   };
-
-  useEffect(() => {
-    resetForm();
-  }, [selectedItem]);
 
   onEventEmitters({ validateAndGetModifiedItem: attemptToValidateAndGetModifiedItem });
   addFormIntegrations({ getFormValues, getModifiedItem });
 
   return {
-    modeForm,
+    setFormValues,
     getFormValues,
     getFieldErrors,
     save,
     reset: resetForm,
     onFieldChange,
     getFormConfig,
+    getFormIntegrations,
   };
 };
 

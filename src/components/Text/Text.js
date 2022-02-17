@@ -1,6 +1,6 @@
 import { Text as RText } from 'rebass';
 import styled, { css } from 'styled-components';
-import { opacity, border, display } from 'styled-system';
+import { border, display, opacity } from 'styled-system';
 
 const getMaxHeight = ({ theme, lineHeight, lineClamp }) => {
   const themeLineHeight = theme.lineHeights[lineHeight];

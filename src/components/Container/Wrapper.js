@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import { Box } from 'rebass';
 import {
-  minHeight,
-  maxWidth,
-  textAlign,
-  position,
+  alignItems,
   display,
   flexBasis,
-  alignItems,
-  justifyContent,
   flexWrap,
+  justifyContent,
+  maxWidth,
+  minHeight,
+  position,
+  textAlign,
 } from 'styled-system';
 
 const Wrapper = styled(Box)`

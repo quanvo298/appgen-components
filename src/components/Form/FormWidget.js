@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withBasicFormStyles } from '../../hocs/withBasicStyles';
 import DeleteConfirmDialog from '../Dialog/DeleteConfirmDialog';
-import { getEntityId } from '../../helper/ModelHelper';
 import useFormWidget from './hooks/useFormWidget';
-import { isUpdatedForm } from '../../helper/FormHelper';
+import { isUpdatedForm, reduceSelectedItem } from '../../helper/FormHelper';
 import ButtonBox from './ButtonBox';
 import FormBox from './Layout/FormBox';
 import FormLayout from './Layout/FormLayout';
 import { useDialogCtx } from '../../hocs/DialogProvider';
+import { isUpdated } from '../../helper/ModelHelper';
+import { ModeFormType } from '../../utils/constant';
+
+const getModelForm = selectedItem =>
+  isUpdated(selectedItem) ? ModeFormType.UPDATE : ModeFormType.NEW;
 
 const FormWidget = ({
   formName,
@@ -21,22 +25,35 @@ const FormWidget = ({
   onAddNew,
   onUpdate,
   onAfterSaved,
+  showNewButton = true,
 }) => {
+  const modeForm = getModelForm(selectedItem);
+
   const {
-    modeForm,
     reset,
     save,
     onFieldChange,
+    setFormValues,
     getFormValues,
     getFieldErrors,
     getFormConfig,
+    getFormIntegrations,
   } = useFormWidget({
     formName,
-    selectedItem,
-    onUpdate,
+    onAction: modeForm === ModeFormType.UPDATE ? onUpdate : onSave,
     onSave,
     onAfterSaved,
   });
+
+  useEffect(() => {
+    if (selectedItem) {
+      const { reduceSelectedItem: callbackReduceSelectedItem } = getFormIntegrations();
+      const item = reduceSelectedItem({ selectedItem })(callbackReduceSelectedItem);
+      setFormValues(item);
+    } else {
+      setFormValues(null);
+    }
+  }, [selectedItem]);
 
   const formConfig = getFormConfig();
 
@@ -44,24 +61,13 @@ const FormWidget = ({
 
   const { openDialog } = useDialogCtx();
 
-  const doDelete = () => {
-    return disableDelete ? false : onDelete && isUpdatedForm(modeForm);
-  };
-
-  const doAdd = () => onAddNew;
-
-  const markNew = () => {
-    onAddNew();
-  };
-
-  const doSave = () => {
+  const enableSave = () => {
     if (disableSave) {
       return false;
     }
 
     if (isUpdatedForm(modeForm)) {
-      const id = getEntityId(selectedItem);
-      return onUpdate && id !== -1;
+      return Boolean(onUpdate);
     }
 
     return !!onSave;
@@ -79,9 +85,9 @@ const FormWidget = ({
 
   const HeaderButtonsBoxInstance = (
     <ButtonBox
-      supportNew={doAdd()}
-      supportDelete={doDelete()}
-      handleAdd={markNew}
+      supportNew={showNewButton && Boolean(onAddNew)}
+      supportDelete={disableDelete ? false : onDelete && isUpdatedForm(modeForm)}
+      handleAdd={onAddNew}
       handleDelete={() => {
         openDialog(DeleteConfirmDialog, {
           onConfirm: makeSureDelete,
@@ -93,7 +99,8 @@ const FormWidget = ({
 
   const FormActionButtonsBoxInstance = (
     <ButtonBox
-      supportSave={doSave()}
+      supportSave={enableSave()}
+      btnSaveConfig={{ disabled: !getFormValues() }}
       supportReset={doReset()}
       onSave={handleSave}
       onReset={handleReset}

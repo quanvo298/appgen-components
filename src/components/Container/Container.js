@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Box } from 'rebass';
-import { maxWidth, borderBottom } from 'styled-system';
+import { borderBottom, maxWidth } from 'styled-system';
 
 const Container = styled(Box)`
   ${maxWidth}

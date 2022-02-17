@@ -4,8 +4,8 @@ import { useGridCtx } from '../Table/hooks/GridProvider';
 import { GridEvents } from '../Table/TableEditable';
 import {
   createFieldCellChangedEvent,
-  createFieldGridRowDefIntegration,
   createFieldEventEmitter,
+  createFieldGridRowDefIntegration,
   fieldCellChanged,
 } from '../../helper/FormHelper';
 import Grid from './Grid';

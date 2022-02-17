@@ -1,4 +1,4 @@
-import { withStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/styles';
 import { amber, green } from '@material-ui/core/colors';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
 
