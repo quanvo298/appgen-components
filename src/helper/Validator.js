@@ -13,7 +13,7 @@ export const validateField = ({ field, fieldValue }) => {
   }
 
   if (required) {
-    return isNotBlank(fieldValue.toString());
+    return isNotBlank(fieldValue);
   }
   return true;
 };
@@ -28,7 +28,7 @@ export const validateElement = (element, newValue) => {
   }
 
   if (element.required) {
-    return isNotBlank(newValue.toString());
+    return isNotBlank(newValue);
   }
   return true;
 };

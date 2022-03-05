@@ -127,6 +127,7 @@ const useFormWidget = ({ formName, onAction = defaultFunc, onAfterSaved }) => {
     onFieldChange,
     getFormConfig,
     getFormIntegrations,
+    getInitialValues,
   };
 };
 

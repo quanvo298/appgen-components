@@ -24,13 +24,14 @@ const FormWidget = ({
   onDelete,
   onAddNew,
   onUpdate,
+  onReset,
   onAfterSaved,
   showNewButton = true,
 }) => {
   const modeForm = getModelForm(selectedItem);
 
   const {
-    reset,
+    reset: resetForm,
     save,
     onFieldChange,
     setFormValues,
@@ -51,7 +52,7 @@ const FormWidget = ({
       const item = reduceSelectedItem({ selectedItem })(callbackReduceSelectedItem);
       setFormValues(item);
     } else {
-      setFormValues(null);
+      resetForm();
     }
   }, [selectedItem]);
 
@@ -62,10 +63,6 @@ const FormWidget = ({
   const { openDialog } = useDialogCtx();
 
   const enableSave = () => {
-    if (disableSave) {
-      return false;
-    }
-
     if (isUpdatedForm(modeForm)) {
       return Boolean(onUpdate);
     }
@@ -81,7 +78,12 @@ const FormWidget = ({
 
   const handleSave = () => save();
 
-  const handleReset = () => reset();
+  const handleReset = () => {
+    if (onReset) {
+      onReset();
+    }
+    resetForm();
+  };
 
   const HeaderButtonsBoxInstance = (
     <ButtonBox
@@ -100,7 +102,7 @@ const FormWidget = ({
   const FormActionButtonsBoxInstance = (
     <ButtonBox
       supportSave={enableSave()}
-      btnSaveConfig={{ disabled: !getFormValues() }}
+      saveOpts={{ disabled: disableSave }}
       supportReset={doReset()}
       onSave={handleSave}
       onReset={handleReset}

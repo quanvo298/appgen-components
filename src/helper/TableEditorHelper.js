@@ -3,7 +3,7 @@ import { isArray, isObject } from '../utils';
 import { FieldType } from '../utils/constant';
 import { formatDateValue, formatNumberValue } from '../utils/FormatUtils';
 
-const formatCellValueBaseOnBasicType = ({ cellValue, type }) => {
+export const formatCellValueBaseOnBasicType = ({ cellValue, type }) => {
   if (cellValue != null) {
     switch (type) {
       case FieldType.Date:

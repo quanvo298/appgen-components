@@ -8,7 +8,7 @@ const ButtonBox = ({
   handleAdd,
   handleDelete,
   supportSave,
-  btnSaveConfig = {},
+  saveOpts = {},
   supportReset,
   onSave,
   onReset,
@@ -40,7 +40,7 @@ const ButtonBox = ({
             label: polyglot.t('btn.save'),
             onClick: onSave,
             variant: 'contained',
-            ...btnSaveConfig,
+            ...saveOpts,
           },
         ]
       : []),

@@ -38,7 +38,6 @@ export const processInitialValues = ({ fields = {}, item = null }) => {
     result[fieldName] = item ? item[fieldName] : field.defaultValue || null;
     return result;
   }, {});
-
   values.id = getEntityId(item);
   return values;
 };

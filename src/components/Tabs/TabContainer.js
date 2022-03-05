@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { AppBar } from '..';
@@ -14,7 +14,7 @@ const TabHeader = ({ tabs, selectedIndexTab, onChange }) => (
   </Tabs>
 );
 
-const TabContainer = ({ onChange, children, classes, selectedTab: selectedTabName }) => {
+const TabContainer = ({ onChange, children, classes, selectedTab }) => {
   const tabPositions = [];
   const tabConfig = React.Children.toArray(children).map(({ props }) => {
     const { tabName, tabTitle } = props;
@@ -22,21 +22,20 @@ const TabContainer = ({ onChange, children, classes, selectedTab: selectedTabNam
     return { tabName, tabTitle };
   });
 
-  const [selectedTab, setSelectedTab] = useState(selectedTabName || tabPositions[0]);
+  const selectedTabName = selectedTab || tabPositions[0];
 
   const handleSelectedTab = (event, tabIndex) => {
     const tabName = tabPositions[tabIndex];
     if (onChange) {
       onChange(tabName);
     }
-    setSelectedTab(tabName);
   };
 
   return (
     <Fragment>
       <AppBar>
         <TabHeader
-          selectedIndexTab={tabPositions.indexOf(selectedTab)}
+          selectedIndexTab={tabPositions.indexOf(selectedTabName)}
           onChange={handleSelectedTab}
           tabs={tabConfig}
         />
@@ -44,7 +43,7 @@ const TabContainer = ({ onChange, children, classes, selectedTab: selectedTabNam
       {React.Children.toArray(children).map((child, index) => {
         const { tabName } = child.props;
         return (
-          <Show selectedTab={selectedTab} name={tabName} key={index}>
+          <Show selectedTab={selectedTabName} name={tabName} key={index}>
             <main className={classes.mainContent}>{child}</main>
           </Show>
         );

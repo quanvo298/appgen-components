@@ -11,7 +11,7 @@ export const ENTITY_PROPERTIES_SYSTEM = {
 export const getEntityId = entity =>
   entity && (entity[ENTITY_PROPERTIES_SYSTEM.ID] || entity[ENTITY_PROPERTIES_SYSTEM.UNDER_ID]);
 
-export const isUpdated = item => getEntityId(item) > 0;
+export const isUpdated = item => Boolean(getEntityId(item));
 
 export const getItemById = (itemId, itemList = []) =>
   itemId && itemList.find(item => getEntityId(item) === itemId);
