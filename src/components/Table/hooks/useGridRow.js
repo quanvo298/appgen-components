@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { validateFields } from '../../../helper/FormHelper';
-import { useGridCtx } from './GridProvider';
+import { useEffect, useState } from "react";
+import { validateFields } from "../../../helper/FormHelper";
+import { useGridCtx } from "./GridProvider";
 
 const useGridRow = ({ rowData, rowIndex }) => {
   const [customColumns, renderRow] = useState([]);
@@ -36,7 +36,7 @@ const useGridRow = ({ rowData, rowIndex }) => {
       }
     }
     refreshRow();
-  }, [rowData]);
+  }, []);
 
   const getColumns = () => {
     const columns = getColumnsFromCtx();
